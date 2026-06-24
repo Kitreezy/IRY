@@ -29,7 +29,7 @@ actor SemanticSearchService {
         guard !allEmbeddings.isEmpty else { return ftsResults }
 
         // Score all embeddings against query
-        let threshold: Float = 0.35
+        let threshold: Float = 0.55
         var semanticIds = Set<UUID>()
         var scores: [UUID: Float] = [:]
 
