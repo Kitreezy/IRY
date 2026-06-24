@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1390E0489F58DB84781606D8 /* MemoryRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B08555B5C169DE76A98305 /* MemoryRepositoryTests.swift */; };
+		200B569921A8FFF7C694B5FA /* String+Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0340927E7707408B081091F5 /* String+Highlight.swift */; };
 		200CA9431075011BF827DEBF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368A454373DDC15267EC027 /* ContentView.swift */; };
 		221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A007D2C70288EF39BE22119F /* SearchViewModel.swift */; };
 		2A192CA9B797AFC934383512 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BF31E624E4333D95C25742 /* SettingsView.swift */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		01B08555B5C169DE76A98305 /* MemoryRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRepositoryTests.swift; sourceTree = "<group>"; };
 		0290DD94571CB2AF17E61658 /* MemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRepository.swift; sourceTree = "<group>"; };
+		0340927E7707408B081091F5 /* String+Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Highlight.swift"; sourceTree = "<group>"; };
 		0BBDCCBD46D2E71381644B94 /* MemoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryItem.swift; sourceTree = "<group>"; };
 		202090EEB075994DE92D62E9 /* CreateMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMemoryView.swift; sourceTree = "<group>"; };
 		34BF31E624E4333D95C25742 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				757375F11F497D777D4CAFAD /* EnvironmentValues+Repository.swift */,
+				0340927E7707408B081091F5 /* String+Highlight.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */,
 				4CBDB9EE75BFADAA63E247A9 /* SeedData.swift in Sources */,
 				2A192CA9B797AFC934383512 /* SettingsView.swift in Sources */,
+				200B569921A8FFF7C694B5FA /* String+Highlight.swift in Sources */,
 				88DD66A3EADB3E5363D66E00 /* TimelineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MemoryCardView: View {
     let memory: MemoryItem
+    var query: String = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -15,25 +16,23 @@ struct MemoryCardView: View {
                     .foregroundStyle(.secondary)
             }
 
-            Text(memory.title)
-                .font(.headline)
+            memory.title.highlighted(query: query, base: .headline, highlightColor: .primary)
                 .lineLimit(1)
 
             if !memory.content.isEmpty {
-                Text(memory.content)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                memory.content.highlighted(query: query, base: .subheadline, highlightColor: .primary)
                     .lineLimit(2)
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(.background)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
     }
 }
 
-private extension MemorySource {
+extension MemorySource {
     var displayName: String {
         switch self {
         case .userCreated: "Memory"

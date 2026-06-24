@@ -54,7 +54,7 @@ struct SearchView: View {
                 emptyStart
             } else {
                 List(viewModel.results) { memory in
-                    MemoryCardView(memory: memory)
+                    MemoryCardView(memory: memory, query: viewModel.query)
                         .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
