@@ -3,12 +3,22 @@ import SwiftUI
 struct SearchView: View {
     @Environment(\.memoryRepository) private var repository
     @State private var viewModel: SearchViewModel?
+    @State private var showCreate: Bool = false
 
     var body: some View {
         NavigationStack {
             resultsArea
                 .navigationTitle("Search")
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button {
+                            showCreate = true
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
                 .searchable(
                     text: Binding(
                         get: { viewModel?.query ?? "" },
@@ -19,6 +29,11 @@ struct SearchView: View {
                     ),
                     prompt: "What do you remember?"
                 )
+                .sheet(isPresented: $showCreate) {
+                    Task { await viewModel?.performSearch() }
+                } content: {
+                    CreateMemoryView()
+                }
         }
         .task {
             let vm = SearchViewModel(repository: repository)
@@ -35,6 +50,8 @@ struct SearchView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if viewModel.results.isEmpty && !viewModel.query.isEmpty {
                 emptyState
+            } else if viewModel.results.isEmpty {
+                emptyStart
             } else {
                 List(viewModel.results) { memory in
                     MemoryCardView(memory: memory)
@@ -47,6 +64,20 @@ struct SearchView: View {
         } else {
             Color.clear
         }
+    }
+
+    private var emptyStart: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "brain")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+            Text("No memories yet")
+                .font(.headline)
+            Text("Tap + to add your first memory.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyState: some View {

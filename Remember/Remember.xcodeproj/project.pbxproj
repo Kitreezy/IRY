@@ -24,6 +24,7 @@
 		A7F30D016966D480C63C469C /* GRDBMemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A18B79C0A1639BC0CEB8E63 /* GRDBMemoryRepository.swift */; };
 		AFD5A6B604369C441A8B75AC /* MemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0290DD94571CB2AF17E61658 /* MemoryRepository.swift */; };
 		B1702AB73A360894F842A9E5 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 2D91C76C2824F9C2FE8FC300 /* GRDB */; };
+		B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202090EEB075994DE92D62E9 /* CreateMemoryView.swift */; };
 		D517E3651E2CFB6A1F6E7ADF /* RememberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DFDE6B7FB231DE247550DA /* RememberApp.swift */; };
 		D6E22580B2B283A39E329140 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F02A83D6F661CE778FED90 /* HomeView.swift */; };
 		E19C86D9B786C48AA31AC5E9 /* AppTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AA8F34252285552296C5E7 /* AppTabView.swift */; };
@@ -46,6 +47,7 @@
 		01B08555B5C169DE76A98305 /* MemoryRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRepositoryTests.swift; sourceTree = "<group>"; };
 		0290DD94571CB2AF17E61658 /* MemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRepository.swift; sourceTree = "<group>"; };
 		0BBDCCBD46D2E71381644B94 /* MemoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryItem.swift; sourceTree = "<group>"; };
+		202090EEB075994DE92D62E9 /* CreateMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMemoryView.swift; sourceTree = "<group>"; };
 		34BF31E624E4333D95C25742 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A18B79C0A1639BC0CEB8E63 /* GRDBMemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRDBMemoryRepository.swift; sourceTree = "<group>"; };
 		482D137F5EC48B95451B7F04 /* Remember.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Remember.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,6 +143,7 @@
 		547A56D9819FF1D44E5C9AD3 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				202090EEB075994DE92D62E9 /* CreateMemoryView.swift */,
 				E0072CA2541FB1518C1DA2E5 /* MemoryCardView.swift */,
 				9A59514D117251B161D645FC /* SearchView.swift */,
 				A007D2C70288EF39BE22119F /* SearchViewModel.swift */,
@@ -367,6 +370,7 @@
 				9C5701AD90B2CFFE10ACBA5E /* AppDatabase.swift in Sources */,
 				E19C86D9B786C48AA31AC5E9 /* AppTabView.swift in Sources */,
 				200CA9431075011BF827DEBF /* ContentView.swift in Sources */,
+				B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */,
 				E533622DE53E4D5A18D622CB /* EnvironmentValues+Repository.swift in Sources */,
 				A7F30D016966D480C63C469C /* GRDBMemoryRepository.swift in Sources */,
 				D6E22580B2B283A39E329140 /* HomeView.swift in Sources */,
