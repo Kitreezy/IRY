@@ -6,7 +6,7 @@ import Observation
 final class AppDatabase: Sendable {
     static let shared = AppDatabase()
 
-    let pool: DatabasePool
+    let writer: any DatabaseWriter
 
     private init() {
         let url = AppDatabase.databaseURL()
@@ -20,8 +20,9 @@ final class AppDatabase: Sendable {
         }
 
         do {
-            pool = try DatabasePool(path: url.path, configuration: config)
-            try AppDatabase.migrate(pool)
+            let pool = try DatabasePool(path: url.path, configuration: config)
+            writer = pool
+            try AppDatabase.migrate(writer)
         } catch {
             fatalError("Database initialization failed: \(error)")
         }
@@ -29,8 +30,8 @@ final class AppDatabase: Sendable {
 
     init(inMemory: Bool) throws {
         let config = Configuration()
-        pool = try DatabasePool(path: ":memory:", configuration: config)
-        try AppDatabase.migrate(pool)
+        writer = try DatabaseQueue(configuration: config)
+        try AppDatabase.migrate(writer)
     }
 
     private static func databaseURL() -> URL {
@@ -42,9 +43,9 @@ final class AppDatabase: Sendable {
         return dir.appendingPathComponent("remember.sqlite")
     }
 
-    private static func migrate(_ pool: DatabasePool) throws {
+    private static func migrate(_ writer: any DatabaseWriter) throws {
         var migrator = DatabaseMigrator()
         Migrations.register(in: &migrator)
-        try migrator.migrate(pool)
+        try migrator.migrate(writer)
     }
 }

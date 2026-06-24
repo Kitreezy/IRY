@@ -1,10 +1,8 @@
 import SwiftUI
 
-// MARK: - Environment Key
-
 private struct MemoryRepositoryKey: EnvironmentKey {
     static let defaultValue: any MemoryRepository = GRDBMemoryRepository(
-        pool: AppDatabase.shared.pool
+        writer: AppDatabase.shared.writer
     )
 }
 

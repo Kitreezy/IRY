@@ -43,7 +43,7 @@
 		69F4F2994491C55DA6538981 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6DD93B6DDD464D7FA0D30B15 /* Migrations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migrations.swift; sourceTree = "<group>"; };
 		757375F11F497D777D4CAFAD /* EnvironmentValues+Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Repository.swift"; sourceTree = "<group>"; };
-		7E5A327BF7629CB569BC140B /* RememberTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RememberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E5A327BF7629CB569BC140B /* RememberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RememberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D2C300A89A16428CE40C43 /* MemorySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemorySource.swift; sourceTree = "<group>"; };
 		A368A454373DDC15267EC027 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DA1D55171B343287B35EA453 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
@@ -236,11 +236,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1600;
-				TargetAttributes = {
-					9F2487D185280D6F8436F2B2 = {
-						DevelopmentTeam = "";
-					};
-				};
 			};
 			buildConfigurationList = E4028934E8C90C76611BD267 /* Build configuration list for PBXProject "Remember" */;
 			compatibilityVersion = "Xcode 11.0";
@@ -457,6 +452,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = LJZ97X76W9;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -490,6 +487,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = LJZ97X76W9;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

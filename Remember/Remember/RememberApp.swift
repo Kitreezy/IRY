@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct RememberApp: App {
     private let repository: any MemoryRepository = GRDBMemoryRepository(
-        pool: AppDatabase.shared.pool
+        writer: AppDatabase.shared.writer
     )
 
     var body: some Scene {

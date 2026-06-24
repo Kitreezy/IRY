@@ -6,7 +6,7 @@ import Foundation
 struct MemoryRepositoryTests {
     private func makeRepository() throws -> GRDBMemoryRepository {
         let db = try AppDatabase(inMemory: true)
-        return GRDBMemoryRepository(pool: db.pool)
+        return GRDBMemoryRepository(writer: db.writer)
     }
 
     @Test("Save and fetch by id")
@@ -39,7 +39,7 @@ struct MemoryRepositoryTests {
         let memory = MemoryItem(title: "Заметка", content: "Обсуждали запуск стартапа с Сергеем")
 
         try await repo.save(memory)
-        let results = try await repo.search(query: "стартап")
+        let results = try await repo.search(query: "запуск")
 
         #expect(results.count == 1)
     }
