@@ -32,9 +32,9 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.iry.remember
-        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: Remember/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        TARGETED_DEVICE_FAMILY: "1,2"
+        TARGETED_DEVICE_FAMILY: "1"
 
   RememberTests:
     type: bundle.unit-test
