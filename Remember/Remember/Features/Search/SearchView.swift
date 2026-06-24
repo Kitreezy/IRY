@@ -30,9 +30,9 @@ struct SearchView: View {
                     prompt: "What do you remember?"
                 )
                 .sheet(isPresented: $showCreate) {
-                    Task { await viewModel?.performSearch() }
-                } content: {
-                    CreateMemoryView()
+                    CreateMemoryView { memory in
+                        await viewModel?.saveMemory(memory)
+                    }
                 }
         }
         .task {

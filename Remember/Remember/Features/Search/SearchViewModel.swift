@@ -10,10 +10,12 @@ final class SearchViewModel {
     var error: String? = nil
 
     private let repository: any MemoryRepository
+    private let semantic: SemanticSearchService
     private var searchTask: Task<Void, Never>?
 
     init(repository: any MemoryRepository) {
         self.repository = repository
+        self.semantic = SemanticSearchService(repository: repository)
     }
 
     func onQueryChanged() {
@@ -29,10 +31,17 @@ final class SearchViewModel {
         isLoading = true
         error = nil
         do {
-            results = try await repository.search(query: query)
+            let ftsResults = try await repository.search(query: query)
+            results = await semantic.search(query: query, ftsResults: ftsResults)
         } catch {
             self.error = error.localizedDescription
         }
         isLoading = false
+    }
+
+    func saveMemory(_ memory: MemoryItem) async {
+        try? await repository.save(memory)
+        await semantic.indexMemory(memory)
+        await performSearch()
     }
 }

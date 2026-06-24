@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct CreateMemoryView: View {
-    @Environment(\.memoryRepository) private var repository
     @Environment(\.dismiss) private var dismiss
 
     @State private var title: String = ""
     @State private var content: String = ""
     @State private var isSaving: Bool = false
+
+    let onSave: (MemoryItem) async -> Void
 
     private var canSave: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty &&
@@ -50,7 +51,7 @@ struct CreateMemoryView: View {
             content: content.trimmingCharacters(in: .whitespaces),
             source: .userCreated
         )
-        try? await repository.save(memory)
+        await onSave(memory)
         dismiss()
     }
 }

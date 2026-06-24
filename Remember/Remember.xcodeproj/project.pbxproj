@@ -16,6 +16,7 @@
 		3F9093CF2FD46BB9CB4B30C1 /* MemorySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D2C300A89A16428CE40C43 /* MemorySource.swift */; };
 		4CBDB9EE75BFADAA63E247A9 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAB83E9F626E5F32E9B4F49 /* SeedData.swift */; };
 		4DEF92512972662F1A42238F /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A890B3971A48115C9E3E76 /* PeopleView.swift */; };
+		53B2A6FD99C12C0E7383A606 /* SemanticSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48B6A3569E37FAB1FE0895E /* SemanticSearchService.swift */; };
 		57B366A483DB5D84AC0939CF /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A59514D117251B161D645FC /* SearchView.swift */; };
 		69BE26AA3D31FEF7FE9E87D2 /* MemoryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0072CA2541FB1518C1DA2E5 /* MemoryCardView.swift */; };
 		6E2F115DED7960F605C5FC0F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1D55171B343287B35EA453 /* Person.swift */; };
@@ -25,6 +26,7 @@
 		A7F30D016966D480C63C469C /* GRDBMemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A18B79C0A1639BC0CEB8E63 /* GRDBMemoryRepository.swift */; };
 		AFD5A6B604369C441A8B75AC /* MemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0290DD94571CB2AF17E61658 /* MemoryRepository.swift */; };
 		B1702AB73A360894F842A9E5 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 2D91C76C2824F9C2FE8FC300 /* GRDB */; };
+		B4BB2652E2B9B7D28EF7F208 /* EmbeddingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4001DB8401B0F59F6FFB76B8 /* EmbeddingService.swift */; };
 		B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202090EEB075994DE92D62E9 /* CreateMemoryView.swift */; };
 		D517E3651E2CFB6A1F6E7ADF /* RememberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DFDE6B7FB231DE247550DA /* RememberApp.swift */; };
 		D6E22580B2B283A39E329140 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F02A83D6F661CE778FED90 /* HomeView.swift */; };
@@ -52,6 +54,7 @@
 		202090EEB075994DE92D62E9 /* CreateMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMemoryView.swift; sourceTree = "<group>"; };
 		34BF31E624E4333D95C25742 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A18B79C0A1639BC0CEB8E63 /* GRDBMemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRDBMemoryRepository.swift; sourceTree = "<group>"; };
+		4001DB8401B0F59F6FFB76B8 /* EmbeddingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddingService.swift; sourceTree = "<group>"; };
 		482D137F5EC48B95451B7F04 /* Remember.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Remember.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A890B3971A48115C9E3E76 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
 		5FFD15F8E953E90FF9369C3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +74,7 @@
 		E3F02A83D6F661CE778FED90 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		F1DB73C873226E1BE1C8CDA7 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		F2DFDE6B7FB231DE247550DA /* RememberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RememberApp.swift; sourceTree = "<group>"; };
+		F48B6A3569E37FAB1FE0895E /* SemanticSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemanticSearchService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,7 @@
 		17C295DD57A719F154B0232F /* Remember */ = {
 			isa = PBXGroup;
 			children = (
+				4D3B476E895F5148785F43ED /* AI */,
 				D85E15CA66A54952AC500E02 /* App */,
 				B36C3DE9BE2A8586201F6405 /* Domain */,
 				A9283B778669CACF12FF4B88 /* Features */,
@@ -141,6 +146,15 @@
 				0340927E7707408B081091F5 /* String+Highlight.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		4D3B476E895F5148785F43ED /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				4001DB8401B0F59F6FFB76B8 /* EmbeddingService.swift */,
+				F48B6A3569E37FAB1FE0895E /* SemanticSearchService.swift */,
+			);
+			path = AI;
 			sourceTree = "<group>";
 		};
 		547A56D9819FF1D44E5C9AD3 /* Search */ = {
@@ -374,6 +388,7 @@
 				E19C86D9B786C48AA31AC5E9 /* AppTabView.swift in Sources */,
 				200CA9431075011BF827DEBF /* ContentView.swift in Sources */,
 				B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */,
+				B4BB2652E2B9B7D28EF7F208 /* EmbeddingService.swift in Sources */,
 				E533622DE53E4D5A18D622CB /* EnvironmentValues+Repository.swift in Sources */,
 				A7F30D016966D480C63C469C /* GRDBMemoryRepository.swift in Sources */,
 				D6E22580B2B283A39E329140 /* HomeView.swift in Sources */,
@@ -388,6 +403,7 @@
 				57B366A483DB5D84AC0939CF /* SearchView.swift in Sources */,
 				221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */,
 				4CBDB9EE75BFADAA63E247A9 /* SeedData.swift in Sources */,
+				53B2A6FD99C12C0E7383A606 /* SemanticSearchService.swift in Sources */,
 				2A192CA9B797AFC934383512 /* SettingsView.swift in Sources */,
 				200B569921A8FFF7C694B5FA /* String+Highlight.swift in Sources */,
 				88DD66A3EADB3E5363D66E00 /* TimelineView.swift in Sources */,

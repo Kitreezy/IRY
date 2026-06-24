@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-// MARK: - GRDB Record
+// MARK: - Records
 
 private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
     static let databaseTableName = "memory_items"
@@ -37,6 +37,22 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
             updatedAt: updated_at,
             tags: tagList
         )
+    }
+}
+
+private struct EmbeddingRecord: Codable, FetchableRecord, PersistableRecord {
+    static let databaseTableName = "memory_embeddings"
+
+    var memory_id: String
+    var vector: Data
+
+    init(memoryId: UUID, vector: [Float]) {
+        self.memory_id = memoryId.uuidString
+        self.vector = vector.withUnsafeBytes { Data($0) }
+    }
+
+    func toVector() -> [Float] {
+        vector.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
     }
 }
 
@@ -100,6 +116,22 @@ final class GRDBMemoryRepository: MemoryRepository {
                 arguments: [pattern]
             )
             .compactMap { $0.toMemoryItem() }
+        }
+    }
+
+    func saveEmbedding(memoryId: UUID, vector: [Float]) async throws {
+        let record = EmbeddingRecord(memoryId: memoryId, vector: vector)
+        try await writer.write { db in
+            try record.save(db)
+        }
+    }
+
+    func fetchAllEmbeddings() async throws -> [(memoryId: UUID, vector: [Float])] {
+        try await writer.read { db in
+            try EmbeddingRecord.fetchAll(db).compactMap { record in
+                guard let id = UUID(uuidString: record.memory_id) else { return nil }
+                return (memoryId: id, vector: record.toVector())
+            }
         }
     }
 }

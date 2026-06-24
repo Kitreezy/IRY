@@ -21,5 +21,13 @@ enum Migrations {
                 t.column("tags")
             }
         }
+
+        migrator.registerMigration("v2_embeddings") { db in
+            try db.create(table: "memory_embeddings") { t in
+                t.primaryKey("memory_id", .text).notNull()
+                    .references("memory_items", onDelete: .cascade)
+                t.column("vector", .blob).notNull()
+            }
+        }
     }
 }
