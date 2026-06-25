@@ -2,22 +2,32 @@ import SwiftUI
 
 @main
 struct RememberApp: App {
-    private let repository: any MemoryRepository = GRDBMemoryRepository(
-        writer: AppDatabase.shared.writer
-    )
+    private let repository: any MemoryRepository
     private let semantic: SemanticSearchService
+    private let entityExtraction: EntityExtractionService
 
     init() {
         let repo = GRDBMemoryRepository(writer: AppDatabase.shared.writer)
+        self.repository = repo
         self.semantic = SemanticSearchService(repository: repo)
+
+        let extractor: any EntityExtracting
+        if #available(iOS 26.0, *) {
+            extractor = FoundationModelsExtractor()
+        } else {
+            extractor = UnavailableEntityExtractor()
+        }
+        self.entityExtraction = EntityExtractionService(extractor: extractor, repository: repo)
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.memoryRepository, repository)
+                .environment(\.entityExtractionService, entityExtraction)
                 .task { await seedIfNeeded() }
                 .task { await indexUnindexedMemories() }
+                .task { await extractEntitiesForUnprocessed() }
         }
     }
 
@@ -35,14 +45,22 @@ struct RememberApp: App {
 
     // MARK: - Background indexing
 
-    // Indexes any memory that has no embedding yet.
-    // Runs on every launch — safe to call multiple times (skips already-indexed).
     private func indexUnindexedMemories() async {
         let all = (try? await repository.fetchAll()) ?? []
         let indexed = Set((try? await repository.fetchAllEmbeddings())?.map { $0.memoryId } ?? [])
         let unindexed = all.filter { !indexed.contains($0.id) }
         for memory in unindexed {
             await semantic.indexMemory(memory)
+        }
+    }
+
+    private func extractEntitiesForUnprocessed() async {
+        guard entityExtraction.isAvailable else { return }
+        let all = (try? await repository.fetchAll()) ?? []
+        let processed = Set((try? await repository.fetchAllEntities())?.map { $0.memoryId } ?? [])
+        let unprocessed = all.filter { !processed.contains($0.id) }
+        for memory in unprocessed {
+            await entityExtraction.extractAndSave(for: memory)
         }
     }
 }

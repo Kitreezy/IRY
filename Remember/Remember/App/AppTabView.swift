@@ -8,11 +8,6 @@ struct AppTabView: View {
                     Label("Search", systemImage: "magnifyingglass")
                 }
 
-            TimelineView()
-                .tabItem {
-                    Label("Timeline", systemImage: "clock")
-                }
-
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")

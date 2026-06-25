@@ -9,7 +9,7 @@ actor EntityExtractionService {
         self.repository = repository
     }
 
-    var isAvailable: Bool { extractor.isAvailable }
+    nonisolated var isAvailable: Bool { extractor.isAvailable }
 
     func extractAndSave(for memory: MemoryItem) async {
         guard extractor.isAvailable else { return }
