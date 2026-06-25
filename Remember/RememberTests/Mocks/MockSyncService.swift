@@ -17,15 +17,21 @@ actor MockSyncService: SyncService {
 
     func push() async throws {
         pushCallCount += 1
-        if shouldFail { throw MockSyncError.forced }
         state = .syncing
+        if shouldFail {
+            state = .failed(MockSyncError.forced)
+            throw MockSyncError.forced
+        }
         state = .succeeded(at: Date())
     }
 
     func pull() async throws {
         pullCallCount += 1
-        if shouldFail { throw MockSyncError.forced }
         state = .syncing
+        if shouldFail {
+            state = .failed(MockSyncError.forced)
+            throw MockSyncError.forced
+        }
         for memory in remoteMemories {
             try await repository.save(memory)
         }
