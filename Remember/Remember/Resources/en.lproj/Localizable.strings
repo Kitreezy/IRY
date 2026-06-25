@@ -33,6 +33,12 @@
 "people.mentions.one" = "%d memory";
 "people.mentions.other" = "%d memories";
 
+// MARK: - Entity Types
+"entity.type.person" = "People";
+"entity.type.place" = "Places";
+"entity.type.topic" = "Topics";
+"entity.type.company" = "Companies";
+
 // MARK: - Settings
 "settings.title" = "Settings";
 

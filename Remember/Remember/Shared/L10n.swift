@@ -43,6 +43,13 @@ enum L10n {
         }
     }
 
+    enum EntityType {
+        static let person = String(localized: "entity.type.person")
+        static let place = String(localized: "entity.type.place")
+        static let topic = String(localized: "entity.type.topic")
+        static let company = String(localized: "entity.type.company")
+    }
+
     enum Settings {
         static let title = String(localized: "settings.title")
     }

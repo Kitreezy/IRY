@@ -38,6 +38,7 @@
 		B4BB2652E2B9B7D28EF7F208 /* EmbeddingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4001DB8401B0F59F6FFB76B8 /* EmbeddingService.swift */; };
 		B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202090EEB075994DE92D62E9 /* CreateMemoryView.swift */; };
 		BC693F7F358509D63ED48E3E /* SyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBAB97EBA4B8EAB0D098634 /* SyncServiceTests.swift */; };
+		C56F4B6ACFA0535E659621BD /* MemoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */; };
 		D517E3651E2CFB6A1F6E7ADF /* RememberApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2DFDE6B7FB231DE247550DA /* RememberApp.swift */; };
 		D6E22580B2B283A39E329140 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F02A83D6F661CE778FED90 /* HomeView.swift */; };
 		D76F09B0DCD90BB36FC7AB22 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F0CC2DA3FA9502BAA34D63 /* CloudKit.framework */; };
@@ -64,6 +65,7 @@
 
 /* Begin PBXFileReference section */
 		01B08555B5C169DE76A98305 /* MemoryRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRepositoryTests.swift; sourceTree = "<group>"; };
+		01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryDetailView.swift; sourceTree = "<group>"; };
 		0290DD94571CB2AF17E61658 /* MemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryRepository.swift; sourceTree = "<group>"; };
 		0305C5C4D52C97E95637CCC7 /* CKRecord+MemoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKRecord+MemoryItem.swift"; sourceTree = "<group>"; };
 		0340927E7707408B081091F5 /* String+Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Highlight.swift"; sourceTree = "<group>"; };
@@ -282,6 +284,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		99837A1ABCA1AF07C06D9930 /* Memory */ = {
+			isa = PBXGroup;
+			children = (
+				01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */,
+			);
+			path = Memory;
+			sourceTree = "<group>";
+		};
 		A34ABFAB7659CD2095F0FD4D /* Memory */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				AB7A5ACBC2DC6B6DF9895067 /* Home */,
+				99837A1ABCA1AF07C06D9930 /* Memory */,
 				F8EA2B744550F23E14A9C6EB /* People */,
 				547A56D9819FF1D44E5C9AD3 /* Search */,
 				E990E8E73AF04EC2D8ED073B /* Settings */,
@@ -491,6 +502,7 @@
 				D6E22580B2B283A39E329140 /* HomeView.swift in Sources */,
 				EB45316DCECE71FAF9753F56 /* L10n.swift in Sources */,
 				69BE26AA3D31FEF7FE9E87D2 /* MemoryCardView.swift in Sources */,
+				C56F4B6ACFA0535E659621BD /* MemoryDetailView.swift in Sources */,
 				81BAB0C4541EF1174F53D344 /* MemoryEntity.swift in Sources */,
 				E3A684CBA18F07E2F58622CC /* MemoryItem.swift in Sources */,
 				AFD5A6B604369C441A8B75AC /* MemoryRepository.swift in Sources */,

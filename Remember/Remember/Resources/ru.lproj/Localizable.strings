@@ -33,6 +33,12 @@
 "people.mentions.one" = "%d воспоминание";
 "people.mentions.other" = "%d воспоминаний";
 
+// MARK: - Entity Types
+"entity.type.person" = "Люди";
+"entity.type.place" = "Места";
+"entity.type.topic" = "Темы";
+"entity.type.company" = "Компании";
+
 // MARK: - Settings
 "settings.title" = "Настройки";
 
