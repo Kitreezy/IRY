@@ -29,5 +29,25 @@ enum Migrations {
                 t.column("vector", .blob).notNull()
             }
         }
+
+        migrator.registerMigration("v3_entities") { db in
+            try db.create(table: "memory_entities") { t in
+                t.primaryKey("id", .text).notNull()
+                t.column("memory_id", .text).notNull()
+                    .references("memory_items", onDelete: .cascade)
+                t.column("value", .text).notNull()
+                t.column("type", .text).notNull()
+            }
+            try db.create(
+                index: "idx_entities_memory_id",
+                on: "memory_entities",
+                columns: ["memory_id"]
+            )
+            try db.create(
+                index: "idx_entities_type",
+                on: "memory_entities",
+                columns: ["type"]
+            )
+        }
     }
 }

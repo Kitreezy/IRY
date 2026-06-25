@@ -56,6 +56,29 @@ private struct EmbeddingRecord: Codable, FetchableRecord, PersistableRecord {
     }
 }
 
+private struct EntityRecord: Codable, FetchableRecord, PersistableRecord {
+    static let databaseTableName = "memory_entities"
+
+    var id: String
+    var memory_id: String
+    var value: String
+    var type: String
+
+    init(from entity: MemoryEntity) {
+        self.id = entity.id.uuidString
+        self.memory_id = entity.memoryId.uuidString
+        self.value = entity.value
+        self.type = entity.type.rawValue
+    }
+
+    func toEntity() -> MemoryEntity? {
+        guard let id = UUID(uuidString: id),
+              let memoryId = UUID(uuidString: memory_id),
+              let type = EntityType(rawValue: type) else { return nil }
+        return MemoryEntity(id: id, memoryId: memoryId, value: value, type: type)
+    }
+}
+
 // MARK: - Repository
 
 final class GRDBMemoryRepository: MemoryRepository {
@@ -132,6 +155,41 @@ final class GRDBMemoryRepository: MemoryRepository {
                 guard let id = UUID(uuidString: record.memory_id) else { return nil }
                 return (memoryId: id, vector: record.toVector())
             }
+        }
+    }
+
+    // MARK: - Entities
+
+    func saveEntities(_ entities: [MemoryEntity]) async throws {
+        try await writer.write { db in
+            for entity in entities {
+                let record = EntityRecord(from: entity)
+                try record.save(db)
+            }
+        }
+    }
+
+    func fetchEntities(for memoryId: UUID) async throws -> [MemoryEntity] {
+        try await writer.read { db in
+            try EntityRecord
+                .filter(Column("memory_id") == memoryId.uuidString)
+                .fetchAll(db)
+                .compactMap { $0.toEntity() }
+        }
+    }
+
+    func fetchAllEntities() async throws -> [MemoryEntity] {
+        try await writer.read { db in
+            try EntityRecord.fetchAll(db).compactMap { $0.toEntity() }
+        }
+    }
+
+    func fetchEntities(ofType type: EntityType) async throws -> [MemoryEntity] {
+        try await writer.read { db in
+            try EntityRecord
+                .filter(Column("type") == type.rawValue)
+                .fetchAll(db)
+                .compactMap { $0.toEntity() }
         }
     }
 }

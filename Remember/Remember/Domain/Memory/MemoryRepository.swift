@@ -12,4 +12,10 @@ protocol MemoryRepository: Sendable {
     // Semantic
     func saveEmbedding(memoryId: UUID, vector: [Float]) async throws
     func fetchAllEmbeddings() async throws -> [(memoryId: UUID, vector: [Float])]
+
+    // Entities
+    func saveEntities(_ entities: [MemoryEntity]) async throws
+    func fetchEntities(for memoryId: UUID) async throws -> [MemoryEntity]
+    func fetchAllEntities() async throws -> [MemoryEntity]
+    func fetchEntities(ofType type: EntityType) async throws -> [MemoryEntity]
 }
