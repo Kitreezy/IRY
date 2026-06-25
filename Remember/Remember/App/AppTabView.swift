@@ -5,12 +5,12 @@ struct AppTabView: View {
         TabView {
             SearchView()
                 .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
+                    Label(L10n.Tab.search, systemImage: "magnifyingglass")
                 }
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape")
+                    Label(L10n.Tab.settings, systemImage: "gearshape")
                 }
         }
     }

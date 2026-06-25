@@ -11,7 +11,7 @@ struct PeopleView: View {
                     content(viewModel: viewModel)
                 }
             }
-            .navigationTitle("People")
+            .navigationTitle(L10n.People.title)
         }
         .task {
             let vm = PeopleViewModel(repository: repository)
@@ -39,7 +39,7 @@ struct PeopleView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(person.name)
                                 .font(.headline)
-                            Text("\(person.mentions) \(person.mentions == 1 ? "memory" : "memories")")
+                            Text(L10n.People.mentions(person.mentions))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -55,9 +55,9 @@ struct PeopleView: View {
             Image(systemName: "person.2")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
-            Text("No people yet")
+            Text(L10n.People.emptyTitle)
                 .font(.headline)
-            Text("People are discovered automatically\nfrom your memories.")
+            Text(L10n.People.emptySubtitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

@@ -35,10 +35,10 @@ struct MemoryCardView: View {
 extension MemorySource {
     var displayName: String {
         switch self {
-        case .userCreated: "Memory"
-        case .appleNotes:  "Notes"
-        case .calendar:    "Calendar"
-        case .photos:      "Photos"
+        case .userCreated: L10n.MemorySource.user
+        case .appleNotes: L10n.MemorySource.notes
+        case .calendar: L10n.MemorySource.calendar
+        case .photos: L10n.MemorySource.photos
         }
     }
 

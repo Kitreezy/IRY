@@ -18,26 +18,26 @@ struct CreateMemoryView: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Title", text: $title)
+                    TextField(L10n.CreateMemory.placeholderTitle, text: $title)
                 } header: {
-                    Text("What is it about?")
+                    Text(L10n.CreateMemory.sectionAbout)
                 }
 
                 Section {
                     TextEditor(text: $content)
                         .frame(minHeight: 160)
                 } header: {
-                    Text("What do you remember?")
+                    Text(L10n.CreateMemory.sectionContent)
                 }
             }
-            .navigationTitle("New Memory")
+            .navigationTitle(L10n.CreateMemory.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button(L10n.CreateMemory.cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { Task { await save() } }
+                    Button(L10n.CreateMemory.save) { Task { await save() } }
                         .disabled(!canSave || isSaving)
                 }
             }

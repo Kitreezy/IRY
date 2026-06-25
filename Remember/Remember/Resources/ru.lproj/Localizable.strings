@@ -1,0 +1,40 @@
+// MARK: - Tab Bar
+"tab.search" = "Поиск";
+"tab.settings" = "Настройки";
+"tab.people" = "Люди";
+"tab.timeline" = "Хронология";
+
+// MARK: - Search
+"search.title" = "Поиск";
+"search.prompt" = "Что я помню?";
+"search.empty.title" = "Воспоминаний пока нет";
+"search.empty.subtitle" = "Нажмите +, чтобы добавить первое.";
+"search.notfound.title" = "Ничего не найдено";
+"search.notfound.subtitle" = "Попробуйте другие слова.";
+
+// MARK: - Create Memory
+"memory.create.title" = "Новое воспоминание";
+"memory.create.section.about" = "О чём это?";
+"memory.create.section.content" = "Что я помню?";
+"memory.create.placeholder.title" = "Название";
+"memory.create.button.cancel" = "Отмена";
+"memory.create.button.save" = "Сохранить";
+
+// MARK: - Memory Card
+"memory.source.user" = "Воспоминание";
+"memory.source.notes" = "Заметки";
+"memory.source.calendar" = "Календарь";
+"memory.source.photos" = "Фото";
+
+// MARK: - People
+"people.title" = "Люди";
+"people.empty.title" = "Людей пока нет";
+"people.empty.subtitle" = "Люди появляются автоматически из ваших воспоминаний.";
+"people.mentions.one" = "%d воспоминание";
+"people.mentions.other" = "%d воспоминаний";
+
+// MARK: - Settings
+"settings.title" = "Настройки";
+
+// MARK: - Timeline
+"timeline.title" = "Хронология";

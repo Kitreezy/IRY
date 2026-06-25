@@ -1,0 +1,40 @@
+// MARK: - Tab Bar
+"tab.search" = "Search";
+"tab.settings" = "Settings";
+"tab.people" = "People";
+"tab.timeline" = "Timeline";
+
+// MARK: - Search
+"search.title" = "Search";
+"search.prompt" = "What do you remember?";
+"search.empty.title" = "No memories yet";
+"search.empty.subtitle" = "Tap + to add your first memory.";
+"search.notfound.title" = "Nothing found";
+"search.notfound.subtitle" = "Try different words.";
+
+// MARK: - Create Memory
+"memory.create.title" = "New Memory";
+"memory.create.section.about" = "What is it about?";
+"memory.create.section.content" = "What do you remember?";
+"memory.create.placeholder.title" = "Title";
+"memory.create.button.cancel" = "Cancel";
+"memory.create.button.save" = "Save";
+
+// MARK: - Memory Card
+"memory.source.user" = "Memory";
+"memory.source.notes" = "Notes";
+"memory.source.calendar" = "Calendar";
+"memory.source.photos" = "Photos";
+
+// MARK: - People
+"people.title" = "People";
+"people.empty.title" = "No people yet";
+"people.empty.subtitle" = "People are discovered automatically from your memories.";
+"people.mentions.one" = "%d memory";
+"people.mentions.other" = "%d memories";
+
+// MARK: - Settings
+"settings.title" = "Settings";
+
+// MARK: - Timeline
+"timeline.title" = "Timeline";

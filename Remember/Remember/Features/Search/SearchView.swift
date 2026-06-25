@@ -8,7 +8,7 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             resultsArea
-                .navigationTitle("Search")
+                .navigationTitle(L10n.Search.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
@@ -27,7 +27,7 @@ struct SearchView: View {
                             viewModel?.onQueryChanged()
                         }
                     ),
-                    prompt: "What do you remember?"
+                    prompt: L10n.Search.prompt
                 )
                 .sheet(isPresented: $showCreate) {
                     CreateMemoryView { memory in
@@ -71,9 +71,9 @@ struct SearchView: View {
             Image(systemName: "brain")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
-            Text("No memories yet")
+            Text(L10n.Search.emptyTitle)
                 .font(.headline)
-            Text("Tap + to add your first memory.")
+            Text(L10n.Search.emptySubtitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
@@ -85,9 +85,9 @@ struct SearchView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 36))
                 .foregroundStyle(.secondary)
-            Text("Nothing found")
+            Text(L10n.Search.notFoundTitle)
                 .font(.headline)
-            Text("Try different words.")
+            Text(L10n.Search.notFoundSubtitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
