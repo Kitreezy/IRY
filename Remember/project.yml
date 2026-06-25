@@ -29,6 +29,7 @@ targets:
           - "**/*.md"
     dependencies:
       - package: GRDB
+      - sdk: CloudKit.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.iry.remember
