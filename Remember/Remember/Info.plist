@@ -22,6 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Remember indexes your calendar events so you can find them through memory search.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Remember indexes your photo metadata so you can find memories by place and date.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

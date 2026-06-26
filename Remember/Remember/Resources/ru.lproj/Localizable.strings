@@ -33,6 +33,11 @@
 "people.mentions.one" = "%d воспоминание";
 "people.mentions.other" = "%d воспоминаний";
 
+// MARK: - Import
+"import.untitled.event" = "Без названия";
+"import.media.photo" = "Фото";
+"import.media.video" = "Видео";
+
 // MARK: - Memory Detail
 "memory.detail.related.title" = "Похожие воспоминания";
 
@@ -44,6 +49,10 @@
 
 // MARK: - Settings
 "settings.title" = "Настройки";
+"settings.section.sources" = "Источники";
+"settings.import.calendar" = "Импорт Календаря";
+"settings.import.photos" = "Импорт Фото";
+"settings.import.result" = "Импортировано %d воспоминаний из %@";
 
 // MARK: - Timeline
 "timeline.title" = "Хронология";

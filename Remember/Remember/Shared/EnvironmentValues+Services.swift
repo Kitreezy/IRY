@@ -19,3 +19,16 @@ extension EnvironmentValues {
         set { self[EntityExtractionServiceKey.self] = newValue }
     }
 }
+
+private struct ImportServiceKey: EnvironmentKey {
+    static let defaultValue = ImportService(
+        repository: GRDBMemoryRepository(writer: AppDatabase.shared.writer)
+    )
+}
+
+extension EnvironmentValues {
+    var importService: ImportService {
+        get { self[ImportServiceKey.self] }
+        set { self[ImportServiceKey.self] = newValue }
+    }
+}

@@ -5,11 +5,13 @@ struct RememberApp: App {
     private let repository: any MemoryRepository
     private let semantic: SemanticSearchService
     private let entityExtraction: EntityExtractionService
+    private let importService: ImportService
 
     init() {
         let repo = GRDBMemoryRepository(writer: AppDatabase.shared.writer)
         self.repository = repo
         self.semantic = SemanticSearchService(repository: repo)
+        self.importService = ImportService(repository: repo)
 
         let extractor: any EntityExtracting
         if #available(iOS 26.0, *) {
@@ -25,6 +27,7 @@ struct RememberApp: App {
             ContentView()
                 .environment(\.memoryRepository, repository)
                 .environment(\.entityExtractionService, entityExtraction)
+                .environment(\.importService, importService)
                 .task { await seedIfNeeded() }
                 .task { await indexUnindexedMemories() }
                 .task { await extractEntitiesForUnprocessed() }

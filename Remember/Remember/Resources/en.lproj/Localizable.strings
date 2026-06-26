@@ -33,6 +33,11 @@
 "people.mentions.one" = "%d memory";
 "people.mentions.other" = "%d memories";
 
+// MARK: - Import
+"import.untitled.event" = "Untitled Event";
+"import.media.photo" = "Photo";
+"import.media.video" = "Video";
+
 // MARK: - Memory Detail
 "memory.detail.related.title" = "Related Memories";
 
@@ -44,6 +49,10 @@
 
 // MARK: - Settings
 "settings.title" = "Settings";
+"settings.section.sources" = "Import Sources";
+"settings.import.calendar" = "Import Calendar";
+"settings.import.photos" = "Import Photos";
+"settings.import.result" = "Imported %d memories from %@";
 
 // MARK: - Timeline
 "timeline.title" = "Timeline";

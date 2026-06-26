@@ -43,6 +43,12 @@ enum L10n {
         }
     }
 
+    enum Import {
+        static let untitledEvent = String(localized: "import.untitled.event")
+        static let photo = String(localized: "import.media.photo")
+        static let video = String(localized: "import.media.video")
+    }
+
     enum MemoryDetail {
         static let relatedTitle = String(localized: "memory.detail.related.title")
     }
@@ -56,6 +62,12 @@ enum L10n {
 
     enum Settings {
         static let title = String(localized: "settings.title")
+        static let sectionSources = String(localized: "settings.section.sources")
+        static let importCalendar = String(localized: "settings.import.calendar")
+        static let importPhotos = String(localized: "settings.import.photos")
+        static func importResult(_ count: Int, sourceName: String) -> String {
+            String(format: NSLocalizedString("settings.import.result", comment: ""), count, sourceName)
+        }
     }
 
     enum Timeline {
