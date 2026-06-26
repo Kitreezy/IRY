@@ -11,6 +11,8 @@
 "search.empty.subtitle" = "Tap + to add your first memory.";
 "search.notfound.title" = "Nothing found";
 "search.notfound.subtitle" = "Try different words.";
+"search.answer.label" = "From your memories";
+"search.answer.loading" = "Thinking...";
 
 // MARK: - Create Memory
 "memory.create.title" = "New Memory";

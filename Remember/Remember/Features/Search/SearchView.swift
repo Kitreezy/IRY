@@ -53,15 +53,29 @@ struct SearchView: View {
             } else if viewModel.results.isEmpty {
                 emptyStart
             } else {
-                List(viewModel.results) { memory in
-                    NavigationLink {
-                        MemoryDetailView(memory: memory)
-                    } label: {
-                        MemoryCardView(memory: memory, query: viewModel.query)
+                List {
+                    if let answer = viewModel.answer {
+                        answerCard(text: answer)
+                            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                    } else if viewModel.isAnswering {
+                        answerLoadingCard
+                            .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                     }
-                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
+
+                    ForEach(viewModel.results) { memory in
+                        NavigationLink {
+                            MemoryDetailView(memory: memory)
+                        } label: {
+                            MemoryCardView(memory: memory, query: viewModel.query)
+                        }
+                        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
                 }
                 .listStyle(.plain)
             }
@@ -69,6 +83,37 @@ struct SearchView: View {
             Color.clear
         }
     }
+
+    // MARK: - Answer Card
+
+    private func answerCard(text: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(L10n.Search.answerLabel, systemImage: "sparkles")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(text)
+                .font(.body)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var answerLoadingCard: some View {
+        HStack(spacing: 10) {
+            ProgressView()
+            Text(L10n.Search.answerLoading)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.08))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    // MARK: - Empty States
 
     private var emptyStart: some View {
         VStack(spacing: 16) {

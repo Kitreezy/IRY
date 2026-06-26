@@ -11,6 +11,8 @@
 "search.empty.subtitle" = "Нажмите +, чтобы добавить первое.";
 "search.notfound.title" = "Ничего не найдено";
 "search.notfound.subtitle" = "Попробуйте другие слова.";
+"search.answer.label" = "Из твоих воспоминаний";
+"search.answer.loading" = "Думаю...";
 
 // MARK: - Create Memory
 "memory.create.title" = "Новое воспоминание";

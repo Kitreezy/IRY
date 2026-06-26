@@ -58,6 +58,7 @@
 		EB45316DCECE71FAF9753F56 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C35ABB97EFB9256CAE7061 /* L10n.swift */; };
 		F4A326A17EF67D91E39F0406 /* ImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0287166EC7386259E5AAF2 /* ImportService.swift */; };
 		F63E3BBFCF3DB7BC141D9030 /* MockSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7211DAE64BEC2A1414EA8315 /* MockSyncService.swift */; };
+		F8BEE220CD34385B325EEA51 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B3DD49629D72DAA94243BF /* AnswerService.swift */; };
 		FBB6E26A8235FC4E2A742E7F /* SourceImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105139FFFB8F9E824AF2B30C /* SourceImporter.swift */; };
 		FCA57C72BA833F0A93FABAA8 /* Migrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD93B6DDD464D7FA0D30B15 /* Migrations.swift */; };
 		FE34CD7F2F3A1791E6275447 /* EntityExtractionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABCDB7EDC0C9679F495BA6B /* EntityExtractionService.swift */; };
@@ -86,6 +87,7 @@
 		1406B40B2DC1C1B5E777F76C /* TimelineViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModelTests.swift; sourceTree = "<group>"; };
 		1A8D6333FCFC521500209662 /* RelatedMemoriesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedMemoriesService.swift; sourceTree = "<group>"; };
 		202090EEB075994DE92D62E9 /* CreateMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMemoryView.swift; sourceTree = "<group>"; };
+		23B3DD49629D72DAA94243BF /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		2B008C8A758112BF7014F662 /* RelatedMemoriesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedMemoriesTests.swift; sourceTree = "<group>"; };
 		34BF31E624E4333D95C25742 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3A18B79C0A1639BC0CEB8E63 /* GRDBMemoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRDBMemoryRepository.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 		4D3B476E895F5148785F43ED /* AI */ = {
 			isa = PBXGroup;
 			children = (
+				23B3DD49629D72DAA94243BF /* AnswerService.swift */,
 				4001DB8401B0F59F6FFB76B8 /* EmbeddingService.swift */,
 				05B963F5EFF02EB95C904905 /* EntityExtracting.swift */,
 				AABCDB7EDC0C9679F495BA6B /* EntityExtractionService.swift */,
@@ -527,6 +530,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8BEE220CD34385B325EEA51 /* AnswerService.swift in Sources */,
 				9C5701AD90B2CFFE10ACBA5E /* AppDatabase.swift in Sources */,
 				E19C86D9B786C48AA31AC5E9 /* AppTabView.swift in Sources */,
 				79CA783A753ACF46D8040310 /* CKRecord+MemoryItem.swift in Sources */,

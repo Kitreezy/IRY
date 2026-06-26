@@ -15,6 +15,8 @@ enum L10n {
         static let emptySubtitle = String(localized: "search.empty.subtitle")
         static let notFoundTitle = String(localized: "search.notfound.title")
         static let notFoundSubtitle = String(localized: "search.notfound.subtitle")
+        static let answerLabel = String(localized: "search.answer.label")
+        static let answerLoading = String(localized: "search.answer.loading")
     }
 
     enum CreateMemory {
