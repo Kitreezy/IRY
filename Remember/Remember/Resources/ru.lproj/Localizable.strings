@@ -44,3 +44,7 @@
 
 // MARK: - Timeline
 "timeline.title" = "Хронология";
+"timeline.today" = "Сегодня";
+"timeline.yesterday" = "Вчера";
+"timeline.empty.title" = "Воспоминаний пока нет";
+"timeline.empty.subtitle" = "Ваши воспоминания появятся здесь\nв хронологическом порядке.";

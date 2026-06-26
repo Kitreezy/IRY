@@ -56,5 +56,9 @@ enum L10n {
 
     enum Timeline {
         static let title = String(localized: "timeline.title")
+        static let today = String(localized: "timeline.today")
+        static let yesterday = String(localized: "timeline.yesterday")
+        static let emptyTitle = String(localized: "timeline.empty.title")
+        static let emptySubtitle = String(localized: "timeline.empty.subtitle")
     }
 }

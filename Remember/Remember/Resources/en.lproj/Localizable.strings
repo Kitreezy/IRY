@@ -44,3 +44,7 @@
 
 // MARK: - Timeline
 "timeline.title" = "Timeline";
+"timeline.today" = "Today";
+"timeline.yesterday" = "Yesterday";
+"timeline.empty.title" = "No memories yet";
+"timeline.empty.subtitle" = "Your memories will appear here\nin chronological order.";
