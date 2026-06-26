@@ -43,13 +43,16 @@ final class PhotosImporter: SourceImporter, @unchecked Sendable {
     private func fetchNamedAssets() -> [PHAsset] {
         let options = PHFetchOptions()
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        options.fetchLimit = 500
-        // Only assets with location or favorite — more likely to be memorable
-        options.predicate = NSPredicate(format: "isFavorite == YES OR location != nil")
+        options.fetchLimit = 1000
         let result = PHAsset.fetchAssets(with: options)
         var assets: [PHAsset] = []
-        result.enumerateObjects { asset, _, _ in assets.append(asset) }
-        return assets
+        result.enumerateObjects { asset, _, _ in
+            // In-memory filter: only assets with location or marked as favorite
+            if asset.location != nil || asset.isFavorite {
+                assets.append(asset)
+            }
+        }
+        return Array(assets.prefix(500))
     }
 
     private func buildContent(from asset: PHAsset) -> (displayTitle: String, body: String) {
