@@ -192,4 +192,33 @@ final class GRDBMemoryRepository: MemoryRepository {
                 .compactMap { $0.toEntity() }
         }
     }
+
+    func fetchMemories(withEntityValues values: [String]) async throws -> [MemoryItem] {
+        guard !values.isEmpty else { return [] }
+        let placeholders = values.map { _ in "?" }.joined(separator: ", ")
+        let args = StatementArguments(values)
+        return try await writer.read { db in
+            try MemoryRecord.fetchAll(
+                db,
+                sql: """
+                    SELECT DISTINCT memory_items.*
+                    FROM memory_items
+                    JOIN memory_entities ON memory_items.id = memory_entities.memory_id
+                    WHERE memory_entities.value IN (\(placeholders))
+                    ORDER BY memory_items.created_at DESC
+                    """,
+                arguments: args
+            )
+            .compactMap { $0.toMemoryItem() }
+        }
+    }
+
+    func fetchEmbedding(for memoryId: UUID) async throws -> [Float]? {
+        try await writer.read { db in
+            try EmbeddingRecord
+                .filter(Column("memory_id") == memoryId.uuidString)
+                .fetchOne(db)?
+                .toVector()
+        }
+    }
 }

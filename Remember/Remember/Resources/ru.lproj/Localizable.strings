@@ -33,6 +33,9 @@
 "people.mentions.one" = "%d воспоминание";
 "people.mentions.other" = "%d воспоминаний";
 
+// MARK: - Memory Detail
+"memory.detail.related.title" = "Похожие воспоминания";
+
 // MARK: - Entity Types
 "entity.type.person" = "Люди";
 "entity.type.place" = "Места";

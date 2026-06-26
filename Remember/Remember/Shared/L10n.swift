@@ -43,6 +43,10 @@ enum L10n {
         }
     }
 
+    enum MemoryDetail {
+        static let relatedTitle = String(localized: "memory.detail.related.title")
+    }
+
     enum EntityType {
         static let person = String(localized: "entity.type.person")
         static let place = String(localized: "entity.type.place")

@@ -18,4 +18,8 @@ protocol MemoryRepository: Sendable {
     func fetchEntities(for memoryId: UUID) async throws -> [MemoryEntity]
     func fetchAllEntities() async throws -> [MemoryEntity]
     func fetchEntities(ofType type: EntityType) async throws -> [MemoryEntity]
+
+    // Related
+    func fetchMemories(withEntityValues values: [String]) async throws -> [MemoryItem]
+    func fetchEmbedding(for memoryId: UUID) async throws -> [Float]?
 }

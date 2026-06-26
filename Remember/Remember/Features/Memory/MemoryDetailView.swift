@@ -4,6 +4,11 @@ struct MemoryDetailView: View {
     let memory: MemoryItem
     @Environment(\.memoryRepository) private var repository
     @State private var entities: [MemoryEntity] = []
+    @State private var related: [MemoryItem] = []
+
+    private var relatedService: RelatedMemoriesService {
+        RelatedMemoriesService(repository: repository)
+    }
 
     var body: some View {
         ScrollView {
@@ -13,12 +18,15 @@ struct MemoryDetailView: View {
                     entitiesSection
                 }
                 contentSection
+                if !related.isEmpty {
+                    relatedSection
+                }
             }
             .padding()
         }
         .navigationTitle(memory.title)
         .navigationBarTitleDisplayMode(.large)
-        .task { await loadEntities() }
+        .task { await load() }
     }
 
     // MARK: - Sections
@@ -52,10 +60,30 @@ struct MemoryDetailView: View {
         }
     }
 
+    private var relatedSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(L10n.MemoryDetail.relatedTitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+
+            ForEach(related) { item in
+                NavigationLink {
+                    MemoryDetailView(memory: item)
+                } label: {
+                    MemoryCardView(memory: item)
+                }
+            }
+        }
+    }
+
     // MARK: - Data
 
-    private func loadEntities() async {
-        entities = (try? await repository.fetchEntities(for: memory.id)) ?? []
+    private func load() async {
+        async let entitiesResult = repository.fetchEntities(for: memory.id)
+        async let relatedResult = relatedService.findRelated(to: memory)
+        entities = (try? await entitiesResult) ?? []
+        related = await relatedResult
     }
 }
 
