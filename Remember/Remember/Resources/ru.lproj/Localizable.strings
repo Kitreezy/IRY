@@ -33,6 +33,19 @@
 "people.mentions.one" = "%d воспоминание";
 "people.mentions.other" = "%d воспоминаний";
 
+// MARK: - Capture Memory
+"capture.what.title" = "Что произошло?";
+"capture.what.subtitle" = "Опиши момент, идею или что-то важное.";
+"capture.why.title" = "Почему это важно?";
+"capture.why.subtitle" = "Именно это превращает информацию в воспоминание.";
+"capture.why.placeholder" = "Потому что...";
+"capture.title.placeholder" = "Дай название";
+"capture.content.placeholder" = "Что хочешь запомнить?";
+"capture.button.next" = "Далее";
+"capture.button.save" = "Сохранить воспоминание";
+"capture.button.cancel" = "Назад";
+"memory.detail.why.title" = "Почему это важно";
+
 // MARK: - Import
 "import.untitled.event" = "Без названия";
 "import.media.photo" = "Фото";

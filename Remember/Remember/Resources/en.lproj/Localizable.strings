@@ -33,6 +33,19 @@
 "people.mentions.one" = "%d memory";
 "people.mentions.other" = "%d memories";
 
+// MARK: - Capture Memory
+"capture.what.title" = "What happened?";
+"capture.what.subtitle" = "Describe the moment, idea, or thing you want to remember.";
+"capture.why.title" = "Why does this matter?";
+"capture.why.subtitle" = "This is what turns information into a memory.";
+"capture.why.placeholder" = "Because...";
+"capture.title.placeholder" = "Give it a name";
+"capture.content.placeholder" = "What do you want to remember?";
+"capture.button.next" = "Next";
+"capture.button.save" = "Save Memory";
+"capture.button.cancel" = "Cancel";
+"memory.detail.why.title" = "Why it matters";
+
 // MARK: - Import
 "import.untitled.event" = "Untitled Event";
 "import.media.photo" = "Photo";

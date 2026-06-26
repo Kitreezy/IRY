@@ -14,6 +14,9 @@ struct MemoryDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 headerSection
+                if !memory.why.isEmpty {
+                    whySection
+                }
                 if !entities.isEmpty {
                     entitiesSection
                 }
@@ -30,6 +33,23 @@ struct MemoryDetailView: View {
     }
 
     // MARK: - Sections
+
+    private var whySection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L10n.MemoryDetail.whyTitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+            Text(memory.why)
+                .font(.body)
+                .italic()
+                .foregroundStyle(.primary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.07))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
 
     private var headerSection: some View {
         HStack {

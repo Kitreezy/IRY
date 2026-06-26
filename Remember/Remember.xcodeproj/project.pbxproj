@@ -54,6 +54,7 @@
 		E3A684CBA18F07E2F58622CC /* MemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDCCBD46D2E71381644B94 /* MemoryItem.swift */; };
 		E533622DE53E4D5A18D622CB /* EnvironmentValues+Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757375F11F497D777D4CAFAD /* EnvironmentValues+Repository.swift */; };
 		E563BBDF12877B4DA77EE738 /* EntityExtracting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B963F5EFF02EB95C904905 /* EntityExtracting.swift */; };
+		E6BA2D5224A35D7CC09270F3 /* CaptureMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752F9AE8DDBC66D432B0D083 /* CaptureMemoryView.swift */; };
 		EB45316DCECE71FAF9753F56 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C35ABB97EFB9256CAE7061 /* L10n.swift */; };
 		F4A326A17EF67D91E39F0406 /* ImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0287166EC7386259E5AAF2 /* ImportService.swift */; };
 		F63E3BBFCF3DB7BC141D9030 /* MockSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7211DAE64BEC2A1414EA8315 /* MockSyncService.swift */; };
@@ -102,6 +103,7 @@
 		6DD93B6DDD464D7FA0D30B15 /* Migrations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migrations.swift; sourceTree = "<group>"; };
 		70F0CC2DA3FA9502BAA34D63 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		7211DAE64BEC2A1414EA8315 /* MockSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSyncService.swift; sourceTree = "<group>"; };
+		752F9AE8DDBC66D432B0D083 /* CaptureMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureMemoryView.swift; sourceTree = "<group>"; };
 		757375F11F497D777D4CAFAD /* EnvironmentValues+Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Repository.swift"; sourceTree = "<group>"; };
 		7E5A327BF7629CB569BC140B /* RememberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RememberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D2C300A89A16428CE40C43 /* MemorySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemorySource.swift; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 		99837A1ABCA1AF07C06D9930 /* Memory */ = {
 			isa = PBXGroup;
 			children = (
+				752F9AE8DDBC66D432B0D083 /* CaptureMemoryView.swift */,
 				01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */,
 			);
 			path = Memory;
@@ -528,6 +531,7 @@
 				E19C86D9B786C48AA31AC5E9 /* AppTabView.swift in Sources */,
 				79CA783A753ACF46D8040310 /* CKRecord+MemoryItem.swift in Sources */,
 				42E3C5EFFFA37A8301406B5C /* CalendarImporter.swift in Sources */,
+				E6BA2D5224A35D7CC09270F3 /* CaptureMemoryView.swift in Sources */,
 				6BE6BF9167C24A86A21C79BC /* CloudKitSyncService.swift in Sources */,
 				200CA9431075011BF827DEBF /* ContentView.swift in Sources */,
 				B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */,

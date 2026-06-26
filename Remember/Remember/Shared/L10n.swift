@@ -49,7 +49,21 @@ enum L10n {
         static let video = String(localized: "import.media.video")
     }
 
+    enum Capture {
+        static let whatTitle = String(localized: "capture.what.title")
+        static let whatSubtitle = String(localized: "capture.what.subtitle")
+        static let whyTitle = String(localized: "capture.why.title")
+        static let whySubtitle = String(localized: "capture.why.subtitle")
+        static let whyPlaceholder = String(localized: "capture.why.placeholder")
+        static let titlePlaceholder = String(localized: "capture.title.placeholder")
+        static let contentPlaceholder = String(localized: "capture.content.placeholder")
+        static let next = String(localized: "capture.button.next")
+        static let save = String(localized: "capture.button.save")
+        static let cancel = String(localized: "capture.button.cancel")
+    }
+
     enum MemoryDetail {
+        static let whyTitle = String(localized: "memory.detail.why.title")
         static let relatedTitle = String(localized: "memory.detail.related.title")
     }
 

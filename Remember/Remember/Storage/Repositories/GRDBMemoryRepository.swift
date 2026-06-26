@@ -9,6 +9,8 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
     var id: String
     var title: String
     var content: String
+    var why: String
+    var summary: String
     var source: String
     var created_at: Date
     var updated_at: Date
@@ -18,6 +20,8 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
         self.id = item.id.uuidString
         self.title = item.title
         self.content = item.content
+        self.why = item.why
+        self.summary = item.summary
         self.source = item.source.rawValue
         self.created_at = item.createdAt
         self.updated_at = item.updatedAt
@@ -32,6 +36,8 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
             id: uuid,
             title: title,
             content: content,
+            why: why,
+            summary: summary,
             source: source,
             createdAt: created_at,
             updatedAt: updated_at,

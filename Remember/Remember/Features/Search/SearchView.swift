@@ -30,7 +30,7 @@ struct SearchView: View {
                     prompt: L10n.Search.prompt
                 )
                 .sheet(isPresented: $showCreate) {
-                    CreateMemoryView { memory in
+                    CaptureMemoryView { memory in
                         await viewModel?.saveMemory(memory)
                     }
                 }
