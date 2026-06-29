@@ -13,9 +13,8 @@ struct MemorySidebarView: View {
         }
         .frame(width: min(UIScreen.main.bounds.width * 0.82, 360))
         .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 0))
         .shadow(color: .black.opacity(0.12), radius: 16, x: 4, y: 0)
-        .ignoresSafeArea(edges: .vertical)
+        .ignoresSafeArea(edges: .bottom)
     }
 
     // MARK: - Header
@@ -38,16 +37,8 @@ struct MemorySidebarView: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, safeAreaTop + 16)
+        .padding(.top, 20)
         .padding(.bottom, 12)
-    }
-
-    private var safeAreaTop: CGFloat {
-        (UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.windows
-            .first { $0.isKeyWindow }?
-            .safeAreaInsets.top) ?? 0
     }
 
     // MARK: - List

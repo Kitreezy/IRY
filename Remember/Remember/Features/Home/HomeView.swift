@@ -4,6 +4,7 @@ struct HomeView: View {
     @Environment(\.memoryRepository) private var repository
     @State private var viewModel: HomeViewModel?
     @State private var navigationPath = NavigationPath()
+    @State private var isSearchActive = false
     @State private var showSidebar = false
     @State private var showSettings = false
     @State private var showVoice = false
@@ -11,16 +12,20 @@ struct HomeView: View {
     @FocusState private var searchFocused: Bool
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            ZStack(alignment: .leading) {
-                screenContent
-                sidebarOverlay
+        ZStack(alignment: .leading) {
+            NavigationStack(path: $navigationPath) {
+                ZStack {
+                    Color.clear
+                    screenContent
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { navigationBar }
+                .navigationDestination(for: MemoryItem.self) { memory in
+                    MemoryDetailView(memory: memory)
+                }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar { navigationBar }
-            .navigationDestination(for: MemoryItem.self) { memory in
-                MemoryDetailView(memory: memory)
-            }
+
+            sidebarOverlay
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
@@ -68,54 +73,42 @@ struct HomeView: View {
     }
 
     // MARK: - Screen Content
+    // Single layout — TextField never leaves the tree so focus is stable.
 
     @ViewBuilder
     private var screenContent: some View {
         if let vm = viewModel {
-            Group {
-                if vm.isQueryActive || searchFocused {
-                    activeSearchLayout(vm)
-                } else {
-                    idleLayout(vm)
+            VStack(spacing: 0) {
+                if !isSearchActive {
+                    Spacer()
+                    countView(count: vm.memoriesCount)
+                        .padding(.bottom, 20)
                 }
-            }
-            .animation(.easeInOut(duration: 0.25), value: vm.isQueryActive)
-            .animation(.easeInOut(duration: 0.2), value: searchFocused)
-        }
-    }
 
-    // MARK: - Idle Layout (centered)
-
-    private func idleLayout(_ vm: HomeViewModel) -> some View {
-        // Spacer–content–Spacer centers count+search on the full height.
-        // Capture is overlaid separately so it doesn't shift the center.
-        VStack(spacing: 0) {
-            Spacer()
-            VStack(spacing: 20) {
-                countView(count: vm.memoriesCount)
                 searchBarView(vm)
                     .padding(.horizontal, 24)
+                    .padding(.vertical, isSearchActive ? 12 : 0)
+
+                if isSearchActive {
+                    Divider()
+                    searchResultsSection(vm)
+                } else {
+                    Spacer()
+                }
             }
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(alignment: .bottom) {
-            captureSection
-                .padding(.bottom, 44)
-        }
-    }
-
-    // MARK: - Active Search Layout
-
-    private func activeSearchLayout(_ vm: HomeViewModel) -> some View {
-        VStack(spacing: 0) {
-            searchBarView(vm)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
-
-            Divider()
-
-            searchResultsSection(vm)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .bottom) {
+                if !isSearchActive {
+                    captureSection.padding(.bottom, 44)
+                }
+            }
+            .animation(.easeInOut(duration: 0.25), value: isSearchActive)
+            .onChange(of: searchFocused) { _, focused in
+                if focused { isSearchActive = true }
+            }
+            .onChange(of: vm.isQueryActive) { _, active in
+                if !active && !searchFocused { isSearchActive = false }
+            }
         }
     }
 
@@ -126,7 +119,6 @@ struct HomeView: View {
             Text("\(count)")
                 .font(.system(size: 52, weight: .bold, design: .rounded))
                 .foregroundStyle(.primary)
-                .contentTransition(.numericText())
 
             Text(L10n.Home.memoriesLabel)
                 .font(.subheadline)
@@ -164,6 +156,9 @@ struct HomeView: View {
                     vm.query = ""
                     vm.onQueryChanged()
                     searchFocused = false
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        isSearchActive = false
+                    }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(.secondary)
@@ -307,6 +302,7 @@ struct HomeView: View {
                     withAnimation(.easeInOut(duration: 0.25)) { showSidebar = false }
                 }
                 .transition(.opacity)
+                .zIndex(10)
 
             MemorySidebarView(
                 isShowing: $showSidebar,
@@ -315,6 +311,7 @@ struct HomeView: View {
                 navigationPath.append(memory)
             }
             .transition(.move(edge: .leading))
+            .zIndex(11)
         }
     }
 }

@@ -156,10 +156,7 @@ struct SettingsView: View {
 
     private func resetAllData() async {
         isResetting = true
-        let all = (try? await repository.fetchAll()) ?? []
-        for memory in all {
-            try? await repository.delete(id: memory.id)
-        }
+        try? await repository.deleteAll()
         isResetting = false
         lastResult = nil
     }

@@ -5,6 +5,7 @@ protocol MemoryRepository: Sendable {
     func fetch(id: UUID) async throws -> MemoryItem?
     func fetchAll() async throws -> [MemoryItem]
     func delete(id: UUID) async throws
+    func deleteAll() async throws
 
     // FTS5
     func search(query: String) async throws -> [MemoryItem]

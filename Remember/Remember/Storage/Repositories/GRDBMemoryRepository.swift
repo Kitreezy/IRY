@@ -128,10 +128,9 @@ final class GRDBMemoryRepository: MemoryRepository {
     }
 
     func search(query: String) async throws -> [MemoryItem] {
-        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return try await fetchAll()
-        }
-        let pattern = FTS5Pattern(matchingAllTokensIn: query)
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return try await fetchAll() }
+        guard let pattern = FTS5Pattern(matchingAllTokensIn: trimmed) else { return [] }
         return try await writer.read { db in
             try MemoryRecord.fetchAll(
                 db,
@@ -145,6 +144,14 @@ final class GRDBMemoryRepository: MemoryRepository {
                 arguments: [pattern]
             )
             .compactMap { $0.toMemoryItem() }
+        }
+    }
+
+    func deleteAll() async throws {
+        try await writer.write { db in
+            try db.execute(sql: "DELETE FROM memory_entities")
+            try db.execute(sql: "DELETE FROM memory_embeddings")
+            try db.execute(sql: "DELETE FROM memory_items")
         }
     }
 
