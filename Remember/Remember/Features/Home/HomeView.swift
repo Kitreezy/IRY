@@ -15,7 +15,6 @@ struct HomeView: View {
         ZStack(alignment: .leading) {
             NavigationStack(path: $navigationPath) {
                 ZStack {
-                    Color.clear
                     screenContent
                 }
                 .navigationBarTitleDisplayMode(.inline)
@@ -75,6 +74,7 @@ struct HomeView: View {
     // MARK: - Screen Content
     // Single layout — TextField never leaves the tree so focus is stable.
 
+    // isSearchActive now means "query has text" — focus alone doesn't switch layout
     @ViewBuilder
     private var screenContent: some View {
         if let vm = viewModel {
@@ -83,11 +83,13 @@ struct HomeView: View {
                     Spacer()
                     countView(count: vm.memoriesCount)
                         .padding(.bottom, 20)
+                        .offset(y: -50)
                 }
 
                 searchBarView(vm)
                     .padding(.horizontal, 24)
                     .padding(.vertical, isSearchActive ? 12 : 0)
+                    .offset(y: isSearchActive ? 0 : -50)
 
                 if isSearchActive {
                     Divider()
@@ -103,11 +105,8 @@ struct HomeView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.25), value: isSearchActive)
-            .onChange(of: searchFocused) { _, focused in
-                if focused { isSearchActive = true }
-            }
             .onChange(of: vm.isQueryActive) { _, active in
-                if !active && !searchFocused { isSearchActive = false }
+                isSearchActive = active
             }
         }
     }
@@ -156,9 +155,6 @@ struct HomeView: View {
                     vm.query = ""
                     vm.onQueryChanged()
                     searchFocused = false
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        isSearchActive = false
-                    }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(.secondary)
