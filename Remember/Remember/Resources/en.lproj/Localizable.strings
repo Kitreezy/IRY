@@ -107,3 +107,4 @@
 "timeline.yesterday" = "Yesterday";
 "timeline.empty.title" = "No memories yet";
 "timeline.empty.subtitle" = "Your memories will appear here\nin chronological order.";
+"voice.ai.suggesting" = "AI is thinking...";

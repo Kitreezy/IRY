@@ -43,7 +43,7 @@ struct SearchView: View {
                     }
                 }
                 .sheet(isPresented: $showVoice) {
-                    VoiceCaptureView { memory in
+                    VoiceSheetWrapper { memory in
                         await viewModel?.saveMemory(memory)
                     }
                 }
@@ -154,5 +154,17 @@ struct SearchView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct VoiceSheetWrapper: View {
+    let onSave: (MemoryItem) async -> Void
+    @State private var detent: PresentationDetent = .medium
+
+    var body: some View {
+        VoiceCaptureView(onSave: onSave, selectedDetent: $detent)
+            .presentationDetents([.medium, .large], selection: $detent)
+            .presentationDragIndicator(.visible)
+            .onDisappear { detent = .medium }
     }
 }

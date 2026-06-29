@@ -9,6 +9,7 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var showVoice = false
     @State private var showText = false
+    @State private var voiceSheetDetent: PresentationDetent = .medium
     @FocusState private var searchFocused: Bool
 
     var body: some View {
@@ -29,11 +30,11 @@ struct HomeView: View {
         .sheet(isPresented: $showSettings) {
             SettingsView()
         }
-        .sheet(isPresented: $showVoice) {
-            VoiceCaptureView { memory in
+        .sheet(isPresented: $showVoice, onDismiss: { voiceSheetDetent = .medium }) {
+            VoiceCaptureView(onSave: { memory in
                 await viewModel?.saveMemory(memory)
-            }
-            .presentationDetents([.medium, .large])
+            }, selectedDetent: $voiceSheetDetent)
+            .presentationDetents([.medium, .large], selection: $voiceSheetDetent)
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showText) {

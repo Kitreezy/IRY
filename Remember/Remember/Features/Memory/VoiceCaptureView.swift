@@ -4,6 +4,7 @@ struct VoiceCaptureView: View {
     @Environment(\.dismiss) private var dismiss
 
     let onSave: (MemoryItem) async -> Void
+    @Binding var selectedDetent: PresentationDetent
 
     private enum CaptureState {
         case idle
@@ -16,15 +17,11 @@ struct VoiceCaptureView: View {
     @State private var state: CaptureState = .idle
     @State private var why: String = ""
     @State private var isSaving = false
+    @State private var isSuggestingWhy = false
     @State private var waveformLevels: [Float] = Array(repeating: 0.3, count: 20)
 
     private let recorder = VoiceRecorderService()
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-
-    private var canSave: Bool {
-        if case .captured = state { return !why.trimmingCharacters(in: .whitespaces).isEmpty }
-        return false
-    }
 
     var body: some View {
         NavigationStack {
@@ -105,16 +102,8 @@ struct VoiceCaptureView: View {
     }
 
     private func capturedView(transcript: String) -> some View {
-        VStack(alignment: .leading, spacing: 24) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(L10n.Capture.whyTitle)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Text(L10n.Capture.whySubtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
+        VStack(alignment: .leading, spacing: 20) {
+            // Transcript
             VStack(alignment: .leading, spacing: 6) {
                 Text(L10n.Voice.transcriptLabel)
                     .font(.caption)
@@ -127,16 +116,42 @@ struct VoiceCaptureView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
 
-            ZStack(alignment: .topLeading) {
-                if why.isEmpty {
-                    Text(L10n.Capture.whyPlaceholder)
-                        .foregroundStyle(.tertiary)
-                        .padding(8)
+            // Why field
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text(L10n.Capture.whyTitle)
+                        .font(.headline)
+                    Spacer()
+                    if isSuggestingWhy {
+                        HStack(spacing: 6) {
+                            ProgressView().scaleEffect(0.7)
+                            Text(L10n.Voice.aiSuggesting)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
-                TextEditor(text: $why)
-                    .frame(minHeight: 120)
+
+                if isSuggestingWhy {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(.systemGray6))
+                        .frame(minHeight: 100)
+                        .overlay(
+                            ProgressView()
+                        )
+                } else {
+                    ZStack(alignment: .topLeading) {
+                        if why.isEmpty {
+                            Text(L10n.Capture.whyPlaceholder)
+                                .foregroundStyle(.tertiary)
+                                .padding(8)
+                        }
+                        TextEditor(text: $why)
+                            .frame(minHeight: 100)
+                    }
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(.systemGray4)))
+                }
             }
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(.systemGray4)))
 
             Spacer()
 
@@ -151,7 +166,7 @@ struct VoiceCaptureView: View {
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
-            .disabled(!canSave || isSaving)
+            .disabled(isSaving || isSuggestingWhy)
         }
     }
 
@@ -235,16 +250,33 @@ struct VoiceCaptureView: View {
             if transcript.trimmingCharacters(in: .whitespaces).isEmpty {
                 state = .error(L10n.Voice.emptyTranscript)
             } else {
+                selectedDetent = .large
                 state = .captured(transcript)
+                await suggestWhy(for: transcript)
             }
         } catch {
             state = .error(error.localizedDescription)
         }
     }
 
+    private func suggestWhy(for transcript: String) async {
+        let provider = LLMProviderService.shared.textCompletion
+        guard provider.isAvailable else { return }
+        isSuggestingWhy = true
+        let prompt = """
+        A user just recorded this memory: "\(transcript)"
+        Suggest in ONE short sentence (max 15 words) why this moment might matter to them.
+        Reply in the same language as the memory text.
+        Be personal and specific. Output only the sentence, no quotes, no explanation.
+        """
+        if let suggestion = try? await provider.complete(prompt: prompt) {
+            why = suggestion.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        isSuggestingWhy = false
+    }
+
     private func updateWaveform() async {
         let power = await recorder.currentPower()
-        // Convert dB (-60..0) to normalized 0..1
         let normalized = Float(max(0, min(1, (power + 60) / 60)))
         var levels = waveformLevels
         levels.removeFirst()

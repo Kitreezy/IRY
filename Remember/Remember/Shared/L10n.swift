@@ -118,6 +118,7 @@ enum L10n {
         static let transcriptLabel = String(localized: "voice.transcript.label")
         static let tryAgain = String(localized: "voice.try.again")
         static let emptyTranscript = String(localized: "voice.empty.transcript")
+        static let aiSuggesting = String(localized: "voice.ai.suggesting")
     }
 
     enum Timeline {
