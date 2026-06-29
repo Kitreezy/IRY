@@ -68,6 +68,15 @@
 "settings.import.calendar" = "Import Calendar";
 "settings.import.photos" = "Import Photos";
 "settings.import.result" = "Imported %d memories from %@";
+"settings.section.ai" = "AI Provider";
+"settings.ai.apple" = "Apple (on-device)";
+"settings.ai.openai" = "OpenAI";
+"settings.ai.apikey.title" = "OpenAI API Key";
+"settings.ai.apikey.placeholder" = "sk-...";
+"settings.ai.apikey.save" = "Save";
+"settings.ai.apikey.saved" = "Saved";
+"settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone.";
+"settings.ai.privacy.openai" = "Text is sent to OpenAI. Better quality, especially for Russian.";
 
 // MARK: - Timeline
 "timeline.title" = "Timeline";

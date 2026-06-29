@@ -68,6 +68,15 @@
 "settings.import.calendar" = "Импорт Календаря";
 "settings.import.photos" = "Импорт Фото";
 "settings.import.result" = "Импортировано %d воспоминаний из %@";
+"settings.section.ai" = "AI Провайдер";
+"settings.ai.apple" = "Apple (на устройстве)";
+"settings.ai.openai" = "OpenAI";
+"settings.ai.apikey.title" = "OpenAI API ключ";
+"settings.ai.apikey.placeholder" = "sk-...";
+"settings.ai.apikey.save" = "Сохранить";
+"settings.ai.apikey.saved" = "Сохранено";
+"settings.ai.privacy.apple" = "Весь AI работает на устройстве. Ничего не покидает телефон.";
+"settings.ai.privacy.openai" = "Текст отправляется в OpenAI. Лучше качество, особенно для русского.";
 
 // MARK: - Timeline
 "timeline.title" = "Хронология";

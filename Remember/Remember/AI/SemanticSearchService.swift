@@ -10,12 +10,19 @@ actor SemanticSearchService {
 
     // Generate and store embedding when a memory is saved
     func indexMemory(_ memory: MemoryItem) async {
-        // Include `why` in the embedding — it's the most semantically rich field
         let text = [memory.title, memory.content, memory.why]
             .filter { !$0.isEmpty }
             .joined(separator: " ")
         guard let vector = await embedding.vector(for: text) else { return }
         try? await repository.saveEmbedding(memoryId: memory.id, vector: vector)
+    }
+
+    /// Re-index all memories — needed when switching embedding providers
+    /// (different dimensions are incompatible).
+    func reindexAll(memories: [MemoryItem]) async {
+        for memory in memories {
+            await indexMemory(memory)
+        }
     }
 
     // Hybrid search: FTS5 union + semantic reranking

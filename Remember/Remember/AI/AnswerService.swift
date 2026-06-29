@@ -1,5 +1,4 @@
 import Foundation
-import FoundationModels
 
 // MARK: - Protocol
 
@@ -8,11 +7,18 @@ protocol AnswerProviding: Sendable {
     func answer(question: String, memories: [MemoryItem]) async -> String?
 }
 
-// MARK: - Foundation Models implementation (iOS 26+)
+// MARK: - Implementation
 
-@available(iOS 26.0, *)
-actor FoundationModelsAnswerService: AnswerProviding {
-    nonisolated let isAvailable: Bool = true
+actor MemoryAnswerService: AnswerProviding {
+    private let providerService: LLMProviderService
+
+    init(providerService: LLMProviderService = .shared) {
+        self.providerService = providerService
+    }
+
+    nonisolated var isAvailable: Bool {
+        providerService.textCompletion.isAvailable
+    }
 
     func answer(question: String, memories: [MemoryItem]) async -> String? {
         guard !memories.isEmpty else { return nil }
@@ -34,30 +40,21 @@ actor FoundationModelsAnswerService: AnswerProviding {
         \(context)
         """
 
-        do {
-            let session = LanguageModelSession()
-            let response = try await session.respond(to: prompt)
-            return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
-        } catch {
-            return nil
-        }
+        return try? await providerService.textCompletion.complete(prompt: prompt)
     }
 }
 
-// MARK: - Fallback (iOS < 26)
+// MARK: - Fallback
 
 struct UnavailableAnswerService: AnswerProviding {
-    let isAvailable: Bool = false
+    let isAvailable = false
     func answer(question: String, memories: [MemoryItem]) async -> String? { nil }
 }
 
 // MARK: - Factory
 
 enum AnswerServiceFactory {
-    static func make() -> any AnswerProviding {
-        if #available(iOS 26.0, *) {
-            return FoundationModelsAnswerService()
-        }
-        return UnavailableAnswerService()
+    static func make(providerService: LLMProviderService = .shared) -> any AnswerProviding {
+        MemoryAnswerService(providerService: providerService)
     }
 }

@@ -81,6 +81,15 @@ enum L10n {
         static let sectionSources = String(localized: "settings.section.sources")
         static let importCalendar = String(localized: "settings.import.calendar")
         static let importPhotos = String(localized: "settings.import.photos")
+        static let sectionAI = String(localized: "settings.section.ai")
+        static let aiApple = String(localized: "settings.ai.apple")
+        static let aiOpenAI = String(localized: "settings.ai.openai")
+        static let aiKeyTitle = String(localized: "settings.ai.apikey.title")
+        static let aiKeyPlaceholder = String(localized: "settings.ai.apikey.placeholder")
+        static let aiKeySave = String(localized: "settings.ai.apikey.save")
+        static let aiKeySaved = String(localized: "settings.ai.apikey.saved")
+        static let aiPrivacyApple = String(localized: "settings.ai.privacy.apple")
+        static let aiPrivacyOpenAI = String(localized: "settings.ai.privacy.openai")
         static func importResult(_ count: Int, sourceName: String) -> String {
             String(format: NSLocalizedString("settings.import.result", comment: ""), count, sourceName)
         }
