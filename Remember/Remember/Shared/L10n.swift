@@ -95,6 +95,17 @@ enum L10n {
         }
     }
 
+    enum Voice {
+        static let title = String(localized: "voice.title")
+        static let subtitle = String(localized: "voice.subtitle")
+        static let recording = String(localized: "voice.recording")
+        static let stopHint = String(localized: "voice.stop.hint")
+        static let transcribing = String(localized: "voice.transcribing")
+        static let transcriptLabel = String(localized: "voice.transcript.label")
+        static let tryAgain = String(localized: "voice.try.again")
+        static let emptyTranscript = String(localized: "voice.empty.transcript")
+    }
+
     enum Timeline {
         static let title = String(localized: "timeline.title")
         static let today = String(localized: "timeline.today")

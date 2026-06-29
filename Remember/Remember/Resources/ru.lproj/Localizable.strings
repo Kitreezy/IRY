@@ -78,6 +78,16 @@
 "settings.ai.privacy.apple" = "Весь AI работает на устройстве. Ничего не покидает телефон.";
 "settings.ai.privacy.openai" = "Текст отправляется в OpenAI. Лучше качество, особенно для русского.";
 
+// MARK: - Voice Capture
+"voice.title" = "Скажи вслух";
+"voice.subtitle" = "Нажми на микрофон и говори.\nДо 30 секунд.";
+"voice.recording" = "Запись...";
+"voice.stop.hint" = "Нажми, чтобы остановить";
+"voice.transcribing" = "Транскрибирую...";
+"voice.transcript.label" = "Что ты сказал";
+"voice.try.again" = "Попробовать снова";
+"voice.empty.transcript" = "Речь не распознана. Попробуй ещё раз.";
+
 // MARK: - Timeline
 "timeline.title" = "Хронология";
 "timeline.today" = "Сегодня";

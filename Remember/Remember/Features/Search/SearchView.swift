@@ -4,6 +4,7 @@ struct SearchView: View {
     @Environment(\.memoryRepository) private var repository
     @State private var viewModel: SearchViewModel?
     @State private var showCreate: Bool = false
+    @State private var showVoice: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -16,6 +17,13 @@ struct SearchView: View {
                             showCreate = true
                         } label: {
                             Image(systemName: "plus")
+                        }
+                    }
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showVoice = true
+                        } label: {
+                            Image(systemName: "mic")
                         }
                     }
                 }
@@ -31,6 +39,11 @@ struct SearchView: View {
                 )
                 .sheet(isPresented: $showCreate) {
                     CaptureMemoryView { memory in
+                        await viewModel?.saveMemory(memory)
+                    }
+                }
+                .sheet(isPresented: $showVoice) {
+                    VoiceCaptureView { memory in
                         await viewModel?.saveMemory(memory)
                     }
                 }

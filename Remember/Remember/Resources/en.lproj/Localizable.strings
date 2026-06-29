@@ -78,6 +78,16 @@
 "settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone.";
 "settings.ai.privacy.openai" = "Text is sent to OpenAI. Better quality, especially for Russian.";
 
+// MARK: - Voice Capture
+"voice.title" = "Say it out loud";
+"voice.subtitle" = "Tap the mic and speak your memory.\nUp to 30 seconds.";
+"voice.recording" = "Recording...";
+"voice.stop.hint" = "Tap to stop";
+"voice.transcribing" = "Transcribing...";
+"voice.transcript.label" = "What you said";
+"voice.try.again" = "Try Again";
+"voice.empty.transcript" = "No speech detected. Try again.";
+
 // MARK: - Timeline
 "timeline.title" = "Timeline";
 "timeline.today" = "Today";

@@ -22,6 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Remember uses your microphone to capture voice memories so you can save moments without typing.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Remember transcribes your voice on-device so you can save spoken memories privately.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Remember indexes your calendar events so you can find them through memory search.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
