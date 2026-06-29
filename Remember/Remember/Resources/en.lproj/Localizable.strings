@@ -78,6 +78,14 @@
 "settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone.";
 "settings.ai.privacy.openai" = "Text is sent to OpenAI. Better quality, especially for Russian.";
 
+// MARK: - Home Screen
+"home.memories.label" = "memories";
+"home.search.placeholder" = "What do you remember?";
+"home.sidebar.title" = "Memories";
+"home.capture.photo" = "Photo";
+"home.capture.voice" = "Voice";
+"home.capture.text" = "Text";
+
 // MARK: - Voice Capture
 "voice.title" = "Say it out loud";
 "voice.subtitle" = "Tap the mic and speak your memory.\nUp to 30 seconds.";

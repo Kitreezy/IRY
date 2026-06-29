@@ -95,6 +95,15 @@ enum L10n {
         }
     }
 
+    enum Home {
+        static let memoriesLabel = String(localized: "home.memories.label")
+        static let searchPlaceholder = String(localized: "home.search.placeholder")
+        static let sidebarTitle = String(localized: "home.sidebar.title")
+        static let capturePhoto = String(localized: "home.capture.photo")
+        static let captureVoice = String(localized: "home.capture.voice")
+        static let captureText = String(localized: "home.capture.text")
+    }
+
     enum Voice {
         static let title = String(localized: "voice.title")
         static let subtitle = String(localized: "voice.subtitle")

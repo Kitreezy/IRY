@@ -78,6 +78,14 @@
 "settings.ai.privacy.apple" = "Весь AI работает на устройстве. Ничего не покидает телефон.";
 "settings.ai.privacy.openai" = "Текст отправляется в OpenAI. Лучше качество, особенно для русского.";
 
+// MARK: - Home Screen
+"home.memories.label" = "воспоминаний";
+"home.search.placeholder" = "Что ты помнишь?";
+"home.sidebar.title" = "Воспоминания";
+"home.capture.photo" = "Фото";
+"home.capture.voice" = "Голос";
+"home.capture.text" = "Текст";
+
 // MARK: - Voice Capture
 "voice.title" = "Скажи вслух";
 "voice.subtitle" = "Нажми на микрофон и говори.\nДо 30 секунд.";
