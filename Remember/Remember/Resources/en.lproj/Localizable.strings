@@ -77,6 +77,11 @@
 "settings.ai.apikey.saved" = "Saved";
 "settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone.";
 "settings.ai.privacy.openai" = "Text is sent to OpenAI. Better quality, especially for Russian.";
+"settings.reset.all" = "Reset All Data";
+"settings.reset.footer" = "Deletes all memories, imports and embeddings. Cannot be undone.";
+"settings.reset.confirm.title" = "Reset all data?";
+"settings.reset.confirm.message" = "All memories will be permanently deleted.";
+"settings.reset.confirm.action" = "Delete Everything";
 
 // MARK: - Home Screen
 "home.memories.label" = "memories";

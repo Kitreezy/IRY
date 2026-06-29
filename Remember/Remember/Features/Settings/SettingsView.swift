@@ -2,22 +2,39 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.importService) private var importService
+    @Environment(\.memoryRepository) private var repository
     @State private var providerService = LLMProviderService.shared
     @State private var isImporting = false
     @State private var lastResult: String?
     @State private var apiKeyInput = ""
     @State private var isKeySaved = false
+    @State private var showResetConfirm = false
+    @State private var isResetting = false
 
     var body: some View {
         NavigationStack {
             List {
                 aiSection
                 sourcesSection
+                #if DEBUG
+                debugSection
+                #endif
             }
             .navigationTitle(L10n.Settings.title)
         }
         .onAppear {
             apiKeyInput = providerService.apiKey(for: .openAI) ?? ""
+        }
+        .confirmationDialog(
+            L10n.Settings.resetConfirmTitle,
+            isPresented: $showResetConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(L10n.Settings.resetConfirmAction, role: .destructive) {
+                Task { await resetAllData() }
+            }
+        } message: {
+            Text(L10n.Settings.resetConfirmMessage)
         }
     }
 
@@ -51,9 +68,7 @@ struct SettingsView: View {
             SecureField(L10n.Settings.aiKeyPlaceholder, text: $apiKeyInput)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
-                .onChange(of: apiKeyInput) { _, _ in
-                    isKeySaved = false
-                }
+                .onChange(of: apiKeyInput) { _, _ in isKeySaved = false }
 
             Button {
                 saveAPIKey()
@@ -77,22 +92,13 @@ struct SettingsView: View {
 
     private var sourcesSection: some View {
         Section {
-            importRow(
-                title: L10n.Settings.importCalendar,
-                icon: "calendar",
-                source: .calendar
-            )
-            importRow(
-                title: L10n.Settings.importPhotos,
-                icon: "photo",
-                source: .photos
-            )
+            importRow(title: L10n.Settings.importCalendar, icon: "calendar", source: .calendar)
+            importRow(title: L10n.Settings.importPhotos, icon: "photo", source: .photos)
         } header: {
             Text(L10n.Settings.sectionSources)
         } footer: {
             if let result = lastResult {
-                Text(result)
-                    .foregroundStyle(.secondary)
+                Text(result).foregroundStyle(.secondary)
             }
         }
     }
@@ -104,13 +110,35 @@ struct SettingsView: View {
             HStack {
                 Label(title, systemImage: icon)
                 Spacer()
-                if isImporting {
-                    ProgressView()
-                }
+                if isImporting { ProgressView() }
             }
         }
         .disabled(isImporting)
     }
+
+    // MARK: - DEBUG Section
+
+    #if DEBUG
+    private var debugSection: some View {
+        Section {
+            Button(role: .destructive) {
+                showResetConfirm = true
+            } label: {
+                HStack {
+                    Label(L10n.Settings.resetAll, systemImage: "trash")
+                    Spacer()
+                    if isResetting { ProgressView() }
+                }
+            }
+            .disabled(isResetting)
+        } header: {
+            Text("DEBUG")
+        } footer: {
+            Text(L10n.Settings.resetFooter)
+                .foregroundStyle(.secondary)
+        }
+    }
+    #endif
 
     // MARK: - Actions
 
@@ -124,5 +152,15 @@ struct SettingsView: View {
         let result = await importService.importFrom(source)
         isImporting = false
         lastResult = L10n.Settings.importResult(result.imported, sourceName: result.source.displayName)
+    }
+
+    private func resetAllData() async {
+        isResetting = true
+        let all = (try? await repository.fetchAll()) ?? []
+        for memory in all {
+            try? await repository.delete(id: memory.id)
+        }
+        isResetting = false
+        lastResult = nil
     }
 }

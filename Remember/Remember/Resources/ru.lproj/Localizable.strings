@@ -77,6 +77,11 @@
 "settings.ai.apikey.saved" = "Сохранено";
 "settings.ai.privacy.apple" = "Весь AI работает на устройстве. Ничего не покидает телефон.";
 "settings.ai.privacy.openai" = "Текст отправляется в OpenAI. Лучше качество, особенно для русского.";
+"settings.reset.all" = "Сбросить все данные";
+"settings.reset.footer" = "Удаляет все воспоминания, импорты и индексы. Действие необратимо.";
+"settings.reset.confirm.title" = "Сбросить все данные?";
+"settings.reset.confirm.message" = "Все воспоминания будут удалены навсегда.";
+"settings.reset.confirm.action" = "Удалить всё";
 
 // MARK: - Home Screen
 "home.memories.label" = "воспоминаний";

@@ -90,6 +90,11 @@ enum L10n {
         static let aiKeySaved = String(localized: "settings.ai.apikey.saved")
         static let aiPrivacyApple = String(localized: "settings.ai.privacy.apple")
         static let aiPrivacyOpenAI = String(localized: "settings.ai.privacy.openai")
+        static let resetAll = String(localized: "settings.reset.all")
+        static let resetFooter = String(localized: "settings.reset.footer")
+        static let resetConfirmTitle = String(localized: "settings.reset.confirm.title")
+        static let resetConfirmMessage = String(localized: "settings.reset.confirm.message")
+        static let resetConfirmAction = String(localized: "settings.reset.confirm.action")
         static func importResult(_ count: Int, sourceName: String) -> String {
             String(format: NSLocalizedString("settings.import.result", comment: ""), count, sourceName)
         }

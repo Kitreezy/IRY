@@ -83,16 +83,21 @@ struct HomeView: View {
     // MARK: - Idle Layout (centered)
 
     private func idleLayout(_ vm: HomeViewModel) -> some View {
-        // Count + search centered; capture pinned to bottom via overlay
-        VStack(spacing: 20) {
-            countView(count: vm.memoriesCount)
-            searchBarView(vm)
-                .padding(.horizontal, 24)
+        // Spacer–content–Spacer centers count+search on the full height.
+        // Capture is overlaid separately so it doesn't shift the center.
+        VStack(spacing: 0) {
+            Spacer()
+            VStack(spacing: 20) {
+                countView(count: vm.memoriesCount)
+                searchBarView(vm)
+                    .padding(.horizontal, 24)
+            }
+            Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .bottom) {
             captureSection
-                .padding(.bottom, 40)
+                .padding(.bottom, 44)
         }
     }
 
