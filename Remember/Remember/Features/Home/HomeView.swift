@@ -29,11 +29,15 @@ struct HomeView: View {
             VoiceCaptureView { memory in
                 await viewModel?.saveMemory(memory)
             }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showText) {
             CaptureMemoryView { memory in
                 await viewModel?.saveMemory(memory)
             }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
         .task {
             let vm = HomeViewModel(repository: repository)

@@ -38,8 +38,16 @@ struct MemorySidebarView: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, 20)
+        .padding(.top, safeAreaTop + 16)
         .padding(.bottom, 12)
+    }
+
+    private var safeAreaTop: CGFloat {
+        (UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.windows
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.top) ?? 0
     }
 
     // MARK: - List

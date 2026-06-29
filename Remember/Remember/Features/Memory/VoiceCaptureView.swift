@@ -43,7 +43,7 @@ struct VoiceCaptureView: View {
                 }
             }
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .frame(maxWidth: .infinity, alignment: .top)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -60,24 +60,23 @@ struct VoiceCaptureView: View {
     // MARK: - States
 
     private var idleView: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            Text(L10n.Voice.title)
-                .font(.title2)
-                .fontWeight(.semibold)
-            Text(L10n.Voice.subtitle)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
+        VStack(spacing: 32) {
+            VStack(spacing: 8) {
+                Text(L10n.Voice.title)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text(L10n.Voice.subtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
             recordButton(isRecording: false)
-            Spacer()
         }
+        .padding(.top, 24)
     }
 
     private var recordingView: some View {
         VStack(spacing: 24) {
-            Spacer()
             Text(L10n.Voice.recording)
                 .font(.title3)
                 .fontWeight(.medium)
@@ -90,20 +89,19 @@ struct VoiceCaptureView: View {
             Text(L10n.Voice.stopHint)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Spacer()
         }
+        .padding(.top, 24)
     }
 
     private var transcribingView: some View {
         VStack(spacing: 16) {
-            Spacer()
             ProgressView()
                 .scaleEffect(1.5)
             Text(L10n.Voice.transcribing)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            Spacer()
         }
+        .padding(.top, 40)
     }
 
     private func capturedView(transcript: String) -> some View {
