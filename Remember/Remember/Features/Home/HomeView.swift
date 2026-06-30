@@ -9,6 +9,7 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var showVoice = false
     @State private var showText = false
+    @State private var showPhoto = false
     @State private var voiceSheetDetent: PresentationDetent = .medium
     @FocusState private var searchFocused: Bool
 
@@ -43,6 +44,11 @@ struct HomeView: View {
             }
             .presentationDetents([.large])
             .presentationDragIndicator(.visible)
+        }
+        .fullScreenCover(isPresented: $showPhoto) {
+            PhotoCaptureView { memory in
+                await viewModel?.saveMemory(memory)
+            }
         }
         .task {
             let vm = HomeViewModel(repository: repository)
@@ -220,7 +226,7 @@ struct HomeView: View {
     private var captureSection: some View {
         HStack(spacing: 44) {
             captureButton(icon: "camera.fill", label: L10n.Home.capturePhoto) {
-                // Photo capture — upcoming sprint
+                showPhoto = true
             }
             captureButton(icon: "mic.fill", label: L10n.Home.captureVoice) {
                 showVoice = true

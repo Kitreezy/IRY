@@ -101,6 +101,13 @@
 "home.capture.text" = "Text";
 
 // MARK: - Voice Capture
+"photo.title" = "Photo Memory";
+"photo.reflection.hint" = "Speak — what does this moment mean to you?";
+"photo.tap.to.record" = "Tap to record your memory";
+"photo.subtitle" = "A photo captures what happened.\nYou capture why it mattered.";
+"photo.take" = "Take Photo";
+"photo.choose" = "Choose from Library";
+"photo.memory.title" = "Photo Memory";
 "voice.title" = "Say it out loud";
 "voice.subtitle" = "Tap the mic and speak your memory.\nUp to 30 seconds.";
 "voice.recording" = "Recording...";

@@ -101,6 +101,13 @@
 "home.capture.text" = "Текст";
 
 // MARK: - Voice Capture
+"photo.title" = "Фото-воспоминание";
+"photo.reflection.hint" = "Расскажи — что значит для тебя этот момент?";
+"photo.tap.to.record" = "Нажми чтобы записать воспоминание";
+"photo.subtitle" = "Фото сохраняет что произошло.\nТы сохраняешь почему это важно.";
+"photo.take" = "Сделать фото";
+"photo.choose" = "Выбрать из галереи";
+"photo.memory.title" = "Фото-воспоминание";
 "voice.title" = "Скажи вслух";
 "voice.subtitle" = "Нажми на микрофон и говори.\nДо 30 секунд.";
 "voice.recording" = "Запись...";

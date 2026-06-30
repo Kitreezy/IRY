@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct MemoryDetailView: View {
     let memory: MemoryItem
@@ -15,19 +16,36 @@ struct MemoryDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
+                if let path = memory.imagePath, let image = UIImage(contentsOfFile: path) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 260)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .padding(.horizontal)
+                }
                 headerSection
+                    .padding(.horizontal)
                 if !memory.why.isEmpty {
                     whySection
+                        .padding(.horizontal)
                 }
                 if !entities.isEmpty {
                     entitiesSection
+                        .padding(.horizontal)
                 }
-                contentSection
+                if !memory.content.isEmpty && memory.content != memory.why {
+                    contentSection
+                        .padding(.horizontal)
+                }
                 if !related.isEmpty {
                     relatedSection
+                        .padding(.horizontal)
                 }
             }
-            .padding()
+            .padding(.vertical)
         }
         .navigationTitle(memory.title)
         .navigationBarTitleDisplayMode(.large)
@@ -71,7 +89,7 @@ struct MemoryDetailView: View {
                 .italic()
                 .foregroundStyle(.primary)
         }
-        .padding()
+        .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.accentColor.opacity(0.07))
         .clipShape(RoundedRectangle(cornerRadius: 10))

@@ -15,6 +15,7 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
     var created_at: Date
     var updated_at: Date
     var tags: String
+    var image_path: String?
 
     init(from item: MemoryItem) {
         self.id = item.id.uuidString
@@ -26,6 +27,7 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
         self.created_at = item.createdAt
         self.updated_at = item.updatedAt
         self.tags = item.tags.joined(separator: ",")
+        self.image_path = item.imagePath
     }
 
     func toMemoryItem() -> MemoryItem? {
@@ -41,7 +43,8 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
             source: source,
             createdAt: created_at,
             updatedAt: updated_at,
-            tags: tagList
+            tags: tagList,
+            imagePath: image_path
         )
     }
 }

@@ -10,6 +10,7 @@ struct MemoryItem: Identifiable, Hashable, Sendable {
     var createdAt: Date
     var updatedAt: Date
     var tags: [String]
+    var imagePath: String? // Путь к фото на диске (опционально)
 
     init(
         id: UUID = UUID(),
@@ -20,7 +21,8 @@ struct MemoryItem: Identifiable, Hashable, Sendable {
         source: MemorySource = .userCreated,
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        tags: [String] = []
+        tags: [String] = [],
+        imagePath: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -31,5 +33,6 @@ struct MemoryItem: Identifiable, Hashable, Sendable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.tags = tags
+        self.imagePath = imagePath
     }
 }

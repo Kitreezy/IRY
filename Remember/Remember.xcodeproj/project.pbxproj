@@ -11,6 +11,10 @@
 		13FA2157C6B1826D7E74A311 /* OpenAIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */; };
 		CC1A2B3D4E5F6A7B8C9D0E1F /* ClaudeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2B3C4D5E6F7A8B9C0D1E2F /* ClaudeProvider.swift */; };
 		DD1A2B3D4E5F6A7B8C9D0E1F /* GeminiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B3C4D5E6F7A8B9C0D1E2F /* GeminiProvider.swift */; };
+		EE1A2B3D4E5F6A7B8C9D0E1F /* PhotoCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2B3C4D5E6F7A8B9C0D1E2F /* PhotoCaptureView.swift */; };
+		FF1A2B3D4E5F6A7B8C9D0E1F /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2B3C4D5E6F7A8B9C0D1E2F /* CameraView.swift */; };
+		AA1A2B3D4E5F6A7B8C9D0E1F /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2B3C4D5E6F7A8B9C0D1E2F /* CameraService.swift */; };
+		BB1A2B3D4E5F6A7B8C9D0E1F /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2B3C4D5E6F7A8B9C0D1E2F /* CameraPreviewView.swift */; };
 		200B569921A8FFF7C694B5FA /* String+Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0340927E7707408B081091F5 /* String+Highlight.swift */; };
 		200CA9431075011BF827DEBF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368A454373DDC15267EC027 /* ContentView.swift */; };
 		221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A007D2C70288EF39BE22119F /* SearchViewModel.swift */; };
@@ -153,6 +157,10 @@
 		F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIProvider.swift; sourceTree = "<group>"; };
 		CC2B3C4D5E6F7A8B9C0D1E2F /* ClaudeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeProvider.swift; sourceTree = "<group>"; };
 		DD2B3C4D5E6F7A8B9C0D1E2F /* GeminiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiProvider.swift; sourceTree = "<group>"; };
+		EE2B3C4D5E6F7A8B9C0D1E2F /* PhotoCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureView.swift; sourceTree = "<group>"; };
+		FF2B3C4D5E6F7A8B9C0D1E2F /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		AA2B3C4D5E6F7A8B9C0D1E2F /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CameraService.swift; path = "Remember/Services/Camera/CameraService.swift"; sourceTree = SOURCE_ROOT; };
+		BB2B3C4D5E6F7A8B9C0D1E2F /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CameraPreviewView.swift; path = "Remember/Services/Camera/CameraPreviewView.swift"; sourceTree = SOURCE_ROOT; };
 		FEF5F3C9FFEBACB5EF2ADD39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -355,6 +363,8 @@
 			isa = PBXGroup;
 			children = (
 				752F9AE8DDBC66D432B0D083 /* CaptureMemoryView.swift */,
+				EE2B3C4D5E6F7A8B9C0D1E2F /* PhotoCaptureView.swift */,
+				FF2B3C4D5E6F7A8B9C0D1E2F /* CameraView.swift */,
 				01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */,
 				BD68EC1B51DDAA7F68FA2B15 /* VoiceCaptureView.swift */,
 			);
@@ -426,6 +436,8 @@
 			isa = PBXGroup;
 			children = (
 				8BDE63A32251C14DBB6F6B72 /* VoiceRecorderService.swift */,
+				AA2B3C4D5E6F7A8B9C0D1E2F /* CameraService.swift */,
+				BB2B3C4D5E6F7A8B9C0D1E2F /* CameraPreviewView.swift */,
 			);
 			path = Voice;
 			sourceTree = "<group>";
@@ -587,6 +599,8 @@
 				79CA783A753ACF46D8040310 /* CKRecord+MemoryItem.swift in Sources */,
 				42E3C5EFFFA37A8301406B5C /* CalendarImporter.swift in Sources */,
 				E6BA2D5224A35D7CC09270F3 /* CaptureMemoryView.swift in Sources */,
+				EE1A2B3D4E5F6A7B8C9D0E1F /* PhotoCaptureView.swift in Sources */,
+				FF1A2B3D4E5F6A7B8C9D0E1F /* CameraView.swift in Sources */,
 				6BE6BF9167C24A86A21C79BC /* CloudKitSyncService.swift in Sources */,
 				200CA9431075011BF827DEBF /* ContentView.swift in Sources */,
 				B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */,
@@ -632,6 +646,8 @@
 				BBBABE6B66981F071F8CFB1D /* TimelineViewModel.swift in Sources */,
 				C9F7CCD664900E3B2E7AAB33 /* VoiceCaptureView.swift in Sources */,
 				DCC6A592512C59564772B771 /* VoiceRecorderService.swift in Sources */,
+				AA1A2B3D4E5F6A7B8C9D0E1F /* CameraService.swift in Sources */,
+				BB1A2B3D4E5F6A7B8C9D0E1F /* CameraPreviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

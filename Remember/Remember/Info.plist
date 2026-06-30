@@ -28,8 +28,10 @@
 	<string>Remember transcribes your voice on-device so you can save spoken memories privately.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Remember indexes your calendar events so you can find them through memory search.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Remember uses your camera to capture photo memories.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Remember indexes your photo metadata so you can find memories by place and date.</string>
+	<string>Remember accesses your photos to save as memories.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

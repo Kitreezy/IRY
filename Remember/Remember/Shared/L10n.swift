@@ -123,6 +123,16 @@ enum L10n {
         static let captureText = String(localized: "home.capture.text")
     }
 
+    enum Photo {
+        static let title = String(localized: "photo.title")
+        static let subtitle = String(localized: "photo.subtitle")
+        static let takePhoto = String(localized: "photo.take")
+        static let choosePhoto = String(localized: "photo.choose")
+        static let memoryTitle = String(localized: "photo.memory.title")
+        static let reflectionHint = String(localized: "photo.reflection.hint")
+        static let tapToRecord = String(localized: "photo.tap.to.record")
+    }
+
     enum Voice {
         static let title = String(localized: "voice.title")
         static let subtitle = String(localized: "voice.subtitle")
