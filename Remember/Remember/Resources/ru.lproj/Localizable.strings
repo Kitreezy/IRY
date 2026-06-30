@@ -46,6 +46,9 @@
 "capture.button.next" = "Далее";
 "capture.button.save" = "Сохранить воспоминание";
 "capture.button.cancel" = "Назад";
+"memory.delete" = "Удалить";
+"memory.delete.confirm.title" = "Удалить воспоминание?";
+"memory.delete.confirm.message" = "Воспоминание будет удалено навсегда.";
 "memory.detail.why.title" = "Почему это важно";
 
 // MARK: - Import

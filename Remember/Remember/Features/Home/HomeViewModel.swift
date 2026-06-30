@@ -72,6 +72,14 @@ final class HomeViewModel {
         if isQueryActive { await performSearch() }
     }
 
+    // MARK: - Delete
+
+    func deleteMemory(_ memory: MemoryItem) async {
+        try? await repository.delete(id: memory.id)
+        allMemories = (try? await repository.fetchAll()) ?? []
+        results.removeAll { $0.id == memory.id }
+    }
+
     // MARK: - Private
 
     private func generateAnswer() async {

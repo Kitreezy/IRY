@@ -64,6 +64,12 @@ enum L10n {
         static let cancel = String(localized: "capture.button.cancel")
     }
 
+    enum Memory {
+        static let delete = String(localized: "memory.delete")
+        static let deleteConfirmTitle = String(localized: "memory.delete.confirm.title")
+        static let deleteConfirmMessage = String(localized: "memory.delete.confirm.message")
+    }
+
     enum MemoryDetail {
         static let whyTitle = String(localized: "memory.detail.why.title")
         static let relatedTitle = String(localized: "memory.detail.related.title")

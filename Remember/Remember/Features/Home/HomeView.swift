@@ -200,6 +200,13 @@ struct HomeView: View {
                                     .padding(.vertical, 6)
                             }
                             .buttonStyle(.plain)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    Task { await vm.deleteMemory(memory) }
+                                } label: {
+                                    Label(L10n.Memory.delete, systemImage: "trash")
+                                }
+                            }
                         }
                     }
                     .padding(.bottom, 16)

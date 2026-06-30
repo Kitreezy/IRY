@@ -3,8 +3,10 @@ import SwiftUI
 struct MemoryDetailView: View {
     let memory: MemoryItem
     @Environment(\.memoryRepository) private var repository
+    @Environment(\.dismiss) private var dismiss
     @State private var entities: [MemoryEntity] = []
     @State private var related: [MemoryItem] = []
+    @State private var showDeleteConfirm = false
 
     private var relatedService: RelatedMemoriesService {
         RelatedMemoriesService(repository: repository)
@@ -30,6 +32,30 @@ struct MemoryDetailView: View {
         .navigationTitle(memory.title)
         .navigationBarTitleDisplayMode(.large)
         .task { await load() }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(role: .destructive) {
+                    showDeleteConfirm = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .confirmationDialog(
+            L10n.Memory.deleteConfirmTitle,
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(L10n.Memory.delete, role: .destructive) {
+                Task {
+                    try? await repository.delete(id: memory.id)
+                    dismiss()
+                }
+            }
+        } message: {
+            Text(L10n.Memory.deleteConfirmMessage)
+        }
     }
 
     // MARK: - Sections

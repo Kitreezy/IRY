@@ -46,6 +46,9 @@
 "capture.button.next" = "Next";
 "capture.button.save" = "Save Memory";
 "capture.button.cancel" = "Cancel";
+"memory.delete" = "Delete";
+"memory.delete.confirm.title" = "Delete Memory?";
+"memory.delete.confirm.message" = "This memory will be permanently deleted.";
 "memory.detail.why.title" = "Why it matters";
 
 // MARK: - Import
