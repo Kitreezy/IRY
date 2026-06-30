@@ -10,14 +10,17 @@ struct VoiceCaptureView: View {
         case idle
         case recording
         case transcribing
-        case captured(String)
+        case captured
         case error(String)
     }
 
+    private let maxDuration: Double = 30
+
     @State private var state: CaptureState = .idle
+    @State private var capturedTranscript: String = ""
     @State private var why: String = ""
     @State private var isSaving = false
-    @State private var isSuggestingWhy = false
+    @State private var recordingElapsed: Double = 0
     @State private var waveformLevels: [Float] = Array(repeating: 0.3, count: 20)
 
     private let recorder = VoiceRecorderService()
@@ -33,8 +36,8 @@ struct VoiceCaptureView: View {
                     recordingView
                 case .transcribing:
                     transcribingView
-                case .captured(let transcript):
-                    capturedView(transcript: transcript)
+                case .captured:
+                    capturedView
                 case .error(let message):
                     errorView(message: message)
                 }
@@ -50,7 +53,11 @@ struct VoiceCaptureView: View {
         }
         .onReceive(timer) { _ in
             guard case .recording = state else { return }
+            recordingElapsed += 0.1
             Task { await updateWaveform() }
+            if recordingElapsed >= maxDuration {
+                Task { await stopRecording() }
+            }
         }
     }
 
@@ -74,10 +81,14 @@ struct VoiceCaptureView: View {
 
     private var recordingView: some View {
         VStack(spacing: 24) {
-            Text(L10n.Voice.recording)
-                .font(.title3)
-                .fontWeight(.medium)
-                .foregroundStyle(.red)
+            // Countdown
+            let remaining = max(0, Int(ceil(maxDuration - recordingElapsed)))
+            Text("0:\(String(format: "%02d", remaining))")
+                .font(.system(size: 42, weight: .semibold, design: .monospaced))
+                .foregroundStyle(remaining <= 10 ? .red : .primary)
+                .monospacedDigit()
+                .contentTransition(.numericText(countsDown: true))
+                .animation(.default, value: remaining)
 
             waveformView
 
@@ -87,7 +98,7 @@ struct VoiceCaptureView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .padding(.top, 24)
+        .padding(.top, 16)
     }
 
     private var transcribingView: some View {
@@ -101,62 +112,45 @@ struct VoiceCaptureView: View {
         .padding(.top, 40)
     }
 
-    private func capturedView(transcript: String) -> some View {
+    private var capturedView: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // Transcript
+            // Editable transcript
             VStack(alignment: .leading, spacing: 6) {
                 Text(L10n.Voice.transcriptLabel)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(transcript)
-                    .font(.body)
-                    .padding(10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                TextEditor(text: $capturedTranscript)
+                    .frame(minHeight: 80, maxHeight: 120)
+                    .padding(6)
                     .background(Color(.systemGray6))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .font(.body)
             }
 
             // Why field
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(L10n.Capture.whyTitle)
-                        .font(.headline)
-                    Spacer()
-                    if isSuggestingWhy {
-                        HStack(spacing: 6) {
-                            ProgressView().scaleEffect(0.7)
-                            Text(L10n.Voice.aiSuggesting)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
+            VStack(alignment: .leading, spacing: 6) {
+                Text(L10n.Capture.whyTitle)
+                    .font(.headline)
+                Text(L10n.Capture.whySubtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
 
-                if isSuggestingWhy {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color(.systemGray6))
-                        .frame(minHeight: 100)
-                        .overlay(
-                            ProgressView()
-                        )
-                } else {
-                    ZStack(alignment: .topLeading) {
-                        if why.isEmpty {
-                            Text(L10n.Capture.whyPlaceholder)
-                                .foregroundStyle(.tertiary)
-                                .padding(8)
-                        }
-                        TextEditor(text: $why)
-                            .frame(minHeight: 100)
+                ZStack(alignment: .topLeading) {
+                    if why.isEmpty {
+                        Text(L10n.Capture.whyPlaceholder)
+                            .foregroundStyle(.tertiary)
+                            .padding(8)
                     }
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(.systemGray4)))
+                    TextEditor(text: $why)
+                        .frame(minHeight: 100)
                 }
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(.systemGray4)))
             }
 
             Spacer()
 
             Button {
-                Task { await save(transcript: transcript) }
+                Task { await save() }
             } label: {
                 if isSaving {
                     ProgressView().frame(maxWidth: .infinity)
@@ -166,7 +160,7 @@ struct VoiceCaptureView: View {
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
-            .disabled(isSaving || isSuggestingWhy)
+            .disabled(isSaving || capturedTranscript.trimmingCharacters(in: .whitespaces).isEmpty)
         }
     }
 
@@ -180,10 +174,8 @@ struct VoiceCaptureView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            Button(L10n.Voice.tryAgain) {
-                state = .idle
-            }
-            .buttonStyle(.bordered)
+            Button(L10n.Voice.tryAgain) { state = .idle }
+                .buttonStyle(.bordered)
             Spacer()
         }
     }
@@ -224,12 +216,9 @@ struct VoiceCaptureView: View {
 
     private func toggleRecording() async {
         switch state {
-        case .idle:
-            await startRecording()
-        case .recording:
-            await stopRecording()
-        default:
-            break
+        case .idle: await startRecording()
+        case .recording: await stopRecording()
+        default: break
         }
     }
 
@@ -237,6 +226,7 @@ struct VoiceCaptureView: View {
         do {
             try await recorder.requestPermissions()
             try await recorder.startRecording()
+            recordingElapsed = 0
             state = .recording
         } catch {
             state = .error(error.localizedDescription)
@@ -250,9 +240,11 @@ struct VoiceCaptureView: View {
             if transcript.trimmingCharacters(in: .whitespaces).isEmpty {
                 state = .error(L10n.Voice.emptyTranscript)
             } else {
+                capturedTranscript = transcript
                 selectedDetent = .large
-                state = .captured(transcript)
-                await suggestWhy(for: transcript)
+                state = .captured
+                // Try AI suggestion silently in background — no blocking loader
+                Task { await suggestWhy(for: transcript) }
             }
         } catch {
             state = .error(error.localizedDescription)
@@ -262,7 +254,6 @@ struct VoiceCaptureView: View {
     private func suggestWhy(for transcript: String) async {
         let provider = LLMProviderService.shared.textCompletion
         guard provider.isAvailable else { return }
-        isSuggestingWhy = true
         let prompt = """
         A user just recorded this memory: "\(transcript)"
         Suggest in ONE short sentence (max 15 words) why this moment might matter to them.
@@ -270,9 +261,11 @@ struct VoiceCaptureView: View {
         Be personal and specific. Output only the sentence, no quotes, no explanation.
         """
         if let suggestion = try? await provider.complete(prompt: prompt) {
-            why = suggestion.trimmingCharacters(in: .whitespacesAndNewlines)
+            let trimmed = suggestion.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty {
+                why = trimmed
+            }
         }
-        isSuggestingWhy = false
     }
 
     private func updateWaveform() async {
@@ -284,11 +277,11 @@ struct VoiceCaptureView: View {
         waveformLevels = levels
     }
 
-    private func save(transcript: String) async {
+    private func save() async {
         isSaving = true
-        let trimmedTitle = String(transcript.prefix(60))
+        let transcript = capturedTranscript.trimmingCharacters(in: .whitespaces)
         let memory = MemoryItem(
-            title: trimmedTitle,
+            title: String(transcript.prefix(60)),
             content: transcript,
             why: why.trimmingCharacters(in: .whitespaces),
             source: .userCreated
