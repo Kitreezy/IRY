@@ -12,6 +12,8 @@ struct SettingsView: View {
     @State private var isResetting = false
     @State private var aiTestResult: AITestResult? = nil
     @State private var isTesting = false
+    @State private var isReindexing = false
+    @State private var reindexResult: String? = nil
 
     private enum AITestResult {
         case success(text: String, embedding: Int)
@@ -168,6 +170,23 @@ struct SettingsView: View {
                 aiTestResultView(result)
             }
 
+            Button {
+                Task { await runReindex() }
+            } label: {
+                HStack {
+                    Label("Re-index Memories", systemImage: "arrow.triangle.2.circlepath")
+                    Spacer()
+                    if isReindexing { ProgressView() }
+                }
+            }
+            .disabled(isReindexing)
+
+            if let result = reindexResult {
+                Text(result)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Button(role: .destructive) {
                 showResetConfirm = true
             } label: {
@@ -239,6 +258,16 @@ struct SettingsView: View {
             aiTestResult = .failure(error.localizedDescription)
         }
         isTesting = false
+    }
+
+    private func runReindex() async {
+        isReindexing = true
+        reindexResult = nil
+        let memories = (try? await repository.fetchAll()) ?? []
+        let semantic = SemanticSearchService(repository: repository)
+        await semantic.reindexAll(memories: memories)
+        isReindexing = false
+        reindexResult = "✓ Re-indexed \(memories.count) memories with \(providerService.currentKind.displayName)"
     }
 
     private func runImport(source: MemorySource) async {
