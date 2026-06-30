@@ -78,6 +78,8 @@ enum LLMError: Error, LocalizedError {
     case noAPIKey
     case networkError(Error)
     case invalidResponse
+    case httpError(Int, String)
+    case parseError(String)
 
     var errorDescription: String? {
         switch self {
@@ -85,6 +87,8 @@ enum LLMError: Error, LocalizedError {
         case .noAPIKey: "API key is required. Add it in Settings."
         case .networkError(let e): "Network error: \(e.localizedDescription)"
         case .invalidResponse: "Unexpected response from AI provider."
+        case .httpError(let code, let body): "HTTP \(code): \(body)"
+        case .parseError(let raw): "Parse error. Response: \(raw)"
         }
     }
 }

@@ -20,7 +20,7 @@ actor GeminiTextCompletionProvider: TextCompletionProvider {
         let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let body: [String: Any] = [
@@ -32,14 +32,20 @@ actor GeminiTextCompletionProvider: TextCompletionProvider {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
-                throw LLMError.invalidResponse
+            let http = response as? HTTPURLResponse
+            let statusCode = http?.statusCode ?? -1
+
+            guard statusCode == 200 else {
+                let body = String(data: data, encoding: .utf8) ?? "no body"
+                throw LLMError.httpError(statusCode, body)
             }
+
             let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
             let choices = json?["choices"] as? [[String: Any]]
             let message = choices?.first?["message"] as? [String: Any]
             guard let text = message?["content"] as? String else {
-                throw LLMError.invalidResponse
+                let raw = String(data: data, encoding: .utf8) ?? "empty"
+                throw LLMError.parseError(raw)
             }
             return text.trimmingCharacters(in: .whitespacesAndNewlines)
         } catch let error as LLMError {
@@ -53,7 +59,7 @@ actor GeminiTextCompletionProvider: TextCompletionProvider {
 // MARK: - Gemini Embedding
 
 actor GeminiEmbeddingProvider: EmbeddingProvider {
-    let providerName = "Gemini text-embedding-004"
+    let providerName = "Gemini gemini-embedding-001"
     let dimensions = 768
     let isAvailable = true
 
@@ -66,28 +72,33 @@ actor GeminiEmbeddingProvider: EmbeddingProvider {
     func embed(text: String) async throws -> [Float] {
         guard !apiKey.isEmpty else { throw LLMError.noAPIKey }
 
-        let urlStr = "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent"
-        let url = URL(string: urlStr)!
+        let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let body: [String: Any] = [
-            "model": "models/text-embedding-004",
+            "model": "models/gemini-embedding-001",
             "content": ["parts": [["text": text]]]
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
-                throw LLMError.invalidResponse
+            let http = response as? HTTPURLResponse
+            let statusCode = http?.statusCode ?? -1
+
+            guard statusCode == 200 else {
+                let body = String(data: data, encoding: .utf8) ?? "no body"
+                throw LLMError.httpError(statusCode, body)
             }
+
             let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
             let embedding = json?["embedding"] as? [String: Any]
             guard let values = embedding?["values"] as? [Double] else {
-                throw LLMError.invalidResponse
+                let raw = String(data: data, encoding: .utf8) ?? "empty"
+                throw LLMError.parseError(raw)
             }
             return values.map { Float($0) }
         } catch let error as LLMError {

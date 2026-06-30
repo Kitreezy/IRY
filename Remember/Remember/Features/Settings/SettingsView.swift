@@ -10,6 +10,13 @@ struct SettingsView: View {
     @State private var savedGeminiKey: String? = nil
     @State private var showResetConfirm = false
     @State private var isResetting = false
+    @State private var aiTestResult: AITestResult? = nil
+    @State private var isTesting = false
+
+    private enum AITestResult {
+        case success(text: String, embedding: Int)
+        case failure(String)
+    }
 
     var body: some View {
         NavigationStack {
@@ -146,6 +153,21 @@ struct SettingsView: View {
     #if DEBUG
     private var debugSection: some View {
         Section {
+            Button {
+                Task { await runAITest() }
+            } label: {
+                HStack {
+                    Label("Test AI Provider", systemImage: "cpu")
+                    Spacer()
+                    if isTesting { ProgressView() }
+                }
+            }
+            .disabled(isTesting)
+
+            if let result = aiTestResult {
+                aiTestResultView(result)
+            }
+
             Button(role: .destructive) {
                 showResetConfirm = true
             } label: {
@@ -161,6 +183,29 @@ struct SettingsView: View {
         } footer: {
             Text(L10n.Settings.resetFooter)
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private func aiTestResultView(_ result: AITestResult) -> some View {
+        switch result {
+        case .success(let text, let dims):
+            VStack(alignment: .leading, spacing: 4) {
+                Label("Provider: \(providerService.currentKind.displayName)", systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+                    .font(.caption)
+                Text("💬 \(text)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text("📐 Embedding: \(dims) dims")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 4)
+        case .failure(let error):
+            Label(error, systemImage: "xmark.circle.fill")
+                .foregroundStyle(.red)
+                .font(.caption)
         }
     }
     #endif
@@ -179,6 +224,21 @@ struct SettingsView: View {
         APIKeyStore.delete(for: .gemini)
         savedGeminiKey = nil
         geminiKeyInput = ""
+    }
+
+    private func runAITest() async {
+        isTesting = true
+        aiTestResult = nil
+        do {
+            let text = try await providerService.textCompletion.complete(
+                prompt: "Ответь одним словом на русском: какой сейчас сезон года?"
+            )
+            let embedding = try await providerService.embedding.embed(text: "тест памяти")
+            aiTestResult = .success(text: text, embedding: embedding.count)
+        } catch {
+            aiTestResult = .failure(error.localizedDescription)
+        }
+        isTesting = false
     }
 
     private func runImport(source: MemorySource) async {
