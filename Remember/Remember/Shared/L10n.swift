@@ -131,6 +131,8 @@ enum L10n {
         static let memoryTitle = String(localized: "photo.memory.title")
         static let reflectionHint = String(localized: "photo.reflection.hint")
         static let tapToRecord = String(localized: "photo.tap.to.record")
+        static let transcriptionFailed = String(localized: "photo.transcription.failed")
+        static let tapToRetry = String(localized: "photo.tap.to.retry")
     }
 
     enum Voice {

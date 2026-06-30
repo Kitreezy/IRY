@@ -104,6 +104,8 @@
 "photo.title" = "Photo Memory";
 "photo.reflection.hint" = "Speak — what does this moment mean to you?";
 "photo.tap.to.record" = "Tap to record your memory";
+"photo.transcription.failed" = "Could not hear you";
+"photo.tap.to.retry" = "Tap to try again";
 "photo.subtitle" = "A photo captures what happened.\nYou capture why it mattered.";
 "photo.take" = "Take Photo";
 "photo.choose" = "Choose from Library";

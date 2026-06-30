@@ -86,15 +86,9 @@ struct PhotoCaptureView: View {
 
                 Spacer()
 
-                // Bottom bar
-                HStack(alignment: .center, spacing: 0) {
-                    // Library picker
-                    LibraryPickerButton { image in
-                        withAnimation { flowState = .reflecting(image) }
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    // Shutter
+                // Bottom bar — шаттер по центру, галерея слева
+                ZStack {
+                    // Шаттер строго по центру
                     ShutterButton {
                         Task {
                             if let image = try? await camera.capturePhoto() {
@@ -102,10 +96,15 @@ struct PhotoCaptureView: View {
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity)
 
-                    // Placeholder для симметрии
-                    Color.clear.frame(maxWidth: .infinity)
+                    // Галерея — левее
+                    HStack {
+                        LibraryPickerButton { image in
+                            withAnimation { flowState = .reflecting(image) }
+                        }
+                        .padding(.leading, 44)
+                        Spacer()
+                    }
                 }
                 .padding(.bottom, 50)
             }
@@ -172,7 +171,7 @@ private struct ReflectionScreen: View {
     let onSave: (MemoryItem) async -> Void
     let onRetake: () -> Void
 
-    private enum VoiceState { case idle, recording, transcribing, done(String) }
+    private enum VoiceState { case idle, recording, transcribing, done(String), failed }
 
     @State private var voiceState: VoiceState = .idle
     @State private var why = ""
@@ -205,7 +204,7 @@ private struct ReflectionScreen: View {
 
             // Контент поверх
             VStack(spacing: 0) {
-                // Кнопка "переснять"
+                // Top bar: переснять + закрыть
                 HStack {
                     Button {
                         onRetake()
@@ -218,6 +217,16 @@ private struct ReflectionScreen: View {
                             .clipShape(Circle())
                     }
                     Spacer()
+                    Button {
+                        onRetake() // возврат на камеру, dismiss снаружи
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 40, height: 40)
+                            .background(.black.opacity(0.4))
+                            .clipShape(Circle())
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 60)
@@ -234,13 +243,18 @@ private struct ReflectionScreen: View {
                     // Голосовое состояние
                     voicePanel
 
-                    // Поле why (появляется после транскрипции)
-                    if case .done = voiceState {
-                        whyField
-                    }
+                    // Поле why (появляется после транскрипции или при failed)
+                    if case .done = voiceState { whyField }
+                    if case .failed = voiceState { whyField }
 
                     // Кнопка сохранить
-                    if case .done = voiceState {
+                    let canSave: Bool = {
+                        if case .done = voiceState { return true }
+                        if case .failed = voiceState { return !why.isEmpty }
+                        return false
+                    }()
+
+                    if canSave {
                         Button {
                             Task { await save() }
                         } label: {
@@ -299,6 +313,19 @@ private struct ReflectionScreen: View {
                     Text(L10n.Voice.aiSuggesting)
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
+                }
+
+            case .failed:
+                Button { Task { await startRecording() } } label: {
+                    micButton(icon: "mic.fill", color: .white)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L10n.Photo.transcriptionFailed)
+                        .font(.subheadline)
+                        .foregroundStyle(.red.opacity(0.9))
+                    Text(L10n.Photo.tapToRetry)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.6))
                 }
             }
         }
@@ -369,11 +396,15 @@ private struct ReflectionScreen: View {
         voiceState = .transcribing
         do {
             let transcript = try await recorder.stopAndTranscribe()
-            voiceState = .done(transcript)
-            why = transcript
-            await suggestWhy(transcript: transcript)
+            if transcript.trimmingCharacters(in: .whitespaces).isEmpty {
+                voiceState = .failed
+            } else {
+                voiceState = .done(transcript)
+                why = transcript
+                await suggestWhy(transcript: transcript)
+            }
         } catch {
-            voiceState = .idle
+            voiceState = .failed
         }
     }
 
