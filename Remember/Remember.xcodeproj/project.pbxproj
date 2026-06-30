@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1390E0489F58DB84781606D8 /* MemoryRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B08555B5C169DE76A98305 /* MemoryRepositoryTests.swift */; };
 		13FA2157C6B1826D7E74A311 /* OpenAIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */; };
+		CC1A2B3D4E5F6A7B8C9D0E1F /* ClaudeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2B3C4D5E6F7A8B9C0D1E2F /* ClaudeProvider.swift */; };
+		DD1A2B3D4E5F6A7B8C9D0E1F /* GeminiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B3C4D5E6F7A8B9C0D1E2F /* GeminiProvider.swift */; };
 		200B569921A8FFF7C694B5FA /* String+Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0340927E7707408B081091F5 /* String+Highlight.swift */; };
 		200CA9431075011BF827DEBF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368A454373DDC15267EC027 /* ContentView.swift */; };
 		221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A007D2C70288EF39BE22119F /* SearchViewModel.swift */; };
@@ -149,6 +151,8 @@
 		F2DFDE6B7FB231DE247550DA /* RememberApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RememberApp.swift; sourceTree = "<group>"; };
 		F48B6A3569E37FAB1FE0895E /* SemanticSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemanticSearchService.swift; sourceTree = "<group>"; };
 		F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIProvider.swift; sourceTree = "<group>"; };
+		CC2B3C4D5E6F7A8B9C0D1E2F /* ClaudeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeProvider.swift; sourceTree = "<group>"; };
+		DD2B3C4D5E6F7A8B9C0D1E2F /* GeminiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiProvider.swift; sourceTree = "<group>"; };
 		FEF5F3C9FFEBACB5EF2ADD39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -213,6 +217,8 @@
 			children = (
 				A4021959B95DA0E76EB507A7 /* APIKeyStore.swift */,
 				B295E97523CDEB2131669FD6 /* AppleProvider.swift */,
+				CC2B3C4D5E6F7A8B9C0D1E2F /* ClaudeProvider.swift */,
+				DD2B3C4D5E6F7A8B9C0D1E2F /* GeminiProvider.swift */,
 				C02B398CEFF2970BFBE6E890 /* LLMProvider.swift */,
 				43C3133691FE3BA22674DA81 /* LLMProviderService.swift */,
 				F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */,
@@ -606,6 +612,8 @@
 				3F9093CF2FD46BB9CB4B30C1 /* MemorySource.swift in Sources */,
 				FCA57C72BA833F0A93FABAA8 /* Migrations.swift in Sources */,
 				13FA2157C6B1826D7E74A311 /* OpenAIProvider.swift in Sources */,
+				CC1A2B3D4E5F6A7B8C9D0E1F /* ClaudeProvider.swift in Sources */,
+				DD1A2B3D4E5F6A7B8C9D0E1F /* GeminiProvider.swift in Sources */,
 				4DEF92512972662F1A42238F /* PeopleView.swift in Sources */,
 				A02A86F97615CE85F30D435D /* PeopleViewModel.swift in Sources */,
 				6E2F115DED7960F605C5FC0F /* Person.swift in Sources */,

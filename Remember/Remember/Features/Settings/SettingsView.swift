@@ -6,8 +6,8 @@ struct SettingsView: View {
     @State private var providerService = LLMProviderService.shared
     @State private var isImporting = false
     @State private var lastResult: String?
-    @State private var apiKeyInput = ""
-    @State private var isKeySaved = false
+    @State private var geminiKeyInput = ""
+    @State private var savedGeminiKey: String? = nil
     @State private var showResetConfirm = false
     @State private var isResetting = false
 
@@ -23,7 +23,7 @@ struct SettingsView: View {
             .navigationTitle(L10n.Settings.title)
         }
         .onAppear {
-            apiKeyInput = providerService.apiKey(for: .openAI) ?? ""
+            savedGeminiKey = providerService.apiKey(for: .gemini)
         }
         .confirmationDialog(
             L10n.Settings.resetConfirmTitle,
@@ -47,13 +47,17 @@ struct SettingsView: View {
                 set: { providerService.select($0) }
             )) {
                 Text(L10n.Settings.aiApple).tag(LLMProviderKind.apple)
-                Text(L10n.Settings.aiOpenAI).tag(LLMProviderKind.openAI)
+                Text(L10n.Settings.aiGemini).tag(LLMProviderKind.gemini)
+                // TODO: re-enable when OpenAI credits available
+                // Text(L10n.Settings.aiOpenAI).tag(LLMProviderKind.openAI)
+                // TODO: re-enable when Claude API key available
+                // Text(L10n.Settings.aiClaude).tag(LLMProviderKind.claude)
             }
             .pickerStyle(.segmented)
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
 
-            if providerService.currentKind == .openAI {
-                apiKeyRow
+            if providerService.currentKind == .gemini {
+                geminiKeySection
             }
         } header: {
             Text(L10n.Settings.sectionAI)
@@ -63,29 +67,50 @@ struct SettingsView: View {
         }
     }
 
-    private var apiKeyRow: some View {
-        HStack {
-            SecureField(L10n.Settings.aiKeyPlaceholder, text: $apiKeyInput)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .onChange(of: apiKeyInput) { _, _ in isKeySaved = false }
-
-            Button {
-                saveAPIKey()
-            } label: {
-                Text(isKeySaved ? L10n.Settings.aiKeySaved : L10n.Settings.aiKeySave)
-                    .foregroundStyle(isKeySaved ? Color.secondary : Color.accentColor)
-                    .animation(.easeInOut(duration: 0.2), value: isKeySaved)
+    @ViewBuilder
+    private var geminiKeySection: some View {
+        if let key = savedGeminiKey, !key.isEmpty {
+            HStack {
+                Label(maskedKey(key), systemImage: "key.fill")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button {
+                    deleteGeminiKey()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
             }
-            .disabled(apiKeyInput.isEmpty)
+        } else {
+            HStack {
+                SecureField(L10n.Settings.aiGeminiKeyPlaceholder, text: $geminiKeyInput)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+
+                Button(L10n.Settings.aiKeySave) {
+                    saveGeminiKey()
+                }
+                .foregroundStyle(Color.accentColor)
+                .disabled(geminiKeyInput.isEmpty)
+            }
         }
     }
 
     private var privacyNote: String {
         switch providerService.currentKind {
         case .apple: L10n.Settings.aiPrivacyApple
+        case .gemini: L10n.Settings.aiPrivacyGemini
         case .openAI: L10n.Settings.aiPrivacyOpenAI
+        case .claude: L10n.Settings.aiPrivacyClaude
         }
+    }
+
+    private func maskedKey(_ key: String) -> String {
+        let prefix = String(key.prefix(8))
+        let suffix = String(key.suffix(4))
+        return "\(prefix)••••\(suffix)"
     }
 
     // MARK: - Sources Section
@@ -142,9 +167,18 @@ struct SettingsView: View {
 
     // MARK: - Actions
 
-    private func saveAPIKey() {
-        providerService.saveAPIKey(apiKeyInput, for: .openAI)
-        isKeySaved = true
+    private func saveGeminiKey() {
+        let key = geminiKeyInput.trimmingCharacters(in: .whitespaces)
+        guard !key.isEmpty else { return }
+        providerService.saveAPIKey(key, for: .gemini)
+        savedGeminiKey = key
+        geminiKeyInput = ""
+    }
+
+    private func deleteGeminiKey() {
+        APIKeyStore.delete(for: .gemini)
+        savedGeminiKey = nil
+        geminiKeyInput = ""
     }
 
     private func runImport(source: MemorySource) async {

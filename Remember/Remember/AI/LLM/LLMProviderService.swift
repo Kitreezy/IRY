@@ -35,9 +35,17 @@ final class LLMProviderService: @unchecked Sendable {
                 return AppleTextCompletionProvider()
             }
             return UnavailableTextCompletionProvider()
+        case .gemini:
+            let key = APIKeyStore.load(for: .gemini) ?? ""
+            return GeminiTextCompletionProvider(apiKey: key)
+        // TODO: re-enable when OpenAI credits available
         case .openAI:
             let key = APIKeyStore.load(for: .openAI) ?? ""
             return OpenAITextCompletionProvider(apiKey: key)
+        // TODO: re-enable when Claude API key available
+        case .claude:
+            let key = APIKeyStore.load(for: .claude) ?? ""
+            return ClaudeTextCompletionProvider(apiKey: key)
         }
     }
 
@@ -45,9 +53,16 @@ final class LLMProviderService: @unchecked Sendable {
         switch currentKind {
         case .apple:
             return AppleEmbeddingProvider()
+        case .gemini:
+            let key = APIKeyStore.load(for: .gemini) ?? ""
+            return GeminiEmbeddingProvider(apiKey: key)
+        // TODO: re-enable when OpenAI credits available
         case .openAI:
             let key = APIKeyStore.load(for: .openAI) ?? ""
             return OpenAIEmbeddingProvider(apiKey: key)
+        // TODO: re-enable when Claude API key available
+        case .claude:
+            return AppleEmbeddingProvider()
         }
     }
 }

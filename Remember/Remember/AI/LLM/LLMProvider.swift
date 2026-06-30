@@ -33,19 +33,27 @@ extension EmbeddingProvider {
 
 enum LLMProviderKind: String, CaseIterable, Sendable {
     case apple = "apple"
+    case gemini = "gemini"
+    // TODO: re-enable when OpenAI credits available
     case openAI = "openai"
+    // TODO: re-enable when Claude API key available
+    case claude = "claude"
 
     var displayName: String {
         switch self {
         case .apple: "Apple (on-device)"
+        case .gemini: "Gemini"
         case .openAI: "OpenAI"
+        case .claude: "Claude"
         }
     }
 
     var requiresAPIKey: Bool {
         switch self {
         case .apple: false
+        case .gemini: true
         case .openAI: true
+        case .claude: true
         }
     }
 
@@ -53,8 +61,12 @@ enum LLMProviderKind: String, CaseIterable, Sendable {
         switch self {
         case .apple:
             "All processing happens on your device. Nothing leaves your phone."
+        case .gemini:
+            "Text is sent to Google Gemini servers. Excellent Russian support. See ai.google.dev/gemini-api/terms."
         case .openAI:
             "Text is sent to OpenAI servers. See openai.com/privacy."
+        case .claude:
+            "Text is sent to Anthropic servers. Embeddings stay on-device. See anthropic.com/privacy."
         }
     }
 }
