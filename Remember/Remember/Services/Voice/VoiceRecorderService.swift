@@ -91,21 +91,31 @@ actor VoiceRecorderService {
     // MARK: - Transcription
 
     private func transcribe(url: URL) async throws -> String {
-        guard let recognizer = SFSpeechRecognizer(locale: Locale.current),
-              recognizer.isAvailable else {
-            // Fallback: try English if current locale unsupported
-            guard let fallback = SFSpeechRecognizer(locale: Locale(identifier: "en-US")),
-                  fallback.isAvailable else {
-                throw VoiceRecorderError.speechRecognitionUnavailable
-            }
-            return try await recognize(with: fallback, url: url)
+        let candidates = ["ru-RU", "en-US"]
+            .compactMap { SFSpeechRecognizer(locale: Locale(identifier: $0)) }
+            .filter { $0.isAvailable }
+
+        guard !candidates.isEmpty else {
+            throw VoiceRecorderError.speechRecognitionUnavailable
         }
-        return try await recognize(with: recognizer, url: url)
+
+        // Try each recognizer, pick the longest non-empty result
+        var collected: [String] = []
+        for recognizer in candidates {
+            if let text = try? await recognize(with: recognizer, url: url),
+               !text.trimmingCharacters(in: .whitespaces).isEmpty {
+                collected.append(text)
+            }
+        }
+
+        guard let best = collected.max(by: { $0.count < $1.count }) else {
+            throw VoiceRecorderError.transcriptionFailed
+        }
+        return best
     }
 
     private func recognize(with recognizer: SFSpeechRecognizer, url: URL) async throws -> String {
         let request = SFSpeechURLRecognitionRequest(url: url)
-        request.requiresOnDeviceRecognition = true
         request.shouldReportPartialResults = false
 
         return try await withCheckedThrowingContinuation { continuation in
