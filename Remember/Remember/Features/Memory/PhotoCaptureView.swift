@@ -33,6 +33,9 @@ struct PhotoCaptureView: View {
                     },
                     onRetake: {
                         flowState = .camera
+                    },
+                    onDismiss: {
+                        dismiss()
                     }
                 )
                 .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -170,6 +173,7 @@ private struct ReflectionScreen: View {
     let image: UIImage
     let onSave: (MemoryItem) async -> Void
     let onRetake: () -> Void
+    let onDismiss: () -> Void
 
     private enum VoiceState { case idle, recording, transcribing, done(String), failed }
 
@@ -180,104 +184,126 @@ private struct ReflectionScreen: View {
     @State private var waveformLevels: [Float] = Array(repeating: 0.3, count: 24)
     @State private var recordingElapsed: Double = 0
 
+    private let maxDuration: Double = 30
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        ZStack {
-            // Фото на весь экран с blur
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
+        GeometryReader { geo in
+            ZStack {
+                // Фото на весь экран
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .clipped()
+                    .ignoresSafeArea()
+
+                // Затемнение снизу
+                VStack {
+                    Spacer()
+                    LinearGradient(
+                        colors: [.clear, .black.opacity(0.92)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(width: geo.size.width, height: 500)
+                }
+                .frame(width: geo.size.width, height: geo.size.height)
                 .ignoresSafeArea()
 
-            // Затемнение снизу
-            VStack {
-                Spacer()
-                LinearGradient(
-                    colors: [.clear, .black.opacity(0.85)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 420)
-            }
-            .ignoresSafeArea()
-
-            // Контент поверх
-            VStack(spacing: 0) {
-                // Top bar: переснять + закрыть
-                HStack {
-                    Button {
-                        onRetake()
-                    } label: {
-                        Image(systemName: "arrow.uturn.left")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .background(.black.opacity(0.4))
-                            .clipShape(Circle())
-                    }
-                    Spacer()
-                    Button {
-                        onRetake() // возврат на камеру, dismiss снаружи
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .background(.black.opacity(0.4))
-                            .clipShape(Circle())
-                    }
+                // Контент — ширина задана явным числом (geo.size.width),
+                // а не .infinity, чтобы исключить любую двусмысленность
+                // в распространении размера сверху вниз по дереву.
+                VStack(spacing: 0) {
+                    topBar(width: geo.size.width)
+                    Spacer(minLength: 12)
+                    bottomPanel(width: geo.size.width)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 60)
-
-                Spacer()
-
-                // Нижняя панель
-                VStack(alignment: .leading, spacing: 16) {
-                    // Подсказка
-                    Text(L10n.Photo.reflectionHint)
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.7))
-
-                    // Голосовое состояние
-                    voicePanel
-
-                    // Поле why (появляется после транскрипции или при failed)
-                    if case .done = voiceState { whyField }
-                    if case .failed = voiceState { whyField }
-
-                    // Кнопка сохранить
-                    let canSave: Bool = {
-                        if case .done = voiceState { return true }
-                        if case .failed = voiceState { return !why.isEmpty }
-                        return false
-                    }()
-
-                    if canSave {
-                        Button {
-                            Task { await save() }
-                        } label: {
-                            Text(L10n.Capture.save)
-                                .font(.headline)
-                                .foregroundStyle(.black)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 50)
+                .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
             }
         }
         .onReceive(timer) { _ in
             if case .recording = voiceState {
                 recordingElapsed += 0.1
                 Task { await updateWaveform() }
-                if recordingElapsed >= 30 { Task { await stopRecording() } }
+                if recordingElapsed >= maxDuration { Task { await stopRecording() } }
             }
+        }
+    }
+
+    // MARK: - Top Bar
+
+    private func topBar(width: CGFloat) -> some View {
+        HStack {
+            Button(action: onRetake) {
+                Image(systemName: "arrow.uturn.left")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
+                    .background(.black.opacity(0.4))
+                    .clipShape(Circle())
+            }
+            Spacer()
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
+                    .background(.black.opacity(0.4))
+                    .clipShape(Circle())
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 60)
+        .frame(width: width, alignment: .leading)
+    }
+
+    // MARK: - Bottom Panel
+    // No ScrollView here on purpose: content height is bounded by lineLimit/maxHeight
+    // on every child, so a fixed VStack avoids ScrollView retaining a stale scroll
+    // offset across state changes (which clipped/shifted content sideways).
+    // Width is passed down as an explicit CGFloat (from GeometryReader), not
+    // .infinity, so every descendant Text is guaranteed a bounded width to wrap
+    // against instead of negotiating an ambiguous proposed size.
+
+    private func bottomPanel(width: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(L10n.Photo.reflectionHint)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.7))
+                .frame(width: width - 40, alignment: .leading)
+
+            voicePanel
+                .frame(width: width - 40, alignment: .leading)
+
+            if case .done = voiceState { whyField(width: width) }
+            if case .failed = voiceState { whyField(width: width) }
+
+            if canSave {
+                Button {
+                    Task { await save() }
+                } label: {
+                    Text(L10n.Capture.save)
+                        .font(.headline)
+                        .foregroundStyle(.black)
+                        .frame(width: width - 40)
+                        .padding(.vertical, 16)
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 16)
+        .padding(.bottom, 34)
+        .frame(width: width, alignment: .leading)
+    }
+
+    private var canSave: Bool {
+        switch voiceState {
+        case .done: return true
+        case .failed: return !why.isEmpty
+        default: return false
         }
     }
 
@@ -285,37 +311,75 @@ private struct ReflectionScreen: View {
 
     @ViewBuilder
     private var voicePanel: some View {
-        HStack(spacing: 16) {
-            switch voiceState {
-            case .idle:
+        switch voiceState {
+        case .idle:
+            HStack(spacing: 16) {
                 Button { Task { await startRecording() } } label: {
                     micButton(icon: "mic.fill", color: .white)
                 }
                 Text(L10n.Photo.tapToRecord)
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.8))
+                Spacer(minLength: 0)
+            }
 
-            case .recording:
-                Button { Task { await stopRecording() } } label: {
-                    micButton(icon: "stop.fill", color: .red)
+        case .recording:
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 16) {
+                    Button { Task { await stopRecording() } } label: {
+                        micButton(icon: "stop.fill", color: .red)
+                    }
+                    waveform
+                    Spacer(minLength: 0)
                 }
-                waveform
+                // Таймер
+                let remaining = Int(maxDuration - recordingElapsed)
+                Text(String(format: "0:%02d", max(0, remaining)))
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.white.opacity(0.6))
+                    .padding(.leading, 72)
+            }
 
-            case .transcribing:
+        case .transcribing:
+            HStack(spacing: 16) {
                 ProgressView().tint(.white)
                 Text(L10n.Voice.transcribing)
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.8))
+                Spacer(minLength: 0)
+            }
 
-            case .done:
+        case .done(let transcript):
+            VStack(alignment: .leading, spacing: 8) {
                 if isSuggestingWhy {
-                    ProgressView().tint(.white)
-                    Text(L10n.Voice.aiSuggesting)
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.7))
+                    HStack(spacing: 8) {
+                        ProgressView().tint(.white)
+                        Text(L10n.Voice.aiSuggesting)
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.7))
+                        Spacer(minLength: 0)
+                    }
+                } else {
+                    // Показываем что сказал пользователь
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L10n.Voice.transcriptLabel)
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.5))
+                        Text(transcript)
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.85))
+                            .lineLimit(4)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.white.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
+            }
 
-            case .failed:
+        case .failed:
+            HStack(spacing: 16) {
                 Button { Task { await startRecording() } } label: {
                     micButton(icon: "mic.fill", color: .white)
                 }
@@ -327,6 +391,7 @@ private struct ReflectionScreen: View {
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.6))
                 }
+                Spacer(minLength: 0)
             }
         }
     }
@@ -340,6 +405,7 @@ private struct ReflectionScreen: View {
                 .font(.system(size: 22))
                 .foregroundStyle(color)
         }
+        .fixedSize()
     }
 
     private var waveform: some View {
@@ -356,7 +422,7 @@ private struct ReflectionScreen: View {
 
     // MARK: - Why Field
 
-    private var whyField: some View {
+    private func whyField(width: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(L10n.Capture.whyTitle)
                 .font(.caption)
@@ -371,12 +437,14 @@ private struct ReflectionScreen: View {
                 TextEditor(text: $why)
                     .scrollContentBackground(.hidden)
                     .foregroundStyle(.white)
-                    .frame(minHeight: 80, maxHeight: 120)
+                    .frame(minHeight: 80, maxHeight: 100)
                     .padding(4)
             }
+            .frame(width: width - 40)
             .background(.white.opacity(0.15))
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
+        .frame(width: width - 40, alignment: .leading)
     }
 
     // MARK: - Actions

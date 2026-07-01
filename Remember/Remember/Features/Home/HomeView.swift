@@ -22,7 +22,9 @@ struct HomeView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { navigationBar }
                 .navigationDestination(for: MemoryItem.self) { memory in
-                    MemoryDetailView(memory: memory)
+                    MemoryDetailView(memory: memory, onDelete: {
+                        Task { await viewModel?.load() }
+                    })
                 }
             }
 

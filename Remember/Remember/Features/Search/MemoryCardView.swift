@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct MemoryCardView: View {
     let memory: MemoryItem

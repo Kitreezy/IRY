@@ -3,6 +3,7 @@ import UIKit
 
 struct MemoryDetailView: View {
     let memory: MemoryItem
+    var onDelete: (() -> Void)? = nil
     @Environment(\.memoryRepository) private var repository
     @Environment(\.dismiss) private var dismiss
     @State private var entities: [MemoryEntity] = []
@@ -68,6 +69,7 @@ struct MemoryDetailView: View {
             Button(L10n.Memory.delete, role: .destructive) {
                 Task {
                     try? await repository.delete(id: memory.id)
+                    onDelete?()
                     dismiss()
                 }
             }

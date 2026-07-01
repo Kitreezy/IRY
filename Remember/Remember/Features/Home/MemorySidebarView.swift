@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct MemorySidebarView: View {
     @Binding var isShowing: Bool
@@ -68,28 +69,39 @@ struct MemorySidebarView: View {
                 onSelect(memory)
             }
         } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(memory.title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-
-                if !memory.why.isEmpty {
-                    Text(memory.why)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                } else if !memory.content.isEmpty {
-                    Text(memory.content)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
+            HStack(alignment: .top, spacing: 10) {
+                if let path = memory.imagePath, let image = UIImage(contentsOfFile: path) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 44, height: 44)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
 
-                Text(memory.createdAt, style: .relative)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(memory.title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+
+                    if !memory.why.isEmpty {
+                        Text(memory.why)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    } else if !memory.content.isEmpty {
+                        Text(memory.content)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
+
+                    Text(memory.createdAt, style: .relative)
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
