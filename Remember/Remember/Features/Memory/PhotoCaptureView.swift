@@ -183,6 +183,7 @@ private struct ReflectionScreen: View {
     @State private var recorder = VoiceRecorderService()
     @State private var waveformLevels: [Float] = Array(repeating: 0.3, count: 24)
     @State private var recordingElapsed: Double = 0
+    @State private var capturedAudioPath: String?
 
     private let maxDuration: Double = 30
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -463,13 +464,14 @@ private struct ReflectionScreen: View {
     private func stopRecording() async {
         voiceState = .transcribing
         do {
-            let transcript = try await recorder.stopAndTranscribe()
-            if transcript.trimmingCharacters(in: .whitespaces).isEmpty {
+            let result = try await recorder.stopAndTranscribe()
+            if result.transcript.trimmingCharacters(in: .whitespaces).isEmpty {
                 voiceState = .failed
             } else {
-                voiceState = .done(transcript)
-                why = transcript
-                await suggestWhy(transcript: transcript)
+                voiceState = .done(result.transcript)
+                why = result.transcript
+                capturedAudioPath = result.audioPath
+                await suggestWhy(transcript: result.transcript)
             }
         } catch {
             voiceState = .failed
@@ -513,7 +515,8 @@ private struct ReflectionScreen: View {
             content: transcript,
             why: why.trimmingCharacters(in: .whitespaces),
             source: .photos,
-            imagePath: path
+            imagePath: path,
+            audioPath: capturedAudioPath
         )
         await onSave(memory)
     }

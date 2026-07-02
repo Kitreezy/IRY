@@ -75,7 +75,7 @@ actor VoiceRecorderService {
         return recorder.averagePower(forChannel: 0)
     }
 
-    func stopAndTranscribe() async throws -> String {
+    func stopAndTranscribe() async throws -> (transcript: String, audioPath: String?) {
         guard let recorder = audioRecorder, let url = recordingURL else {
             throw VoiceRecorderError.recordingFailed
         }
@@ -85,7 +85,25 @@ actor VoiceRecorderService {
         audioRecorder = nil
         try? AVAudioSession.sharedInstance().setActive(false)
 
-        return try await transcribe(url: url)
+        let transcript = try await transcribe(url: url)
+        let audioPath = persistRecording(at: url)
+        return (transcript, audioPath)
+    }
+
+    // MARK: - Persistence
+
+    private func persistRecording(at tempURL: URL) -> String? {
+        let dir = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("memories/audio")
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let destination = dir.appendingPathComponent(UUID().uuidString).appendingPathExtension("m4a")
+        do {
+            try FileManager.default.copyItem(at: tempURL, to: destination)
+            return destination.path
+        } catch {
+            return nil
+        }
     }
 
     // MARK: - Transcription

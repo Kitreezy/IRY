@@ -43,6 +43,12 @@ enum Migrations {
             }
         }
 
+        migrator.registerMigration("v6_audio_path") { db in
+            try db.alter(table: "memory_items") { t in
+                t.add(column: "audio_path", .text)
+            }
+        }
+
         migrator.registerMigration("v3_entities") { db in
             try db.create(table: "memory_entities") { t in
                 t.primaryKey("id", .text).notNull()

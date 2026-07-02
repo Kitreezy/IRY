@@ -26,6 +26,7 @@ struct VoiceCaptureView: View {
     @State private var attachedImage: UIImage?
     @State private var showCamera = false
     @State private var libraryItem: PhotosPickerItem?
+    @State private var capturedAudioPath: String?
 
     private let recorder = VoiceRecorderService()
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -300,15 +301,16 @@ struct VoiceCaptureView: View {
     private func stopRecording() async {
         state = .transcribing
         do {
-            let transcript = try await recorder.stopAndTranscribe()
-            if transcript.trimmingCharacters(in: .whitespaces).isEmpty {
+            let result = try await recorder.stopAndTranscribe()
+            if result.transcript.trimmingCharacters(in: .whitespaces).isEmpty {
                 state = .error(L10n.Voice.emptyTranscript)
             } else {
-                capturedTranscript = transcript
+                capturedTranscript = result.transcript
+                capturedAudioPath = result.audioPath
                 selectedDetent = .large
                 state = .captured
                 // Try AI suggestion silently in background — no blocking loader
-                Task { await suggestWhy(for: transcript) }
+                Task { await suggestWhy(for: result.transcript) }
             }
         } catch {
             state = .error(error.localizedDescription)
@@ -349,7 +351,8 @@ struct VoiceCaptureView: View {
             content: transcript,
             why: why.trimmingCharacters(in: .whitespaces),
             source: .userCreated,
-            imagePath: attachedImage?.saveToMemoriesDirectory()
+            imagePath: attachedImage?.saveToMemoriesDirectory(),
+            audioPath: capturedAudioPath
         )
         await onSave(memory)
         dismiss()
