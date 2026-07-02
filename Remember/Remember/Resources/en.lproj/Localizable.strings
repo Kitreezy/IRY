@@ -58,6 +58,7 @@
 
 // MARK: - Memory Detail
 "memory.detail.related.title" = "Related Memories";
+"memory.detail.audio.title" = "Voice Recording";
 
 // MARK: - Entity Types
 "entity.type.person" = "People";

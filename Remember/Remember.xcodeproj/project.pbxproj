@@ -17,6 +17,8 @@
 		BB1A2B3D4E5F6A7B8C9D0E1F /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2B3C4D5E6F7A8B9C0D1E2F /* CameraPreviewView.swift */; };
 		F2F1E1964DE4CAA22052FE7A /* UIImage+MemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C3C08AF4257EC741247652 /* UIImage+MemoryStorage.swift */; };
 		5EF73725C00E719CD7F5B53E /* SystemCameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAC9DB187A406352FEAD4EF /* SystemCameraPicker.swift */; };
+		B52EE7026C31AFA340E8B4D2 /* MemoryAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1872E9B5CE1867A4B2828995 /* MemoryAudioPlayer.swift */; };
+		57A9A7297D85261EE797F5FB /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0543BF8FBC0FB39A1370DC95 /* AudioPlayerView.swift */; };
 		200B569921A8FFF7C694B5FA /* String+Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0340927E7707408B081091F5 /* String+Highlight.swift */; };
 		200CA9431075011BF827DEBF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368A454373DDC15267EC027 /* ContentView.swift */; };
 		221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A007D2C70288EF39BE22119F /* SearchViewModel.swift */; };
@@ -165,6 +167,8 @@
 		BB2B3C4D5E6F7A8B9C0D1E2F /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CameraPreviewView.swift; path = "Remember/Services/Camera/CameraPreviewView.swift"; sourceTree = SOURCE_ROOT; };
 		56C3C08AF4257EC741247652 /* UIImage+MemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIImage+MemoryStorage.swift"; path = "Remember/Shared/UIImage+MemoryStorage.swift"; sourceTree = SOURCE_ROOT; };
 		EBAC9DB187A406352FEAD4EF /* SystemCameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SystemCameraPicker.swift; path = "Remember/Services/Camera/SystemCameraPicker.swift"; sourceTree = SOURCE_ROOT; };
+		1872E9B5CE1867A4B2828995 /* MemoryAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemoryAudioPlayer.swift; path = "Remember/Services/Voice/MemoryAudioPlayer.swift"; sourceTree = SOURCE_ROOT; };
+		0543BF8FBC0FB39A1370DC95 /* AudioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AudioPlayerView.swift; path = "Remember/Features/Memory/AudioPlayerView.swift"; sourceTree = SOURCE_ROOT; };
 		FEF5F3C9FFEBACB5EF2ADD39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -372,6 +376,7 @@
 				FF2B3C4D5E6F7A8B9C0D1E2F /* CameraView.swift */,
 				01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */,
 				BD68EC1B51DDAA7F68FA2B15 /* VoiceCaptureView.swift */,
+				0543BF8FBC0FB39A1370DC95 /* AudioPlayerView.swift */,
 			);
 			path = Memory;
 			sourceTree = "<group>";
@@ -444,6 +449,7 @@
 				AA2B3C4D5E6F7A8B9C0D1E2F /* CameraService.swift */,
 				BB2B3C4D5E6F7A8B9C0D1E2F /* CameraPreviewView.swift */,
 				EBAC9DB187A406352FEAD4EF /* SystemCameraPicker.swift */,
+				1872E9B5CE1867A4B2828995 /* MemoryAudioPlayer.swift */,
 			);
 			path = Voice;
 			sourceTree = "<group>";
@@ -656,6 +662,8 @@
 				BB1A2B3D4E5F6A7B8C9D0E1F /* CameraPreviewView.swift in Sources */,
 				F2F1E1964DE4CAA22052FE7A /* UIImage+MemoryStorage.swift in Sources */,
 				5EF73725C00E719CD7F5B53E /* SystemCameraPicker.swift in Sources */,
+				B52EE7026C31AFA340E8B4D2 /* MemoryAudioPlayer.swift in Sources */,
+				57A9A7297D85261EE797F5FB /* AudioPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

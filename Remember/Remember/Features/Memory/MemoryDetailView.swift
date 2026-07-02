@@ -33,6 +33,10 @@ struct MemoryDetailView: View {
                     whySection
                         .padding(.horizontal)
                 }
+                if let audioPath = memory.audioPath {
+                    audioSection(path: audioPath)
+                        .padding(.horizontal)
+                }
                 if !entities.isEmpty {
                     entitiesSection
                         .padding(.horizontal)
@@ -95,6 +99,16 @@ struct MemoryDetailView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.accentColor.opacity(0.07))
         .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
+    private func audioSection(path: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L10n.MemoryDetail.audioTitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+            AudioPlayerView(path: path)
+        }
     }
 
     private var headerSection: some View {

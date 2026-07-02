@@ -58,6 +58,7 @@
 
 // MARK: - Memory Detail
 "memory.detail.related.title" = "Похожие воспоминания";
+"memory.detail.audio.title" = "Голосовая запись";
 
 // MARK: - Entity Types
 "entity.type.person" = "Люди";
