@@ -506,7 +506,7 @@ private struct ReflectionScreen: View {
         if case .done(let t) = voiceState { transcript = t } else { transcript = "" }
 
         let title = await generateTitle(from: why.isEmpty ? transcript : why)
-        let path = saveImageToDisk(image)
+        let path = image.saveToMemoriesDirectory()
 
         let memory = MemoryItem(
             title: title,
@@ -531,16 +531,6 @@ private struct ReflectionScreen: View {
         return String(title.trimmingCharacters(in: .whitespacesAndNewlines).prefix(60))
     }
 
-    private func saveImageToDisk(_ image: UIImage) -> String? {
-        guard let data = image.jpegData(compressionQuality: 0.8) else { return nil }
-        let dir = FileManager.default
-            .urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("memories")
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let url = dir.appendingPathComponent(UUID().uuidString + ".jpg")
-        try? data.write(to: url)
-        return url.path
-    }
 }
 
 // MARK: - FlowState Equatable для animation

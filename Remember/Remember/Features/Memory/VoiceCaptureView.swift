@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 struct VoiceCaptureView: View {
     @Environment(\.dismiss) private var dismiss
@@ -22,6 +23,9 @@ struct VoiceCaptureView: View {
     @State private var isSaving = false
     @State private var recordingElapsed: Double = 0
     @State private var waveformLevels: [Float] = Array(repeating: 0.3, count: 20)
+    @State private var attachedImage: UIImage?
+    @State private var showCamera = false
+    @State private var libraryItem: PhotosPickerItem?
 
     private let recorder = VoiceRecorderService()
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -57,6 +61,22 @@ struct VoiceCaptureView: View {
             Task { await updateWaveform() }
             if recordingElapsed >= maxDuration {
                 Task { await stopRecording() }
+            }
+        }
+        .sheet(isPresented: $showCamera) {
+            SystemCameraPicker { image in
+                attachedImage = image
+            }
+            .ignoresSafeArea()
+        }
+        .onChange(of: libraryItem) { _, item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    attachedImage = image
+                }
+                libraryItem = nil
             }
         }
     }
@@ -147,6 +167,8 @@ struct VoiceCaptureView: View {
                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(.systemGray4)))
             }
 
+            photoAttachmentSection
+
             Spacer()
 
             Button {
@@ -161,6 +183,48 @@ struct VoiceCaptureView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .disabled(isSaving || capturedTranscript.trimmingCharacters(in: .whitespaces).isEmpty)
+        }
+    }
+
+    // MARK: - Photo Attachment
+
+    @ViewBuilder
+    private var photoAttachmentSection: some View {
+        if let attachedImage {
+            ZStack(alignment: .topTrailing) {
+                Image(uiImage: attachedImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 140)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                Button {
+                    self.attachedImage = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.white, .black.opacity(0.5))
+                }
+                .padding(8)
+            }
+        } else {
+            HStack(spacing: 12) {
+                Button {
+                    showCamera = true
+                } label: {
+                    Label(L10n.Photo.takePhoto, systemImage: "camera")
+                        .font(.subheadline)
+                }
+                .buttonStyle(.bordered)
+
+                PhotosPicker(selection: $libraryItem, matching: .images) {
+                    Label(L10n.Photo.choosePhoto, systemImage: "photo.on.rectangle")
+                        .font(.subheadline)
+                }
+                .buttonStyle(.bordered)
+            }
         }
     }
 
@@ -284,7 +348,8 @@ struct VoiceCaptureView: View {
             title: String(transcript.prefix(60)),
             content: transcript,
             why: why.trimmingCharacters(in: .whitespaces),
-            source: .userCreated
+            source: .userCreated,
+            imagePath: attachedImage?.saveToMemoriesDirectory()
         )
         await onSave(memory)
         dismiss()
