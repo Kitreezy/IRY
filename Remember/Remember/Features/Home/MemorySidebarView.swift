@@ -63,51 +63,56 @@ struct MemorySidebarView: View {
     }
 
     private func sidebarRow(_ memory: MemoryItem) -> some View {
-        Button {
-            withAnimation(.easeInOut(duration: 0.2)) { isShowing = false }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                onSelect(memory)
+        HStack(alignment: .top, spacing: 10) {
+            if let url = memory.imageURL, let image = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 44, height: 44)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-        } label: {
-            HStack(alignment: .top, spacing: 10) {
-                if let path = memory.imagePath, let image = UIImage(contentsOfFile: path) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 44, height: 44)
-                        .clipped()
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
 
-                VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
                     Text(memory.title)
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundStyle(.primary)
                         .lineLimit(1)
-
-                    if !memory.why.isEmpty {
-                        Text(memory.why)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(2)
-                    } else if !memory.content.isEmpty {
-                        Text(memory.content)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(2)
+                    Spacer(minLength: 8)
+                    if let audioURL = memory.audioURL {
+                        CompactAudioButton(url: audioURL)
                     }
-
-                    Text(memory.createdAt, style: .relative)
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
                 }
+
+                if !memory.why.isEmpty {
+                    Text(memory.why)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                } else if !memory.content.isEmpty {
+                    Text(memory.content)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+
+                Text(memory.createdAt, style: .relative)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.2)) { isShowing = false }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                onSelect(memory)
+            }
+        }
     }
 
     private var emptyState: some View {

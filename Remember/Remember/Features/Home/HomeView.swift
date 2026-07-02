@@ -199,22 +199,21 @@ struct HomeView: View {
                         }
 
                         ForEach(vm.results) { memory in
-                            Button {
-                                searchFocused = false
-                                navigationPath.append(memory)
-                            } label: {
-                                MemoryCardView(memory: memory, query: vm.query)
-                                    .padding(.horizontal, 20)
-                                    .padding(.vertical, 6)
-                            }
-                            .buttonStyle(.plain)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    Task { await vm.deleteMemory(memory) }
-                                } label: {
-                                    Label(L10n.Memory.delete, systemImage: "trash")
+                            MemoryCardView(memory: memory, query: vm.query)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 6)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    searchFocused = false
+                                    navigationPath.append(memory)
                                 }
-                            }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        Task { await vm.deleteMemory(memory) }
+                                    } label: {
+                                        Label(L10n.Memory.delete, systemImage: "trash")
+                                    }
+                                }
                         }
                     }
                     .padding(.bottom, 16)

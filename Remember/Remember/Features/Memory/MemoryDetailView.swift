@@ -17,7 +17,7 @@ struct MemoryDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                if let path = memory.imagePath, let image = UIImage(contentsOfFile: path) {
+                if let url = memory.imageURL, let image = UIImage(contentsOfFile: url.path) {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
@@ -33,8 +33,8 @@ struct MemoryDetailView: View {
                     whySection
                         .padding(.horizontal)
                 }
-                if let audioPath = memory.audioPath {
-                    audioSection(path: audioPath)
+                if let url = memory.audioURL {
+                    audioSection(path: url.path)
                         .padding(.horizontal)
                 }
                 if !entities.isEmpty {

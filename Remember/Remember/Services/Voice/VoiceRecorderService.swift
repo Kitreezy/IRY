@@ -93,17 +93,7 @@ actor VoiceRecorderService {
     // MARK: - Persistence
 
     private func persistRecording(at tempURL: URL) -> String? {
-        let dir = FileManager.default
-            .urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("memories/audio")
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let destination = dir.appendingPathComponent(UUID().uuidString).appendingPathExtension("m4a")
-        do {
-            try FileManager.default.copyItem(at: tempURL, to: destination)
-            return destination.path
-        } catch {
-            return nil
-        }
+        MemoryMediaStore.copy(from: tempURL, subdirectory: "memories/audio", fileExtension: "m4a")
     }
 
     // MARK: - Transcription

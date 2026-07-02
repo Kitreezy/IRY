@@ -8,7 +8,7 @@ struct MemoryCardView: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             // Фото превью если есть
-            if let path = memory.imagePath, let image = UIImage(contentsOfFile: path) {
+            if let url = memory.imageURL, let image = UIImage(contentsOfFile: url.path) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
@@ -23,6 +23,9 @@ struct MemoryCardView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Spacer()
+                    if let audioURL = memory.audioURL {
+                        CompactAudioButton(url: audioURL)
+                    }
                     Text(memory.createdAt.formatted(date: .abbreviated, time: .omitted))
                         .font(.caption)
                         .foregroundStyle(.secondary)
