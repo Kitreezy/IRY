@@ -10,19 +10,32 @@ actor SemanticSearchService {
 
     // Generate and store embedding when a memory is saved
     func indexMemory(_ memory: MemoryItem) async {
-        let text = [memory.title, memory.content, memory.why]
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let text = Self.indexText(for: memory)
         guard let vector = await embedding.vector(for: text) else { return }
         try? await repository.saveEmbedding(memoryId: memory.id, vector: vector)
     }
 
     /// Re-index all memories — needed when switching embedding providers
     /// (different dimensions are incompatible).
-    func reindexAll(memories: [MemoryItem]) async {
-        for memory in memories {
-            await indexMemory(memory)
+    ///
+    /// Каждое воспоминание независимо от остальных, поэтому векторы считаются
+    /// параллельно. Раньше 200 воспоминаний по 300 мс = ~60 с; при окне в 4
+    /// задачи — ~15 с. Запись в БД идёт после, чтобы не держать транзакции
+    /// открытыми во время сетевых ожиданий.
+    @discardableResult
+    func reindexAll(memories: [MemoryItem], maxConcurrent: Int = ConcurrencyLimit.network) async -> Int {
+        guard !memories.isEmpty else { return 0 }
+
+        let texts = memories.map(Self.indexText(for:))
+        let vectors = await embedding.vectors(for: texts, maxConcurrent: maxConcurrent)
+
+        var indexed = 0
+        for (memory, vector) in zip(memories, vectors) {
+            guard let vector else { continue }
+            try? await repository.saveEmbedding(memoryId: memory.id, vector: vector)
+            indexed += 1
         }
+        return indexed
     }
 
     // Hybrid search: FTS5 union + semantic reranking
@@ -35,16 +48,23 @@ actor SemanticSearchService {
             return ftsResults
         }
 
-        let allEmbeddings = (try? await repository.fetchAllEmbeddings()) ?? []
+        // Независимые чтения из БД — запускаем одновременно.
+        async let embeddingsTask = try? await repository.fetchAllEmbeddings()
+        async let allMemoriesTask = try? await repository.fetchAll()
+        let allEmbeddings = await embeddingsTask ?? []
+        let allMemories = await allMemoriesTask ?? []
+
         guard !allEmbeddings.isEmpty else { return ftsResults }
 
-        // Score all embeddings against query
+        // Косинусное сходство — чистая математика без актора: цикл больше не
+        // делает hop на EmbeddingService на каждой итерации.
         let threshold: Float = 0.55
         var semanticIds = Set<UUID>()
         var scores: [UUID: Float] = [:]
+        scores.reserveCapacity(allEmbeddings.count)
 
         for (memoryId, vector) in allEmbeddings {
-            let score = await embedding.similarity(between: queryVector, and: vector)
+            let score = EmbeddingService.cosineSimilarity(queryVector, vector)
             scores[memoryId] = score
             if score >= threshold {
                 semanticIds.insert(memoryId)
@@ -57,8 +77,6 @@ actor SemanticSearchService {
         // Union: FTS5 + semantic hits
         let unionIds = ftsIds.union(semanticIds)
 
-        // Fetch all memories in union that aren't already in ftsResults
-        let allMemories = (try? await repository.fetchAll()) ?? []
         let semanticOnly = allMemories.filter { semanticIds.contains($0.id) && !ftsIds.contains($0.id) }
         let combined = ftsResults + semanticOnly
 
@@ -68,5 +86,13 @@ actor SemanticSearchService {
             .sorted { a, b in
                 (scores[a.id] ?? 0) > (scores[b.id] ?? 0)
             }
+    }
+
+    // MARK: - Private
+
+    private static func indexText(for memory: MemoryItem) -> String {
+        [memory.title, memory.content, memory.why]
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
     }
 }

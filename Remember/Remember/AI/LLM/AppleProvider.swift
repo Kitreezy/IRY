@@ -22,11 +22,20 @@ actor AppleTextCompletionProvider: TextCompletionProvider {
 
 // MARK: - Apple Embedding (NLEmbedding, iOS 18+)
 
-// NLEmbedding is immutable after init and thread-safe for reads — @unchecked Sendable is safe here.
-final class AppleEmbeddingProvider: EmbeddingProvider, @unchecked Sendable {
-    let providerName = "Apple NLEmbedding"
-    let dimensions = 512
-    let isAvailable: Bool
+/// NLEmbedding — общий ресурс, а не чистая функция.
+///
+/// Раньше здесь стояло `@unchecked Sendable` с комментарием «thread-safe для
+/// чтения». Как только векторы начали считаться параллельно, это привело к
+/// `malloc: Heap corruption detected` — `vector(for:)` не рассчитан на
+/// одновременные вызовы. Актор сериализует доступ к модели.
+///
+/// Вывод для параллелизма: on-device embeddings всё равно упираются в CPU,
+/// поэтому выигрыш здесь минимален. Параллельная обработка окупается на
+/// сетевых провайдерах (OpenAI / Gemini), где время — это ожидание ответа.
+actor AppleEmbeddingProvider: EmbeddingProvider {
+    nonisolated let providerName = "Apple NLEmbedding"
+    nonisolated let dimensions = 512
+    nonisolated let isAvailable: Bool
 
     private let embedding: NLEmbedding?
 
