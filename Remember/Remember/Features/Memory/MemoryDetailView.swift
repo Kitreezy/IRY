@@ -1,10 +1,14 @@
 import SwiftUI
+import UIKit
 
 struct MemoryDetailView: View {
     let memory: MemoryItem
+    var onDelete: (() -> Void)? = nil
     @Environment(\.memoryRepository) private var repository
+    @Environment(\.dismiss) private var dismiss
     @State private var entities: [MemoryEntity] = []
     @State private var related: [MemoryItem] = []
+    @State private var showDeleteConfirm = false
 
     private var relatedService: RelatedMemoriesService {
         RelatedMemoriesService(repository: repository)
@@ -13,23 +17,99 @@ struct MemoryDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
+                if let url = memory.imageURL, let image = UIImage(contentsOfFile: url.path) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 260)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .padding(.horizontal)
+                }
                 headerSection
+                    .padding(.horizontal)
+                if !memory.why.isEmpty {
+                    whySection
+                        .padding(.horizontal)
+                }
+                if let url = memory.audioURL {
+                    audioSection(path: url.path)
+                        .padding(.horizontal)
+                }
                 if !entities.isEmpty {
                     entitiesSection
+                        .padding(.horizontal)
                 }
-                contentSection
+                if !memory.content.isEmpty && memory.content != memory.why {
+                    contentSection
+                        .padding(.horizontal)
+                }
                 if !related.isEmpty {
                     relatedSection
+                        .padding(.horizontal)
                 }
             }
-            .padding()
+            .padding(.vertical)
         }
         .navigationTitle(memory.title)
         .navigationBarTitleDisplayMode(.large)
         .task { await load() }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(role: .destructive) {
+                    showDeleteConfirm = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .confirmationDialog(
+            L10n.Memory.deleteConfirmTitle,
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(L10n.Memory.delete, role: .destructive) {
+                Task {
+                    try? await repository.delete(id: memory.id)
+                    onDelete?()
+                    dismiss()
+                }
+            }
+        } message: {
+            Text(L10n.Memory.deleteConfirmMessage)
+        }
     }
 
     // MARK: - Sections
+
+    private var whySection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L10n.MemoryDetail.whyTitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+            Text(memory.why)
+                .font(.body)
+                .italic()
+                .foregroundStyle(.primary)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accentColor.opacity(0.07))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
+    private func audioSection(path: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(L10n.MemoryDetail.audioTitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+            AudioPlayerView(path: path)
+        }
+    }
 
     private var headerSection: some View {
         HStack {

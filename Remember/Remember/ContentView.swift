@@ -2,10 +2,6 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        AppTabView()
+        HomeView()
     }
-}
-
-#Preview {
-    ContentView()
 }

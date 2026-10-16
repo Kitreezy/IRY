@@ -11,6 +11,8 @@
 "search.empty.subtitle" = "Tap + to add your first memory.";
 "search.notfound.title" = "Nothing found";
 "search.notfound.subtitle" = "Try different words.";
+"search.answer.label" = "From your memories";
+"search.answer.loading" = "Thinking...";
 
 // MARK: - Create Memory
 "memory.create.title" = "New Memory";
@@ -33,6 +35,22 @@
 "people.mentions.one" = "%d memory";
 "people.mentions.other" = "%d memories";
 
+// MARK: - Capture Memory
+"capture.what.title" = "What happened?";
+"capture.what.subtitle" = "Describe the moment, idea, or thing you want to remember.";
+"capture.why.title" = "Why does this matter?";
+"capture.why.subtitle" = "This is what turns information into a memory.";
+"capture.why.placeholder" = "Because...";
+"capture.title.placeholder" = "Give it a name";
+"capture.content.placeholder" = "What do you want to remember?";
+"capture.button.next" = "Next";
+"capture.button.save" = "Save Memory";
+"capture.button.cancel" = "Cancel";
+"memory.delete" = "Delete";
+"memory.delete.confirm.title" = "Delete Memory?";
+"memory.delete.confirm.message" = "This memory will be permanently deleted.";
+"memory.detail.why.title" = "Why it matters";
+
 // MARK: - Import
 "import.untitled.event" = "Untitled Event";
 "import.media.photo" = "Photo";
@@ -40,6 +58,7 @@
 
 // MARK: - Memory Detail
 "memory.detail.related.title" = "Related Memories";
+"memory.detail.audio.title" = "Voice Recording";
 
 // MARK: - Entity Types
 "entity.type.person" = "People";
@@ -53,6 +72,53 @@
 "settings.import.calendar" = "Import Calendar";
 "settings.import.photos" = "Import Photos";
 "settings.import.result" = "Imported %d memories from %@";
+"settings.section.ai" = "AI Provider";
+"settings.ai.apple" = "Apple";
+"settings.ai.gemini" = "Gemini";
+"settings.ai.openai" = "OpenAI";
+"settings.ai.claude" = "Claude";
+"settings.ai.apikey.title" = "API Key";
+"settings.ai.apikey.placeholder" = "sk-...";
+"settings.ai.gemini.apikey.placeholder" = "AIza...";
+"settings.ai.claude.apikey.placeholder" = "sk-ant-...";
+"settings.ai.apikey.save" = "Save";
+"settings.ai.apikey.saved" = "Saved";
+"settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone. English only.";
+"settings.ai.privacy.gemini" = "Text is sent to Google Gemini. Full Russian support. Free tier available.";
+"settings.ai.privacy.openai" = "Text is sent to OpenAI. Better quality, especially for Russian.";
+"settings.ai.privacy.claude" = "Text is sent to Anthropic (Claude). Embeddings stay on-device. Excellent Russian support.";
+"settings.reset.all" = "Reset All Data";
+"settings.reset.footer" = "Deletes all memories, imports and embeddings. Cannot be undone.";
+"settings.reset.confirm.title" = "Reset all data?";
+"settings.reset.confirm.message" = "All memories will be permanently deleted.";
+"settings.reset.confirm.action" = "Delete Everything";
+
+// MARK: - Home Screen
+"home.memories.label" = "memories";
+"home.search.placeholder" = "What do you remember?";
+"home.sidebar.title" = "Memories";
+"home.capture.photo" = "Photo";
+"home.capture.voice" = "Voice";
+"home.capture.text" = "Text";
+
+// MARK: - Voice Capture
+"photo.title" = "Photo Memory";
+"photo.reflection.hint" = "Speak — what does this moment mean to you?";
+"photo.tap.to.record" = "Tap to record your memory";
+"photo.transcription.failed" = "Could not hear you";
+"photo.tap.to.retry" = "Tap to try again";
+"photo.subtitle" = "A photo captures what happened.\nYou capture why it mattered.";
+"photo.take" = "Take Photo";
+"photo.choose" = "Choose from Library";
+"photo.memory.title" = "Photo Memory";
+"voice.title" = "Say it out loud";
+"voice.subtitle" = "Tap the mic and speak your memory.\nUp to 30 seconds.";
+"voice.recording" = "Recording...";
+"voice.stop.hint" = "Tap to stop";
+"voice.transcribing" = "Transcribing...";
+"voice.transcript.label" = "What you said";
+"voice.try.again" = "Try Again";
+"voice.empty.transcript" = "No speech detected. Try again.";
 
 // MARK: - Timeline
 "timeline.title" = "Timeline";
@@ -60,3 +126,4 @@
 "timeline.yesterday" = "Yesterday";
 "timeline.empty.title" = "No memories yet";
 "timeline.empty.subtitle" = "Your memories will appear here\nin chronological order.";
+"voice.ai.suggesting" = "AI is thinking...";

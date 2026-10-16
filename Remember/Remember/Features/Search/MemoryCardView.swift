@@ -1,27 +1,45 @@
 import SwiftUI
+import UIKit
 
 struct MemoryCardView: View {
     let memory: MemoryItem
     var query: String = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Label(memory.source.displayName, systemImage: memory.source.icon)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text(memory.createdAt.formatted(date: .abbreviated, time: .omitted))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        HStack(alignment: .top, spacing: 12) {
+            // Фото превью если есть
+            if let url = memory.imageURL, let image = UIImage(contentsOfFile: url.path) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 72, height: 72)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
             }
 
-            memory.title.highlighted(query: query, base: .headline, highlightColor: .primary)
-                .lineLimit(1)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Label(memory.source.displayName, systemImage: memory.source.icon)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    if let audioURL = memory.audioURL {
+                        CompactAudioButton(url: audioURL)
+                    }
+                    Text(memory.createdAt.formatted(date: .abbreviated, time: .omitted))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
 
-            if !memory.content.isEmpty {
-                memory.content.highlighted(query: query, base: .subheadline, highlightColor: .primary)
-                    .lineLimit(2)
+                memory.title.highlighted(query: query, base: .headline, highlightColor: .primary)
+                    .lineLimit(1)
+
+                let preview = memory.why.isEmpty ? memory.content : memory.why
+                if !preview.isEmpty {
+                    preview.highlighted(query: query, base: .subheadline, highlightColor: .primary)
+                        .lineLimit(2)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .padding()

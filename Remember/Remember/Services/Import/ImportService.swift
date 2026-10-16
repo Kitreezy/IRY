@@ -19,23 +19,18 @@ actor ImportService {
     }
 
     /// Runs all importers that have permission granted, returns results per source.
+    ///
+    /// Импортеры не пересекаются по данным: Calendar и Photos читают разные
+    /// системные хранилища. Последовательный запуск означал, что запрос прав и
+    /// выборка фото ждали окончания работы с календарём. Здесь они идут
+    /// одновременно, а порядок результатов сохраняется — на него опираются тесты
+    /// и UI настроек.
     @discardableResult
     func importAll() async -> [ImportResult] {
-        var results: [ImportResult] = []
-        for importer in importers {
-            let hasAccess = await importer.requestAccess()
-            guard hasAccess else {
-                results.append(ImportResult(source: importer.source, imported: 0, failed: 0))
-                continue
-            }
-            do {
-                let count = try await importer.importNew(into: repository)
-                results.append(ImportResult(source: importer.source, imported: count, failed: 0))
-            } catch {
-                results.append(ImportResult(source: importer.source, imported: 0, failed: 1))
-            }
+        let repository = self.repository
+        return await importers.concurrentMap(maxConcurrent: importers.count) { importer in
+            await Self.run(importer, into: repository)
         }
-        return results
     }
 
     /// Import from a single specific source.
@@ -44,14 +39,23 @@ actor ImportService {
         guard let importer = importers.first(where: { $0.source == source }) else {
             return ImportResult(source: source, imported: 0, failed: 0)
         }
+        return await Self.run(importer, into: repository)
+    }
+
+    // MARK: - Private
+
+    private static func run(
+        _ importer: any SourceImporter,
+        into repository: any MemoryRepository
+    ) async -> ImportResult {
         guard await importer.requestAccess() else {
-            return ImportResult(source: source, imported: 0, failed: 0)
+            return ImportResult(source: importer.source, imported: 0, failed: 0)
         }
         do {
             let count = try await importer.importNew(into: repository)
-            return ImportResult(source: source, imported: count, failed: 0)
+            return ImportResult(source: importer.source, imported: count, failed: 0)
         } catch {
-            return ImportResult(source: source, imported: 0, failed: 1)
+            return ImportResult(source: importer.source, imported: 0, failed: 1)
         }
     }
 }

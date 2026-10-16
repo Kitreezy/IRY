@@ -48,22 +48,30 @@ struct RememberApp: App {
 
     // MARK: - Background indexing
 
+    /// Две `.task` выше стартуют независимо, поэтому индексация и извлечение
+    /// сущностей идут одновременно. Внутри каждой — тоже параллелизм.
     private func indexUnindexedMemories() async {
-        let all = (try? await repository.fetchAll()) ?? []
-        let indexed = Set((try? await repository.fetchAllEmbeddings())?.map { $0.memoryId } ?? [])
+        // Два независимых запроса к БД: раньше второй ждал первый без причины.
+        async let allTask = try? await repository.fetchAll()
+        async let indexedTask = try? await repository.fetchAllEmbeddings()
+
+        let all = await allTask ?? []
+        let indexed = Set((await indexedTask)?.map { $0.memoryId } ?? [])
+
         let unindexed = all.filter { !indexed.contains($0.id) }
-        for memory in unindexed {
-            await semantic.indexMemory(memory)
-        }
+        await semantic.reindexAll(memories: unindexed)
     }
 
     private func extractEntitiesForUnprocessed() async {
         guard entityExtraction.isAvailable else { return }
-        let all = (try? await repository.fetchAll()) ?? []
-        let processed = Set((try? await repository.fetchAllEntities())?.map { $0.memoryId } ?? [])
+
+        async let allTask = try? await repository.fetchAll()
+        async let processedTask = try? await repository.fetchAllEntities()
+
+        let all = await allTask ?? []
+        let processed = Set((await processedTask)?.map { $0.memoryId } ?? [])
+
         let unprocessed = all.filter { !processed.contains($0.id) }
-        for memory in unprocessed {
-            await entityExtraction.extractAndSave(for: memory)
-        }
+        await entityExtraction.extractAndSave(for: unprocessed)
     }
 }

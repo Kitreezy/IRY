@@ -20,23 +20,35 @@ actor RelatedMemoriesService {
 
         guard !candidates.isEmpty else { return [] }
 
-        let sourceText = memory.title + " " + memory.content
-        guard let sourceVector = await embedding.vector(for: sourceText) else {
+        let sourceText = Self.rankingText(for: memory)
+        let candidateTexts = candidates.map(Self.rankingText(for:))
+
+        // Вектор исходного воспоминания и векторы кандидатов независимы —
+        // считаем их одним параллельным заходом вместо N+1 последовательных.
+        async let sourceVectorTask = embedding.vector(for: sourceText)
+        async let candidateVectorsTask = embedding.vectors(for: candidateTexts)
+
+        let sourceVector = await sourceVectorTask
+        let candidateVectors = await candidateVectorsTask
+
+        guard let sourceVector else {
             return Array(candidates.prefix(limit))
         }
 
-        var ranked: [(MemoryItem, Float)] = []
-        for candidate in candidates {
-            let candidateText = candidate.title + " " + candidate.content
-            if let v = await embedding.vector(for: candidateText) {
-                let score = await embedding.similarity(between: sourceVector, and: v)
-                ranked.append((candidate, score))
-            }
+        let ranked: [(MemoryItem, Float)] = zip(candidates, candidateVectors).compactMap { candidate, vector in
+            guard let vector else { return nil }
+            return (candidate, EmbeddingService.cosineSimilarity(sourceVector, vector))
         }
 
         return ranked
             .sorted { $0.1 > $1.1 }
             .prefix(limit)
             .map(\.0)
+    }
+
+    // MARK: - Private
+
+    private static func rankingText(for memory: MemoryItem) -> String {
+        memory.title + " " + memory.content
     }
 }

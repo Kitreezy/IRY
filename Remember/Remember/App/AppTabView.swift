@@ -3,7 +3,7 @@ import SwiftUI
 struct AppTabView: View {
     var body: some View {
         TabView {
-            SearchView()
+            HomeView()
                 .tabItem {
                     Label(L10n.Tab.search, systemImage: "magnifyingglass")
                 }

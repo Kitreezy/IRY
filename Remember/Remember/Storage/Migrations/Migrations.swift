@@ -30,6 +30,25 @@ enum Migrations {
             }
         }
 
+        migrator.registerMigration("v4_why_and_summary") { db in
+            try db.alter(table: "memory_items") { t in
+                t.add(column: "why", .text).notNull().defaults(to: "")
+                t.add(column: "summary", .text).notNull().defaults(to: "")
+            }
+        }
+
+        migrator.registerMigration("v5_image_path") { db in
+            try db.alter(table: "memory_items") { t in
+                t.add(column: "image_path", .text)
+            }
+        }
+
+        migrator.registerMigration("v6_audio_path") { db in
+            try db.alter(table: "memory_items") { t in
+                t.add(column: "audio_path", .text)
+            }
+        }
+
         migrator.registerMigration("v3_entities") { db in
             try db.create(table: "memory_entities") { t in
                 t.primaryKey("id", .text).notNull()

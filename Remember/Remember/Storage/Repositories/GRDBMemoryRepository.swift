@@ -9,19 +9,27 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
     var id: String
     var title: String
     var content: String
+    var why: String
+    var summary: String
     var source: String
     var created_at: Date
     var updated_at: Date
     var tags: String
+    var image_path: String?
+    var audio_path: String?
 
     init(from item: MemoryItem) {
         self.id = item.id.uuidString
         self.title = item.title
         self.content = item.content
+        self.why = item.why
+        self.summary = item.summary
         self.source = item.source.rawValue
         self.created_at = item.createdAt
         self.updated_at = item.updatedAt
         self.tags = item.tags.joined(separator: ",")
+        self.image_path = item.imagePath
+        self.audio_path = item.audioPath
     }
 
     func toMemoryItem() -> MemoryItem? {
@@ -32,10 +40,14 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
             id: uuid,
             title: title,
             content: content,
+            why: why,
+            summary: summary,
             source: source,
             createdAt: created_at,
             updatedAt: updated_at,
-            tags: tagList
+            tags: tagList,
+            imagePath: image_path,
+            audioPath: audio_path
         )
     }
 }
@@ -122,10 +134,9 @@ final class GRDBMemoryRepository: MemoryRepository {
     }
 
     func search(query: String) async throws -> [MemoryItem] {
-        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return try await fetchAll()
-        }
-        let pattern = FTS5Pattern(matchingAllTokensIn: query)
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return try await fetchAll() }
+        guard let pattern = FTS5Pattern(matchingAllTokensIn: trimmed) else { return [] }
         return try await writer.read { db in
             try MemoryRecord.fetchAll(
                 db,
@@ -139,6 +150,14 @@ final class GRDBMemoryRepository: MemoryRepository {
                 arguments: [pattern]
             )
             .compactMap { $0.toMemoryItem() }
+        }
+    }
+
+    func deleteAll() async throws {
+        try await writer.write { db in
+            try db.execute(sql: "DELETE FROM memory_entities")
+            try db.execute(sql: "DELETE FROM memory_embeddings")
+            try db.execute(sql: "DELETE FROM memory_items")
         }
     }
 

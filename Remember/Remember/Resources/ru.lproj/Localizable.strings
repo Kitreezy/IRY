@@ -11,6 +11,8 @@
 "search.empty.subtitle" = "Нажмите +, чтобы добавить первое.";
 "search.notfound.title" = "Ничего не найдено";
 "search.notfound.subtitle" = "Попробуйте другие слова.";
+"search.answer.label" = "Из твоих воспоминаний";
+"search.answer.loading" = "Думаю...";
 
 // MARK: - Create Memory
 "memory.create.title" = "Новое воспоминание";
@@ -33,6 +35,22 @@
 "people.mentions.one" = "%d воспоминание";
 "people.mentions.other" = "%d воспоминаний";
 
+// MARK: - Capture Memory
+"capture.what.title" = "Что произошло?";
+"capture.what.subtitle" = "Опиши момент, идею или что-то важное.";
+"capture.why.title" = "Почему это важно?";
+"capture.why.subtitle" = "Именно это превращает информацию в воспоминание.";
+"capture.why.placeholder" = "Потому что...";
+"capture.title.placeholder" = "Дай название";
+"capture.content.placeholder" = "Что хочешь запомнить?";
+"capture.button.next" = "Далее";
+"capture.button.save" = "Сохранить воспоминание";
+"capture.button.cancel" = "Назад";
+"memory.delete" = "Удалить";
+"memory.delete.confirm.title" = "Удалить воспоминание?";
+"memory.delete.confirm.message" = "Воспоминание будет удалено навсегда.";
+"memory.detail.why.title" = "Почему это важно";
+
 // MARK: - Import
 "import.untitled.event" = "Без названия";
 "import.media.photo" = "Фото";
@@ -40,6 +58,7 @@
 
 // MARK: - Memory Detail
 "memory.detail.related.title" = "Похожие воспоминания";
+"memory.detail.audio.title" = "Голосовая запись";
 
 // MARK: - Entity Types
 "entity.type.person" = "Люди";
@@ -53,6 +72,53 @@
 "settings.import.calendar" = "Импорт Календаря";
 "settings.import.photos" = "Импорт Фото";
 "settings.import.result" = "Импортировано %d воспоминаний из %@";
+"settings.section.ai" = "AI Провайдер";
+"settings.ai.apple" = "Apple";
+"settings.ai.gemini" = "Gemini";
+"settings.ai.openai" = "OpenAI";
+"settings.ai.claude" = "Claude";
+"settings.ai.apikey.title" = "API ключ";
+"settings.ai.apikey.placeholder" = "sk-...";
+"settings.ai.gemini.apikey.placeholder" = "AIza...";
+"settings.ai.claude.apikey.placeholder" = "sk-ant-...";
+"settings.ai.apikey.save" = "Сохранить";
+"settings.ai.apikey.saved" = "Сохранено";
+"settings.ai.privacy.apple" = "Весь AI работает на устройстве. Ничего не покидает телефон. Только английский.";
+"settings.ai.privacy.gemini" = "Текст отправляется в Google Gemini. Полная поддержка русского языка. Есть бесплатный тариф.";
+"settings.ai.privacy.openai" = "Текст отправляется в OpenAI. Лучше качество, особенно для русского.";
+"settings.ai.privacy.claude" = "Текст отправляется в Anthropic (Claude). Embeddings остаются на устройстве. Отличная поддержка русского языка.";
+"settings.reset.all" = "Сбросить все данные";
+"settings.reset.footer" = "Удаляет все воспоминания, импорты и индексы. Действие необратимо.";
+"settings.reset.confirm.title" = "Сбросить все данные?";
+"settings.reset.confirm.message" = "Все воспоминания будут удалены навсегда.";
+"settings.reset.confirm.action" = "Удалить всё";
+
+// MARK: - Home Screen
+"home.memories.label" = "воспоминаний";
+"home.search.placeholder" = "Что ты помнишь?";
+"home.sidebar.title" = "Воспоминания";
+"home.capture.photo" = "Фото";
+"home.capture.voice" = "Голос";
+"home.capture.text" = "Текст";
+
+// MARK: - Voice Capture
+"photo.title" = "Фото-воспоминание";
+"photo.reflection.hint" = "Расскажи — что значит для тебя этот момент?";
+"photo.tap.to.record" = "Нажми чтобы записать воспоминание";
+"photo.transcription.failed" = "Не удалось распознать речь";
+"photo.tap.to.retry" = "Нажми чтобы попробовать снова";
+"photo.subtitle" = "Фото сохраняет что произошло.\nТы сохраняешь почему это важно.";
+"photo.take" = "Сделать фото";
+"photo.choose" = "Выбрать из галереи";
+"photo.memory.title" = "Фото-воспоминание";
+"voice.title" = "Скажи вслух";
+"voice.subtitle" = "Нажми на микрофон и говори.\nДо 30 секунд.";
+"voice.recording" = "Запись...";
+"voice.stop.hint" = "Нажми, чтобы остановить";
+"voice.transcribing" = "Транскрибирую...";
+"voice.transcript.label" = "Что ты сказал";
+"voice.try.again" = "Попробовать снова";
+"voice.empty.transcript" = "Речь не распознана. Попробуй ещё раз.";
 
 // MARK: - Timeline
 "timeline.title" = "Хронология";
@@ -60,3 +126,4 @@
 "timeline.yesterday" = "Вчера";
 "timeline.empty.title" = "Воспоминаний пока нет";
 "timeline.empty.subtitle" = "Ваши воспоминания появятся здесь\nв хронологическом порядке.";
+"voice.ai.suggesting" = "AI думает...";

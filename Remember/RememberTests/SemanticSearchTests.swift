@@ -1,9 +1,16 @@
 import Testing
 import Foundation
+import NaturalLanguage
 @testable import Remember
 
 @Suite("Semantic Search")
 struct SemanticSearchTests {
+
+    /// Есть ли модель предложений. В симуляторе iOS её ресурсов нет:
+    /// `sentenceEmbedding(for:)` отдаёт `nil`, векторов не будет вовсе.
+    /// Тесты, которым нужны векторы, там пропускаются, а не падают — и не
+    /// проходят молча, ничего не проверив.
+    static let hasSentenceModel = NLEmbedding.sentenceEmbedding(for: .english) != nil
 
     private func makeSetup() async throws -> (GRDBMemoryRepository, SemanticSearchService) {
         let db = try AppDatabase(inMemory: true)
@@ -14,7 +21,7 @@ struct SemanticSearchTests {
 
     // MARK: - Embedding Generation
 
-    @Test("EmbeddingService generates vector for English text")
+    @Test("EmbeddingService generates vector for English text", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
     func embeddingEnglish() async {
         let vector = await EmbeddingService.shared.vector(for: "artificial intelligence startup")
         #expect(vector != nil)
@@ -29,18 +36,17 @@ struct SemanticSearchTests {
         // Russian may not be supported by NLEmbedding — this test documents the behavior
     }
 
-    @Test("Cosine similarity: identical texts = 1.0")
-    func similarityIdentical() async {
-        let v1 = await EmbeddingService.shared.vector(for: "sales CRM software")
-        let v2 = await EmbeddingService.shared.vector(for: "sales CRM software")
-        guard let v1, let v2 else { return }
+    @Test("Cosine similarity: identical texts = 1.0", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
+    func similarityIdentical() async throws {
+        let v1 = try #require(await EmbeddingService.shared.vector(for: "sales CRM software"))
+        let v2 = try #require(await EmbeddingService.shared.vector(for: "sales CRM software"))
         let score = await EmbeddingService.shared.similarity(between: v1, and: v2)
         print("[Similarity] identical: \(score)")
         #expect(score > 0.99)
     }
 
-    @Test("Cosine similarity: related concepts score")
-    func similarityRelated() async {
+    @Test("Cosine similarity: related concepts score", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
+    func similarityRelated() async throws {
         let pairs: [(String, String)] = [
             ("AI CRM for sales teams", "startup about sales"),
             ("trip to London", "travel in England"),
@@ -50,22 +56,17 @@ struct SemanticSearchTests {
         ]
 
         for (a, b) in pairs {
-            let v1 = await EmbeddingService.shared.vector(for: a)
-            let v2 = await EmbeddingService.shared.vector(for: b)
-            guard let v1, let v2 else {
-                print("[Similarity] '\(a)' vs '\(b)': SKIP — no vector")
-                continue
-            }
+            let v1 = try #require(await EmbeddingService.shared.vector(for: a))
+            let v2 = try #require(await EmbeddingService.shared.vector(for: b))
             let score = await EmbeddingService.shared.similarity(between: v1, and: v2)
             print("[Similarity] '\(a)' vs '\(b)': \(String(format: "%.3f", score))")
         }
     }
 
-    @Test("Cosine similarity: unrelated concepts score below threshold")
-    func similarityUnrelated() async {
-        let v1 = await EmbeddingService.shared.vector(for: "cooking pasta recipe")
-        let v2 = await EmbeddingService.shared.vector(for: "software architecture patterns")
-        guard let v1, let v2 else { return }
+    @Test("Cosine similarity: unrelated concepts score below threshold", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
+    func similarityUnrelated() async throws {
+        let v1 = try #require(await EmbeddingService.shared.vector(for: "cooking pasta recipe"))
+        let v2 = try #require(await EmbeddingService.shared.vector(for: "software architecture patterns"))
         let score = await EmbeddingService.shared.similarity(between: v1, and: v2)
         print("[Similarity] unrelated: \(String(format: "%.3f", score)) (threshold: 0.55)")
         #expect(score < 0.55) // must not trigger semantic match
@@ -73,7 +74,7 @@ struct SemanticSearchTests {
 
     // MARK: - Hybrid Search Scenarios
 
-    @Test("Semantic finds memory by meaning — EN")
+    @Test("Semantic finds memory by meaning — EN", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
     func semanticFindsByMeaning() async throws {
         let (repo, semantic) = try await makeSetup()
 
@@ -93,7 +94,7 @@ struct SemanticSearchTests {
         #expect(results.contains { $0.id == memory.id })
     }
 
-    @Test("Semantic ranking: most relevant comes first")
+    @Test("Semantic ranking: most relevant comes first", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
     func semanticRanking() async throws {
         let (repo, semantic) = try await makeSetup()
 
