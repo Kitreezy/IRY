@@ -60,8 +60,15 @@ actor GeminiTextCompletionProvider: TextCompletionProvider {
 
 actor GeminiEmbeddingProvider: EmbeddingProvider {
     let providerName = "Gemini gemini-embedding-001"
-    let dimensions = 768
     let isAvailable = true
+
+    /// Одна модель на все языки — поэтому русский запрос находит и
+    /// английское воспоминание. На устройстве так не выйдет.
+    static let model = "gemini.gemini-embedding-001"
+
+    func model(for text: String) async -> String { Self.model }
+
+    nonisolated func threshold(for model: String) -> Float { 0.55 }
 
     private let apiKey: String
 
@@ -69,7 +76,7 @@ actor GeminiEmbeddingProvider: EmbeddingProvider {
         self.apiKey = apiKey
     }
 
-    func embed(text: String) async throws -> [Float] {
+    func embed(text: String) async throws -> TextEmbedding {
         guard !apiKey.isEmpty else { throw LLMError.noAPIKey }
 
         let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent")!
@@ -100,7 +107,7 @@ actor GeminiEmbeddingProvider: EmbeddingProvider {
                 let raw = String(data: data, encoding: .utf8) ?? "empty"
                 throw LLMError.parseError(raw)
             }
-            return values.map { Float($0) }
+            return TextEmbedding(vector: values.map { Float($0) }, model: Self.model)
         } catch let error as LLMError {
             throw error
         } catch {

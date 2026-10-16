@@ -35,9 +35,11 @@ actor RelatedMemoriesService {
             return Array(candidates.prefix(limit))
         }
 
-        let ranked: [(MemoryItem, Float)] = zip(candidates, candidateVectors).compactMap { candidate, vector in
-            guard let vector else { return nil }
-            return (candidate, EmbeddingService.cosineSimilarity(sourceVector, vector))
+        // Кандидат на другом языке посчитан другой моделью — сравнивать его
+        // не с чем. Он остаётся связанным по сущностям, но после похожих.
+        let ranked: [(MemoryItem, Float)] = zip(candidates, candidateVectors).map { candidate, vector in
+            guard let vector, vector.model == sourceVector.model else { return (candidate, -1) }
+            return (candidate, EmbeddingService.cosineSimilarity(sourceVector.vector, vector.vector))
         }
 
         return ranked

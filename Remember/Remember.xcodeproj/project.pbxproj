@@ -58,6 +58,7 @@
 		B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202090EEB075994DE92D62E9 /* CreateMemoryView.swift */; };
 		BBBABE6B66981F071F8CFB1D /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9025C3AB9112C39609700DF8 /* TimelineViewModel.swift */; };
 		BC693F7F358509D63ED48E3E /* SyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBAB97EBA4B8EAB0D098634 /* SyncServiceTests.swift */; };
+		BF46E2757CCB094CCC834E19 /* OnDeviceEmbeddingProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8DE9F63E8991A827CC3C10 /* OnDeviceEmbeddingProvider.swift */; };
 		C56F4B6ACFA0535E659621BD /* MemoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C00A5FD657E6895B9AE050 /* MemoryDetailView.swift */; };
 		C750A295706EC0FD20DD4B76 /* RelatedMemoriesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B008C8A758112BF7014F662 /* RelatedMemoriesTests.swift */; };
 		C9F7CCD664900E3B2E7AAB33 /* VoiceCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD68EC1B51DDAA7F68FA2B15 /* VoiceCaptureView.swift */; };
@@ -178,6 +179,7 @@
 		F911A86E204BEB30057A2B0C /* MemoryMediaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryMediaStore.swift; sourceTree = "<group>"; };
 		F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIProvider.swift; sourceTree = "<group>"; };
 		FEF5F3C9FFEBACB5EF2ADD39 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF8DE9F63E8991A827CC3C10 /* OnDeviceEmbeddingProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceEmbeddingProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +247,7 @@
 				5FBC5749B10FB5C44A78AB20 /* GeminiProvider.swift */,
 				C02B398CEFF2970BFBE6E890 /* LLMProvider.swift */,
 				43C3133691FE3BA22674DA81 /* LLMProviderService.swift */,
+				FF8DE9F63E8991A827CC3C10 /* OnDeviceEmbeddingProvider.swift */,
 				F97F9D564EAF947EE8B336E2 /* OpenAIProvider.swift */,
 			);
 			path = LLM;
@@ -685,6 +688,7 @@
 				F9D7BDC8172311C64F9286A6 /* MemorySidebarView.swift in Sources */,
 				3F9093CF2FD46BB9CB4B30C1 /* MemorySource.swift in Sources */,
 				FCA57C72BA833F0A93FABAA8 /* Migrations.swift in Sources */,
+				BF46E2757CCB094CCC834E19 /* OnDeviceEmbeddingProvider.swift in Sources */,
 				13FA2157C6B1826D7E74A311 /* OpenAIProvider.swift in Sources */,
 				4DEF92512972662F1A42238F /* PeopleView.swift in Sources */,
 				A02A86F97615CE85F30D435D /* PeopleViewModel.swift in Sources */,

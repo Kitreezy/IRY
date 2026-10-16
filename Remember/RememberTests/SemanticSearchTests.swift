@@ -6,11 +6,18 @@ import NaturalLanguage
 @Suite("Semantic Search")
 struct SemanticSearchTests {
 
-    /// Есть ли модель предложений. В симуляторе iOS её ресурсов нет:
-    /// `sentenceEmbedding(for:)` отдаёт `nil`, векторов не будет вовсе.
-    /// Тесты, которым нужны векторы, там пропускаются, а не падают — и не
-    /// проходят молча, ничего не проверив.
-    static let hasSentenceModel = NLEmbedding.sentenceEmbedding(for: .english) != nil
+    /// Работает ли модель на этом устройстве. Проверяется делом, а не
+    /// флагом: в симуляторе iOS латинская модель сообщает, что ресурсы на
+    /// месте, но не загружается — нет доступа к системному кэшу моделей.
+    /// Тесты, которым нужна настоящая модель, там пропускаются, а не падают;
+    /// логику поиска проверяют тесты на поддельных векторах ниже.
+    static let hasSentenceModel: Bool = {
+        guard let model = NLContextualEmbedding(language: .english), model.hasAvailableAssets,
+              (try? model.load()) != nil else {
+            return false
+        }
+        return (try? model.embeddingResult(for: "probe", language: .english)) != nil
+    }()
 
     private func makeSetup() async throws -> (GRDBMemoryRepository, SemanticSearchService) {
         let db = try AppDatabase(inMemory: true)
@@ -25,22 +32,21 @@ struct SemanticSearchTests {
     func embeddingEnglish() async {
         let vector = await EmbeddingService.shared.vector(for: "artificial intelligence startup")
         #expect(vector != nil)
-        #expect((vector?.count ?? 0) > 0)
-        print("[Embedding] EN vector dimensions: \(vector?.count ?? 0)")
+        #expect((vector?.vector.count ?? 0) > 0)
+        print("[Embedding] EN vector: \(vector?.vector.count ?? 0) dims, model \(vector?.model ?? "-")")
     }
 
     @Test("EmbeddingService generates vector for Russian text")
     func embeddingRussian() async {
         let vector = await EmbeddingService.shared.vector(for: "искусственный интеллект стартап")
-        print("[Embedding] RU vector: \(vector == nil ? "NIL — not supported" : "\(vector!.count) dims")")
-        // Russian may not be supported by NLEmbedding — this test documents the behavior
+        print("[Embedding] RU vector: \(vector.map { "\($0.vector.count) dims, model \($0.model)" } ?? "NIL — no model on this device")")
     }
 
     @Test("Cosine similarity: identical texts = 1.0", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
     func similarityIdentical() async throws {
         let v1 = try #require(await EmbeddingService.shared.vector(for: "sales CRM software"))
         let v2 = try #require(await EmbeddingService.shared.vector(for: "sales CRM software"))
-        let score = await EmbeddingService.shared.similarity(between: v1, and: v2)
+        let score = await EmbeddingService.shared.similarity(between: v1.vector, and: v2.vector)
         print("[Similarity] identical: \(score)")
         #expect(score > 0.99)
     }
@@ -58,18 +64,22 @@ struct SemanticSearchTests {
         for (a, b) in pairs {
             let v1 = try #require(await EmbeddingService.shared.vector(for: a))
             let v2 = try #require(await EmbeddingService.shared.vector(for: b))
-            let score = await EmbeddingService.shared.similarity(between: v1, and: v2)
+            let score = await EmbeddingService.shared.similarity(between: v1.vector, and: v2.vector)
             print("[Similarity] '\(a)' vs '\(b)': \(String(format: "%.3f", score))")
         }
     }
 
-    @Test("Cosine similarity: unrelated concepts score below threshold", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
+    @Test("Cosine similarity: related is closer than unrelated", .enabled(if: hasSentenceModel, "нет модели предложений NLEmbedding"))
     func similarityUnrelated() async throws {
-        let v1 = try #require(await EmbeddingService.shared.vector(for: "cooking pasta recipe"))
-        let v2 = try #require(await EmbeddingService.shared.vector(for: "software architecture patterns"))
-        let score = await EmbeddingService.shared.similarity(between: v1, and: v2)
-        print("[Similarity] unrelated: \(String(format: "%.3f", score)) (threshold: 0.55)")
-        #expect(score < 0.55) // must not trigger semantic match
+        // Абсолютное число у моделей разное: у контекстной несвязанные фразы
+        // дают 0.6–0.7. Проверяется порядок — связанное ближе несвязанного.
+        let topic = try #require(await EmbeddingService.shared.vector(for: "machine learning model"))
+        let related = try #require(await EmbeddingService.shared.vector(for: "artificial intelligence algorithm"))
+        let unrelated = try #require(await EmbeddingService.shared.vector(for: "cooking pasta recipe"))
+        let near = await EmbeddingService.shared.similarity(between: topic.vector, and: related.vector)
+        let far = await EmbeddingService.shared.similarity(between: topic.vector, and: unrelated.vector)
+        print("[Similarity] related \(String(format: "%.3f", near)), unrelated \(String(format: "%.3f", far))")
+        #expect(near > far)
     }
 
     // MARK: - Hybrid Search Scenarios
@@ -144,5 +154,131 @@ struct SemanticSearchTests {
         #expect(ftsResults.isEmpty) // FTS5 misses — exact words not present
         // Semantic may or may not find — documents real behavior at threshold 0.55
         print("[FTS5 miss] semantic found: \(semanticResults.count > 0)")
+    }
+}
+
+// MARK: - Логика поиска на поддельных векторах
+
+/// Векторы заданы руками, модель — по тексту. Так логика поиска
+/// проверяется без настоящей модели, которой в симуляторе нет.
+private struct FakeEmbeddingProvider: EmbeddingProvider {
+    let providerName = "fake"
+    let isAvailable = true
+    let vectors: [String: TextEmbedding]
+
+    func model(for text: String) async -> String {
+        vectors[text]?.model ?? "none"
+    }
+
+    func embed(text: String) async throws -> TextEmbedding {
+        guard let vector = vectors[text] else { throw LLMError.notAvailable }
+        return vector
+    }
+
+    func threshold(for model: String) -> Float { 0.5 }
+}
+
+@Suite("Semantic Search — logic")
+struct SemanticSearchLogicTests {
+
+    private func makeSetup(_ vectors: [String: TextEmbedding]) throws -> (GRDBMemoryRepository, SemanticSearchService) {
+        let db = try AppDatabase(inMemory: true)
+        let repo = GRDBMemoryRepository(writer: db.writer)
+        let embedding = EmbeddingService(provider: FakeEmbeddingProvider(vectors: vectors))
+        return (repo, SemanticSearchService(repository: repo, embedding: embedding))
+    }
+
+    private func ru(_ v: [Float]) -> TextEmbedding { TextEmbedding(vector: v, model: "cyrillic") }
+    private func en(_ v: [Float]) -> TextEmbedding { TextEmbedding(vector: v, model: "latin") }
+
+    @Test("Vectors of another model are not compared")
+    func otherModelIsIgnored() async throws {
+        // Векторы совпадают до знака, но посчитаны разными моделями —
+        // значит, в разных пространствах, и сходство между ними ничего не значит.
+        let memory = MemoryItem(title: "Ключи", content: "")
+        let (repo, semantic) = try makeSetup(["Ключи": en([1, 0]), "keys": en([1, 0])])
+        try await repo.save(memory)
+        try await repo.saveEmbedding(memoryId: memory.id, embedding: ru([1, 0]))
+
+        let results = await semantic.search(query: "keys", ftsResults: [])
+
+        #expect(results.isEmpty)
+    }
+
+    @Test("Same model finds by meaning")
+    func sameModelFinds() async throws {
+        let memory = MemoryItem(title: "Ключи", content: "")
+        let (repo, semantic) = try makeSetup(["Ключи": ru([1, 0]), "где запасной комплект": ru([0.9, 0.1])])
+        try await repo.save(memory)
+        await semantic.indexMemory(memory)
+
+        let results = await semantic.search(query: "где запасной комплект", ftsResults: [])
+
+        #expect(results.map(\.id) == [memory.id])
+    }
+
+    @Test("At most three semantic hits, best first")
+    func semanticHitsAreCapped() async throws {
+        let titles = ["a", "b", "c", "d", "e"]
+        var vectors: [String: TextEmbedding] = ["q": ru([1, 0])]
+        // Все пять выше порога, сходство убывает от a к e.
+        for (i, title) in titles.enumerated() {
+            vectors[title] = ru([1, Float(i) * 0.1])
+        }
+        let (repo, semantic) = try makeSetup(vectors)
+        for title in titles {
+            let memory = MemoryItem(title: title, content: "")
+            try await repo.save(memory)
+            await semantic.indexMemory(memory)
+        }
+
+        let results = await semantic.search(query: "q", ftsResults: [])
+
+        #expect(results.map(\.title) == ["a", "b", "c"])
+    }
+
+    @Test("Full-text hits stay even without a vector")
+    func ftsHitsStay() async throws {
+        let memory = MemoryItem(title: "Ключи", content: "")
+        let (repo, semantic) = try makeSetup(["q": ru([1, 0])])
+        try await repo.save(memory)
+
+        let results = await semantic.search(query: "q", ftsResults: [memory])
+
+        #expect(results.map(\.id) == [memory.id])
+    }
+
+    @Test("Missing, legacy and foreign vectors need reindexing")
+    func staleVectorsAreFound() async throws {
+        let fresh = MemoryItem(title: "fresh", content: "")
+        let missing = MemoryItem(title: "missing", content: "")
+        let legacy = MemoryItem(title: "legacy", content: "")
+        let foreign = MemoryItem(title: "foreign", content: "")
+        let (repo, semantic) = try makeSetup([
+            "fresh": ru([1]), "missing": ru([1]), "legacy": ru([1]), "foreign": ru([1])
+        ])
+        for memory in [fresh, missing, legacy, foreign] {
+            try await repo.save(memory)
+        }
+        try await repo.saveEmbedding(memoryId: fresh.id, embedding: ru([1]))
+        // До метки моделей вектор хранился без неё — миграция ставит пустую.
+        try await repo.saveEmbedding(memoryId: legacy.id, embedding: TextEmbedding(vector: [1], model: ""))
+        // Посчитан облаком до перехода на устройство.
+        try await repo.saveEmbedding(memoryId: foreign.id, embedding: TextEmbedding(vector: [1], model: "gemini.gemini-embedding-001"))
+
+        let stale = await semantic.memoriesNeedingIndex([fresh, missing, legacy, foreign])
+
+        #expect(Set(stale.map(\.title)) == ["missing", "legacy", "foreign"])
+    }
+
+    @Test("Embedding keeps its model in the store")
+    func modelIsStored() async throws {
+        let memory = MemoryItem(title: "t", content: "")
+        let (repo, _) = try makeSetup([:])
+        try await repo.save(memory)
+
+        try await repo.saveEmbedding(memoryId: memory.id, embedding: ru([0.5, 0.25]))
+
+        #expect(try await repo.fetchEmbedding(for: memory.id) == ru([0.5, 0.25]))
     }
 }

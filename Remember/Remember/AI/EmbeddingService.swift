@@ -3,14 +3,31 @@ import Foundation
 actor EmbeddingService {
     static let shared = EmbeddingService()
 
-    private let providerService: LLMProviderService
+    /// Текущий провайдер. Читается на каждый вызов: человек может сменить
+    /// его в настройках, и следующий расчёт пойдёт уже новым.
+    private let current: @Sendable () -> any EmbeddingProvider
 
     init(providerService: LLMProviderService = .shared) {
-        self.providerService = providerService
+        self.current = { providerService.embedding }
     }
 
-    func vector(for text: String) async -> [Float]? {
-        try? await providerService.embedding.embed(text: text)
+    /// Конкретный провайдер — для тестов: моделей Apple в симуляторе нет.
+    init(provider: any EmbeddingProvider) {
+        self.current = { provider }
+    }
+
+    func vector(for text: String) async -> TextEmbedding? {
+        try? await current().embed(text: text)
+    }
+
+    /// Какой моделью текущий провайдер посчитает текст.
+    func model(for text: String) async -> String {
+        await current().model(for: text)
+    }
+
+    /// Порог «близко» для модели — у каждой свой.
+    func threshold(for model: String) -> Float {
+        current().threshold(for: model)
     }
 
     /// Считает векторы для нескольких текстов параллельно.
@@ -18,9 +35,9 @@ actor EmbeddingService {
     /// Последовательный вариант ждал ответа на каждый текст по очереди:
     /// суммарное время = сумма латентностей. Здесь время ≈ сумма / `maxConcurrent`.
     /// Порядок результатов совпадает с порядком `texts`.
-    func vectors(for texts: [String], maxConcurrent: Int = ConcurrencyLimit.network) async -> [[Float]?] {
+    func vectors(for texts: [String], maxConcurrent: Int = ConcurrencyLimit.network) async -> [TextEmbedding?] {
         // Провайдер достаётся один раз: он Sendable, а его создание читает Keychain.
-        let provider = providerService.embedding
+        let provider = current()
         return await texts.concurrentMap(maxConcurrent: maxConcurrent) { text in
             try? await provider.embed(text: text)
         }
@@ -44,9 +61,5 @@ actor EmbeddingService {
         }
         guard normA > 0, normB > 0 else { return 0 }
         return dot / (sqrt(normA) * sqrt(normB))
-    }
-
-    var currentDimensions: Int {
-        providerService.embedding.dimensions
     }
 }

@@ -49,6 +49,15 @@ enum Migrations {
             }
         }
 
+        // Вектор без модели несравним ни с чем: после смены провайдера поиск
+        // молча переставал находить. Старые строки получают пустую модель —
+        // она не совпадёт ни с одной настоящей, и при запуске их пересчитают.
+        migrator.registerMigration("v7_embedding_model") { db in
+            try db.alter(table: "memory_embeddings") { t in
+                t.add(column: "model", .text).notNull().defaults(to: "")
+            }
+        }
+
         migrator.registerMigration("v3_entities") { db in
             try db.create(table: "memory_entities") { t in
                 t.primaryKey("id", .text).notNull()

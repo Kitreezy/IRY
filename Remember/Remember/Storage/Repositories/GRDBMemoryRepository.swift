@@ -57,14 +57,16 @@ private struct EmbeddingRecord: Codable, FetchableRecord, PersistableRecord {
 
     var memory_id: String
     var vector: Data
+    var model: String
 
-    init(memoryId: UUID, vector: [Float]) {
+    init(memoryId: UUID, embedding: TextEmbedding) {
         self.memory_id = memoryId.uuidString
-        self.vector = vector.withUnsafeBytes { Data($0) }
+        self.vector = embedding.vector.withUnsafeBytes { Data($0) }
+        self.model = embedding.model
     }
 
-    func toVector() -> [Float] {
-        vector.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
+    func toEmbedding() -> TextEmbedding {
+        TextEmbedding(vector: vector.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }, model: model)
     }
 }
 
@@ -161,18 +163,18 @@ final class GRDBMemoryRepository: MemoryRepository {
         }
     }
 
-    func saveEmbedding(memoryId: UUID, vector: [Float]) async throws {
-        let record = EmbeddingRecord(memoryId: memoryId, vector: vector)
+    func saveEmbedding(memoryId: UUID, embedding: TextEmbedding) async throws {
+        let record = EmbeddingRecord(memoryId: memoryId, embedding: embedding)
         try await writer.write { db in
             try record.save(db)
         }
     }
 
-    func fetchAllEmbeddings() async throws -> [(memoryId: UUID, vector: [Float])] {
+    func fetchAllEmbeddings() async throws -> [(memoryId: UUID, embedding: TextEmbedding)] {
         try await writer.read { db in
             try EmbeddingRecord.fetchAll(db).compactMap { record in
                 guard let id = UUID(uuidString: record.memory_id) else { return nil }
-                return (memoryId: id, vector: record.toVector())
+                return (memoryId: id, embedding: record.toEmbedding())
             }
         }
     }
@@ -232,12 +234,12 @@ final class GRDBMemoryRepository: MemoryRepository {
         }
     }
 
-    func fetchEmbedding(for memoryId: UUID) async throws -> [Float]? {
+    func fetchEmbedding(for memoryId: UUID) async throws -> TextEmbedding? {
         try await writer.read { db in
             try EmbeddingRecord
                 .filter(Column("memory_id") == memoryId.uuidString)
                 .fetchOne(db)?
-                .toVector()
+                .toEmbedding()
         }
     }
 }

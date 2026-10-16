@@ -50,8 +50,13 @@ actor OpenAITextCompletionProvider: TextCompletionProvider {
 
 actor OpenAIEmbeddingProvider: EmbeddingProvider {
     let providerName = "OpenAI text-embedding-3-small"
-    let dimensions = 1536
     let isAvailable = true
+
+    static let model = "openai.text-embedding-3-small"
+
+    func model(for text: String) async -> String { Self.model }
+
+    nonisolated func threshold(for model: String) -> Float { 0.55 }
 
     private let apiKey: String
 
@@ -59,7 +64,7 @@ actor OpenAIEmbeddingProvider: EmbeddingProvider {
         self.apiKey = apiKey
     }
 
-    func embed(text: String) async throws -> [Float] {
+    func embed(text: String) async throws -> TextEmbedding {
         guard !apiKey.isEmpty else { throw LLMError.noAPIKey }
 
         let url = URL(string: "https://api.openai.com/v1/embeddings")!
@@ -84,7 +89,7 @@ actor OpenAIEmbeddingProvider: EmbeddingProvider {
             guard let vector = embedData?["embedding"] as? [Double] else {
                 throw LLMError.invalidResponse
             }
-            return vector.map { Float($0) }
+            return TextEmbedding(vector: vector.map { Float($0) }, model: Self.model)
         } catch let error as LLMError {
             throw error
         } catch {

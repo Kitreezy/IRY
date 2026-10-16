@@ -11,8 +11,8 @@ protocol MemoryRepository: Sendable {
     func search(query: String) async throws -> [MemoryItem]
 
     // Semantic
-    func saveEmbedding(memoryId: UUID, vector: [Float]) async throws
-    func fetchAllEmbeddings() async throws -> [(memoryId: UUID, vector: [Float])]
+    func saveEmbedding(memoryId: UUID, embedding: TextEmbedding) async throws
+    func fetchAllEmbeddings() async throws -> [(memoryId: UUID, embedding: TextEmbedding)]
 
     // Entities
     func saveEntities(_ entities: [MemoryEntity]) async throws
@@ -22,5 +22,5 @@ protocol MemoryRepository: Sendable {
 
     // Related
     func fetchMemories(withEntityValues values: [String]) async throws -> [MemoryItem]
-    func fetchEmbedding(for memoryId: UUID) async throws -> [Float]?
+    func fetchEmbedding(for memoryId: UUID) async throws -> TextEmbedding?
 }

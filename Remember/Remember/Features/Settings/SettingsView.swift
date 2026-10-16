@@ -253,7 +253,7 @@ struct SettingsView: View {
                 prompt: "Ответь одним словом на русском: какой сейчас сезон года?"
             )
             let embedding = try await providerService.embedding.embed(text: "тест памяти")
-            aiTestResult = .success(text: text, embedding: embedding.count)
+            aiTestResult = .success(text: text, embedding: embedding.vector.count)
         } catch {
             aiTestResult = .failure(error.localizedDescription)
         }

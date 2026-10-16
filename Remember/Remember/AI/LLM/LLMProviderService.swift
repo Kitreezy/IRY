@@ -91,14 +91,14 @@ final class LLMProviderService: @unchecked Sendable {
     private func makeEmbedding(_ kind: LLMProviderKind) -> any EmbeddingProvider {
         switch kind {
         case .apple:
-            return AppleEmbeddingProvider()
+            return OnDeviceEmbeddingProvider()
         case .gemini:
             return GeminiEmbeddingProvider(apiKey: APIKeyStore.load(for: .gemini) ?? "")
         case .openAI:
             return OpenAIEmbeddingProvider(apiKey: APIKeyStore.load(for: .openAI) ?? "")
         case .claude:
             // Claude не предоставляет embeddings API — остаёмся на on-device.
-            return AppleEmbeddingProvider()
+            return OnDeviceEmbeddingProvider()
         }
     }
 }

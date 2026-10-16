@@ -10,12 +10,31 @@ protocol TextCompletionProvider: Sendable {
 
 // MARK: - Embedding
 
+/// Вектор и модель, которой он посчитан.
+///
+/// Векторы разных моделей несравнимы: у них разные пространства, а часто и
+/// разная длина. Раньше вектор хранился без модели, и после смены
+/// провайдера поиск молча переставал находить — косинус векторов разной
+/// длины считался нулём. На устройстве моделей несколько даже у одного
+/// провайдера: своя для латиницы, своя для кириллицы.
+struct TextEmbedding: Sendable, Equatable {
+    let vector: [Float]
+    let model: String
+}
+
 protocol EmbeddingProvider: Sendable {
     var providerName: String { get }
-    var dimensions: Int { get }
     var isAvailable: Bool { get }
-    func embed(text: String) async throws -> [Float]
-    func similarity(between a: [Float], and b: [Float]) -> Float
+
+    /// Какой моделью будет посчитан этот текст — без самого расчёта.
+    /// По нему видно, что сохранённый вектор устарел и его пора пересчитать.
+    func model(for text: String) async -> String
+
+    func embed(text: String) async throws -> TextEmbedding
+
+    /// С какого сходства считать тексты близкими. У моделей разный фон:
+    /// у одной несвязанные фразы дают 0.3, у другой — 0.65.
+    func threshold(for model: String) -> Float
 }
 
 extension EmbeddingProvider {

@@ -51,15 +51,11 @@ struct RememberApp: App {
     /// Две `.task` выше стартуют независимо, поэтому индексация и извлечение
     /// сущностей идут одновременно. Внутри каждой — тоже параллелизм.
     private func indexUnindexedMemories() async {
-        // Два независимых запроса к БД: раньше второй ждал первый без причины.
-        async let allTask = try? await repository.fetchAll()
-        async let indexedTask = try? await repository.fetchAllEmbeddings()
-
-        let all = await allTask ?? []
-        let indexed = Set((await indexedTask)?.map { $0.memoryId } ?? [])
-
-        let unindexed = all.filter { !indexed.contains($0.id) }
-        await semantic.reindexAll(memories: unindexed)
+        // Не только новые: вектор чужой модели тоже устарел — после смены
+        // провайдера или обновления модели Apple.
+        let all = (try? await repository.fetchAll()) ?? []
+        let stale = await semantic.memoriesNeedingIndex(all)
+        await semantic.reindexAll(memories: stale)
     }
 
     private func extractEntitiesForUnprocessed() async {
