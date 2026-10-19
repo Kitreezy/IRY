@@ -105,6 +105,17 @@ enum L10n {
         static let aiPrivacyGemini = String(localized: "settings.ai.privacy.gemini")
         static let aiPrivacyOpenAI = String(localized: "settings.ai.privacy.openai")
         static let aiPrivacyClaude = String(localized: "settings.ai.privacy.claude")
+        static let aiLanguagesDownload = String(localized: "settings.ai.languages.download")
+        static let aiLanguagesDownloading = String(localized: "settings.ai.languages.downloading")
+        static func aiLanguagesReady(_ language: String) -> String {
+            String(format: NSLocalizedString("settings.ai.languages.ready", comment: ""), language)
+        }
+        static func aiLanguagesNeeded(_ language: String) -> String {
+            String(format: NSLocalizedString("settings.ai.languages.needed", comment: ""), language)
+        }
+        static func aiLanguagesUnsupported(_ language: String) -> String {
+            String(format: NSLocalizedString("settings.ai.languages.unsupported", comment: ""), language)
+        }
         static let resetAll = String(localized: "settings.reset.all")
         static let resetFooter = String(localized: "settings.reset.footer")
         static let resetConfirmTitle = String(localized: "settings.reset.confirm.title")

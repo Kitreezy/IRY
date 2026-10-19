@@ -28,19 +28,20 @@ actor MemoryAnswerService: AnswerProviding {
             if !memory.why.isEmpty { parts.append("Why it matters: \(memory.why)") }
             if !memory.content.isEmpty { parts.append("Content: \(memory.content)") }
             return parts.joined(separator: "\n")
-        }.joined(separator: "\n\n---\n\n")
+        }
 
-        let prompt = """
-        The user asked: "\(question)"
+        // Вопрос и воспоминания — данные человека, инструкция — отдельно:
+        // на устройстве данные могут пойти через перевод, инструкция — нет.
+        let request = CompletionRequest(
+            instructions: """
+            Answer the user's question based only on the memories given with it.
+            If the memories don't contain enough information, say so briefly.
+            Do not invent information. Be concise — 1-3 sentences. Answer in the language of the question.
+            """,
+            content: ["Question: \(question)"] + context
+        )
 
-        Based only on the following memories, give a short, direct answer.
-        If the memories don't contain enough information, say so briefly.
-        Do not invent information. Be concise — 1-3 sentences.
-
-        \(context)
-        """
-
-        return try? await providerService.textCompletion.complete(prompt: prompt)
+        return try? await providerService.textCompletion.complete(request)
     }
 }
 
