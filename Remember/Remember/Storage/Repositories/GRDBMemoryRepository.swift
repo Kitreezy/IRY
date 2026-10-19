@@ -17,6 +17,8 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
     var tags: String
     var image_path: String?
     var audio_path: String?
+    /// Леммы всего, по чему ищут, — для полнотекстового индекса.
+    var search_text: String
 
     init(from item: MemoryItem) {
         self.id = item.id.uuidString
@@ -30,6 +32,7 @@ private struct MemoryRecord: Codable, FetchableRecord, PersistableRecord {
         self.tags = item.tags.joined(separator: ",")
         self.image_path = item.imagePath
         self.audio_path = item.audioPath
+        self.search_text = SearchText.index(title: item.title, content: item.content, why: item.why, tags: item.tags)
     }
 
     func toMemoryItem() -> MemoryItem? {
@@ -138,16 +141,21 @@ final class GRDBMemoryRepository: MemoryRepository {
     func search(query: String) async throws -> [MemoryItem] {
         let trimmed = query.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return try await fetchAll() }
-        guard let pattern = FTS5Pattern(matchingAllTokensIn: trimmed) else { return [] }
+        guard let raw = SearchText.pattern(for: trimmed) else { return [] }
         return try await writer.read { db in
-            try MemoryRecord.fetchAll(
+            guard let pattern = try? db.makeFTS5Pattern(rawPattern: raw, forTable: "memory_items_fts") else {
+                return []
+            }
+            // По релевантности, а не по дате: раньше свежее, но совпавшее
+            // одним словом, стояло выше точного совпадения.
+            return try MemoryRecord.fetchAll(
                 db,
                 sql: """
                     SELECT memory_items.*
                     FROM memory_items
                     JOIN memory_items_fts ON memory_items.rowid = memory_items_fts.rowid
                     WHERE memory_items_fts MATCH ?
-                    ORDER BY memory_items.created_at DESC
+                    ORDER BY bm25(memory_items_fts)
                     """,
                 arguments: [pattern]
             )

@@ -58,6 +58,35 @@ enum Migrations {
             }
         }
 
+        // Полнотекстовый индекс — по леммам и с «почему это важно». Индекс
+        // пересоздаётся: колонки FTS5 после создания не добавить. Леммы для
+        // уже сохранённого считаются здесь же, до перестройки индекса.
+        migrator.registerMigration("v8_search_text") { db in
+            try db.alter(table: "memory_items") { t in
+                t.add(column: "search_text", .text).notNull().defaults(to: "")
+            }
+            let rows = try Row.fetchAll(db, sql: "SELECT id, title, content, why, tags FROM memory_items")
+            for row in rows {
+                let tags: String = row["tags"]
+                let text = SearchText.index(title: row["title"], content: row["content"], why: row["why"],
+                                            tags: tags.isEmpty ? [] : tags.split(separator: ",").map(String.init))
+                try db.execute(sql: "UPDATE memory_items SET search_text = ? WHERE id = ?",
+                               arguments: [text, row["id"] as String])
+            }
+
+            try db.dropFTS5SynchronizationTriggers(forTable: "memory_items_fts")
+            try db.drop(table: "memory_items_fts")
+            try db.create(virtualTable: "memory_items_fts", using: FTS5()) { t in
+                t.synchronize(withTable: "memory_items")
+                t.tokenizer = .unicode61()
+                t.column("title")
+                t.column("content")
+                t.column("why")
+                t.column("tags")
+                t.column("search_text")
+            }
+        }
+
         migrator.registerMigration("v3_entities") { db in
             try db.create(table: "memory_entities") { t in
                 t.primaryKey("id", .text).notNull()

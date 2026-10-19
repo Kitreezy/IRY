@@ -67,14 +67,16 @@ actor OnDeviceEmbeddingProvider: EmbeddingProvider {
     }
 
     nonisolated func threshold(for model: String) -> Float {
-        // Подобрано замером (Tools/bench-embeddings.sh): у среднего по
-        // токенам высокий фон — несвязанные фразы дают 0.6–0.7, — поэтому
-        // порог сам по себе отделяет плохо и работает только вместе с
-        // ограничением выдачи тремя лучшими (SemanticSearchService).
+        // Подобрано замером всей выдачи (Tools/bench-search.sh): у среднего
+        // по токенам высокий фон — несвязанные фразы дают 0.6–0.7, — и порог
+        // сам по себе отделяет плохо. Работает он вместе с ограничением тремя
+        // лучшими и слиянием с полнотекстовым поиском (SemanticSearchService):
+        // там лишнее смысловое совпадение уже не обгоняет точное, и порог
+        // можно держать мягче — от 0.56 до 0.64 качество одинаковое.
         Self.contextualThreshold
     }
 
-    static let contextualThreshold: Float = 0.68
+    static let contextualThreshold: Float = 0.64
 
     // MARK: - Модель
 

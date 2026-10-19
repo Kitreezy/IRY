@@ -1,0 +1,499 @@
+{
+  "about": "Качество всей выдачи поиска: полнотекстового и смыслового вместе. Виды запросов — слова в другой форме, естественные вопросы, перефразы без общих слов, то, что записано только в «почему это важно», и запросы на другом языке, чем воспоминание.",
+  "memories": [
+    {
+      "id": "keys",
+      "title": "Запасные ключи",
+      "content": "Ключи от машины — запасной комплект лежит в ящике комода в прихожей, под перчатками.",
+      "why": ""
+    },
+    {
+      "id": "dentist",
+      "title": "Стоматолог",
+      "content": "Записалась к стоматологу Ирине Павловне на 14 ноября, 18:30. Клиника на Литейном, второй этаж.",
+      "why": ""
+    },
+    {
+      "id": "mom_recipe",
+      "title": "Пирог с капустой",
+      "content": "Мамин рецепт пирога с капустой: тесто на кефире, капусту тушить с луком, печь 40 минут при 180.",
+      "why": ""
+    },
+    {
+      "id": "passport",
+      "title": "Загранпаспорт",
+      "content": "Загранпаспорт истекает в марте 2027 — продлевать через Госуслуги, фото сделать заранее.",
+      "why": ""
+    },
+    {
+      "id": "wifi_dacha",
+      "title": "Вайфай на даче",
+      "content": "Пароль от вайфая на даче записан на роутере снизу, сеть называется Sosny_5G.",
+      "why": ""
+    },
+    {
+      "id": "book_kahneman",
+      "title": "Канеман",
+      "content": "Дочитал «Думай медленно… решай быстро». Главное: интуиция ошибается системно, особенно в оценке вероятностей.",
+      "why": ""
+    },
+    {
+      "id": "investor_meeting",
+      "title": "Встреча с фондом",
+      "content": "Встреча с фондом: просили метрики удержания за полгода и план выхода на безубыточность.",
+      "why": ""
+    },
+    {
+      "id": "allergy",
+      "title": "Аллергия Миши",
+      "content": "У Миши аллергия на арахис — в гостях всегда предупреждать, в аптечке держать антигистаминное.",
+      "why": ""
+    },
+    {
+      "id": "bike",
+      "title": "Ремонт велосипеда",
+      "content": "Велосипеду нужна замена цепи и задних тормозных колодок, мастер на Гороховой берёт 2500.",
+      "why": ""
+    },
+    {
+      "id": "sister_birthday",
+      "title": "День рождения сестры",
+      "content": "У сестры день рождения 3 декабря. Она давно хотела хорошие наушники с шумоподавлением.",
+      "why": ""
+    },
+    {
+      "id": "lease",
+      "title": "Аренда квартиры",
+      "content": "Договор аренды квартиры заканчивается 31 января, хозяин предупредил о повышении на десять процентов.",
+      "why": ""
+    },
+    {
+      "id": "running",
+      "title": "Первый полумарафон",
+      "content": "Пробежал первый полумарафон за 2:05. Колено начало ныть после пятнадцатого километра — нужны новые кроссовки.",
+      "why": ""
+    },
+    {
+      "id": "vacation_georgia",
+      "title": "Грузия",
+      "content": "Отпуск в Грузии: Тбилиси три дня, потом Казбеги. Хинкали в «Зодиаке» были лучшими.",
+      "why": ""
+    },
+    {
+      "id": "vet",
+      "title": "Прививка кота",
+      "content": "Коту сделали прививку от бешенства 20 сентября, следующая через год. Ветклиника «Айболит».",
+      "why": ""
+    },
+    {
+      "id": "idea_app",
+      "title": "Идея приложения",
+      "content": "Идея приложения: заметки, которые сами находят связь между собой по смыслу, а не по тегам.",
+      "why": ""
+    },
+    {
+      "id": "plants",
+      "title": "Полив цветов",
+      "content": "Фикус поливать раз в неделю, монстеру — когда верхний слой земли подсохнет. Зимой реже.",
+      "why": ""
+    },
+    {
+      "id": "tax",
+      "title": "Налоговый вычет",
+      "content": "Налоговый вычет за лечение зубов: нужна справка об оплате из клиники и договор, подать до конца апреля.",
+      "why": ""
+    },
+    {
+      "id": "mentor",
+      "title": "Совет наставника",
+      "content": "Совет наставника: прежде чем писать код, опиши решение в одном абзаце — если не выходит, ты не понял задачу.",
+      "why": ""
+    },
+    {
+      "id": "en_conference",
+      "title": "Berlin talk",
+      "content": "Talk at the iOS conference in Berlin went well; people asked a lot about Swift concurrency and actors.",
+      "why": ""
+    },
+    {
+      "id": "en_coffee",
+      "title": "Coffee near the office",
+      "content": "Best coffee near the office is the tiny place on Rosenthaler Str, the oat flat white is perfect.",
+      "why": ""
+    },
+    {
+      "id": "en_gym",
+      "title": "Gym routine",
+      "content": "New gym routine: squats and deadlifts on Monday, upper body on Thursday, mobility every morning.",
+      "why": ""
+    },
+    {
+      "id": "en_flight",
+      "title": "Lisbon flight",
+      "content": "Flight to Lisbon on June 12, gate closes 40 minutes before departure, seat 14A.",
+      "why": ""
+    },
+    {
+      "id": "en_insurance",
+      "title": "Car insurance",
+      "content": "Car insurance renewal is due in August; compare quotes before the old policy auto-renews.",
+      "why": ""
+    },
+    {
+      "id": "en_quote",
+      "title": "Quote",
+      "content": "Quote I liked: we overestimate what we can do in a year and underestimate what we can do in ten.",
+      "why": ""
+    },
+    {
+      "id": "graduation",
+      "title": "Фото с выпускного",
+      "content": "Мы все в мантиях на ступенях главного корпуса, кто-то уронил шапку.",
+      "why": "Последний день, когда вся группа была вместе"
+    },
+    {
+      "id": "grandpa_watch",
+      "title": "Часы",
+      "content": "Старые механические часы, стекло поцарапано, ремешок менял дважды.",
+      "why": "Дедушка подарил их перед тем, как я уехал учиться в другой город"
+    }
+  ],
+  "queries": [
+    {
+      "kind": "слова",
+      "text": "ключей от машины",
+      "relevant": [
+        "keys"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "запасные ключи",
+      "relevant": [
+        "keys"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "стоматолог",
+      "relevant": [
+        "dentist"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "аренда квартиры",
+      "relevant": [
+        "lease"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "прививка коту",
+      "relevant": [
+        "vet"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "пирог с капустой",
+      "relevant": [
+        "mom_recipe"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "полумарафон",
+      "relevant": [
+        "running"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "наушники для сестры",
+      "relevant": [
+        "sister_birthday"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "налоговый вычет",
+      "relevant": [
+        "tax"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "вайфай на даче",
+      "relevant": [
+        "wifi_dacha"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "ремонт велосипеда",
+      "relevant": [
+        "bike"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "Lisbon flight",
+      "relevant": [
+        "en_flight"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "gym routine",
+      "relevant": [
+        "en_gym"
+      ]
+    },
+    {
+      "kind": "слова",
+      "text": "insurance renewal",
+      "relevant": [
+        "en_insurance"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "где лежат запасные ключи?",
+      "relevant": [
+        "keys"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "когда у меня стоматолог?",
+      "relevant": [
+        "dentist"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "какой пароль от вайфая на даче?",
+      "relevant": [
+        "wifi_dacha"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "что подарить сестре на день рождения?",
+      "relevant": [
+        "sister_birthday"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "когда заканчивается аренда квартиры?",
+      "relevant": [
+        "lease"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "сколько стоит ремонт велосипеда?",
+      "relevant": [
+        "bike"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "where is the best coffee near the office?",
+      "relevant": [
+        "en_coffee"
+      ]
+    },
+    {
+      "kind": "вопрос",
+      "text": "when is my flight to Lisbon?",
+      "relevant": [
+        "en_flight"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "куда я положил второй комплект от тачки",
+      "relevant": [
+        "keys"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "когда мне идти к зубному врачу",
+      "relevant": [
+        "dentist"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "как готовить домашнюю выпечку по семейному способу",
+      "relevant": [
+        "mom_recipe"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "когда обновлять документ для поездок за рубеж",
+      "relevant": [
+        "passport"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "как подключиться к интернету за городом",
+      "relevant": [
+        "wifi_dacha"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "что я вынес из книги про мышление и ошибки суждений",
+      "relevant": [
+        "book_kahneman"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "какие цифры хотели увидеть люди, которые дают деньги на проект",
+      "relevant": [
+        "investor_meeting"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "чем нельзя угощать сына",
+      "relevant": [
+        "allergy"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "сколько стоит починить велик",
+      "relevant": [
+        "bike"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "какой подарок хочет родственница на праздник зимой",
+      "relevant": [
+        "sister_birthday"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "когда истекает соглашение о съёмном жилье",
+      "relevant": [
+        "lease"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "как прошёл мой первый длинный забег",
+      "relevant": [
+        "running"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "где вкусно поели в путешествии по Кавказу",
+      "relevant": [
+        "vacation_georgia"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "когда снова вакцинировать питомца",
+      "relevant": [
+        "vet"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "как вернуть часть денег за стоматологию через государство",
+      "relevant": [
+        "tax"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "чему меня учил опытный коллега про проектирование",
+      "relevant": [
+        "mentor"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "как ухаживать за комнатными растениями",
+      "relevant": [
+        "plants"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "what did the audience ask after my presentation",
+      "relevant": [
+        "en_conference"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "where to get a good latte at work",
+      "relevant": [
+        "en_coffee"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "what is my weekly workout plan",
+      "relevant": [
+        "en_gym"
+      ]
+    },
+    {
+      "kind": "смысл",
+      "text": "which seat do I have on the plane to Portugal",
+      "relevant": [
+        "en_flight"
+      ]
+    },
+    {
+      "kind": "почему",
+      "text": "когда вся группа была вместе",
+      "relevant": [
+        "graduation"
+      ]
+    },
+    {
+      "kind": "почему",
+      "text": "подарок дедушки",
+      "relevant": [
+        "grandpa_watch"
+      ]
+    },
+    {
+      "kind": "межъязыковой",
+      "text": "когда продлевать страховку на автомобиль",
+      "relevant": [
+        "en_insurance"
+      ]
+    },
+    {
+      "kind": "межъязыковой",
+      "text": "цитата о том, что мы переоцениваем один год и недооцениваем десять",
+      "relevant": [
+        "en_quote"
+      ]
+    },
+    {
+      "kind": "межъязыковой",
+      "text": "my idea for a notes app that links notes by meaning",
+      "relevant": [
+        "idea_app"
+      ]
+    }
+  ]
+}

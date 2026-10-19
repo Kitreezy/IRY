@@ -55,6 +55,7 @@
 		A7F30D016966D480C63C469C /* GRDBMemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A18B79C0A1639BC0CEB8E63 /* GRDBMemoryRepository.swift */; };
 		AFD5A6B604369C441A8B75AC /* MemoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0290DD94571CB2AF17E61658 /* MemoryRepository.swift */; };
 		B1702AB73A360894F842A9E5 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 2D91C76C2824F9C2FE8FC300 /* GRDB */; };
+		B4390F8A5A985154A7A07467 /* SearchText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E8FA9EADAA24608B35DCD9 /* SearchText.swift */; };
 		B4BB2652E2B9B7D28EF7F208 /* EmbeddingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4001DB8401B0F59F6FFB76B8 /* EmbeddingService.swift */; };
 		B4E85A5934500147A30E926C /* AppleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B295E97523CDEB2131669FD6 /* AppleProvider.swift */; };
 		B717D12DC10DAFC5AAC6CCA4 /* CreateMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202090EEB075994DE92D62E9 /* CreateMemoryView.swift */; };
@@ -78,6 +79,7 @@
 		E563BBDF12877B4DA77EE738 /* EntityExtracting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B963F5EFF02EB95C904905 /* EntityExtracting.swift */; };
 		E6BA2D5224A35D7CC09270F3 /* CaptureMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752F9AE8DDBC66D432B0D083 /* CaptureMemoryView.swift */; };
 		E7B916010A360DF6901B1036 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A048F45A0FE531D49CFD8 /* AudioPlayerView.swift */; };
+		E83C12A334D7C2D2F15AB924 /* SearchRelevanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACA7A1E9FCAF0FA8FE0F4DF /* SearchRelevanceTests.swift */; };
 		EB45316DCECE71FAF9753F56 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C35ABB97EFB9256CAE7061 /* L10n.swift */; };
 		F4A326A17EF67D91E39F0406 /* ImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C0287166EC7386259E5AAF2 /* ImportService.swift */; };
 		F5FA27D53E22A36C6AAB67EA /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEA0BB20BE0E7C0385658FA /* CameraView.swift */; };
@@ -146,6 +148,7 @@
 		757375F11F497D777D4CAFAD /* EnvironmentValues+Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Repository.swift"; sourceTree = "<group>"; };
 		7E5A327BF7629CB569BC140B /* RememberTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RememberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D2C300A89A16428CE40C43 /* MemorySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemorySource.swift; sourceTree = "<group>"; };
+		85E8FA9EADAA24608B35DCD9 /* SearchText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchText.swift; sourceTree = "<group>"; };
 		8AEA0BB20BE0E7C0385658FA /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		8BDE63A32251C14DBB6F6B72 /* VoiceRecorderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderService.swift; sourceTree = "<group>"; };
 		8DF391703F1C0CD71CE75C9E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -162,6 +165,7 @@
 		A368A454373DDC15267EC027 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A4021959B95DA0E76EB507A7 /* APIKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyStore.swift; sourceTree = "<group>"; };
 		AABCDB7EDC0C9679F495BA6B /* EntityExtractionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityExtractionService.swift; sourceTree = "<group>"; };
+		AACA7A1E9FCAF0FA8FE0F4DF /* SearchRelevanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRelevanceTests.swift; sourceTree = "<group>"; };
 		ACB4813B224CBB509B52E772 /* EnvironmentValues+Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Services.swift"; sourceTree = "<group>"; };
 		B295E97523CDEB2131669FD6 /* AppleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleProvider.swift; sourceTree = "<group>"; };
 		B3586FB95BBD239FCF4B5544 /* MemoryEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryEntity.swift; sourceTree = "<group>"; };
@@ -355,6 +359,7 @@
 				5FEECCE1E3C83C0ADF311E0C /* LanguageBridgeTests.swift */,
 				01B08555B5C169DE76A98305 /* MemoryRepositoryTests.swift */,
 				2B008C8A758112BF7014F662 /* RelatedMemoriesTests.swift */,
+				AACA7A1E9FCAF0FA8FE0F4DF /* SearchRelevanceTests.swift */,
 				6B1434911418805C69A9231A /* SemanticSearchTests.swift */,
 				DDBAB97EBA4B8EAB0D098634 /* SyncServiceTests.swift */,
 				1406B40B2DC1C1B5E777F76C /* TimelineViewModelTests.swift */,
@@ -370,6 +375,14 @@
 				151C140C3191CD789CDFA253 /* Frameworks */,
 				0271739B3D00FE3876AFD68C /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		77637D2B897A0BC7AF53FDC4 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				85E8FA9EADAA24608B35DCD9 /* SearchText.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		77780475ED8ADACA54E1ADD2 /* Database */ = {
@@ -455,6 +468,7 @@
 				77780475ED8ADACA54E1ADD2 /* Database */,
 				0107990B044122FAFBCE2020 /* Migrations */,
 				058C30240AFA80B896ECA540 /* Repositories */,
+				77637D2B897A0BC7AF53FDC4 /* Search */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -646,6 +660,7 @@
 				1390E0489F58DB84781606D8 /* MemoryRepositoryTests.swift in Sources */,
 				F63E3BBFCF3DB7BC141D9030 /* MockSyncService.swift in Sources */,
 				C750A295706EC0FD20DD4B76 /* RelatedMemoriesTests.swift in Sources */,
+				E83C12A334D7C2D2F15AB924 /* SearchRelevanceTests.swift in Sources */,
 				43ADDBE8D41BCA208EEB1AE1 /* SemanticSearchTests.swift in Sources */,
 				BC693F7F358509D63ED48E3E /* SyncServiceTests.swift in Sources */,
 				420EB2179B8F813AFE662525 /* TimelineViewModelTests.swift in Sources */,
@@ -708,6 +723,7 @@
 				4EC55CC3CFE5FC4604853C31 /* PhotosImporter.swift in Sources */,
 				2C8B6465DD035271954C111C /* RelatedMemoriesService.swift in Sources */,
 				D517E3651E2CFB6A1F6E7ADF /* RememberApp.swift in Sources */,
+				B4390F8A5A985154A7A07467 /* SearchText.swift in Sources */,
 				57B366A483DB5D84AC0939CF /* SearchView.swift in Sources */,
 				221F992E9884EC57768DD4B3 /* SearchViewModel.swift in Sources */,
 				4CBDB9EE75BFADAA63E247A9 /* SeedData.swift in Sources */,
