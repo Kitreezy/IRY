@@ -39,9 +39,11 @@ enum L10n {
         static let title = String(localized: "people.title")
         static let emptyTitle = String(localized: "people.empty.title")
         static let emptySubtitle = String(localized: "people.empty.subtitle")
+        /// Формы числа — в Localizable.stringsdict: у русского их три
+        /// («1 воспоминание», «2 воспоминания», «5 воспоминаний»), и выбор
+        /// `count == 1 ? one : other` давал «21 воспоминаний».
         static func mentions(_ count: Int) -> String {
-            let key = count == 1 ? "people.mentions.one" : "people.mentions.other"
-            return String(format: NSLocalizedString(key, comment: ""), count)
+            String.localizedStringWithFormat(NSLocalizedString("people.mentions", comment: ""), count)
         }
     }
 
@@ -122,12 +124,15 @@ enum L10n {
         static let resetConfirmMessage = String(localized: "settings.reset.confirm.message")
         static let resetConfirmAction = String(localized: "settings.reset.confirm.action")
         static func importResult(_ count: Int, sourceName: String) -> String {
-            String(format: NSLocalizedString("settings.import.result", comment: ""), count, sourceName)
+            String.localizedStringWithFormat(NSLocalizedString("settings.import.result", comment: ""), count, sourceName)
         }
     }
 
     enum Home {
-        static let memoriesLabel = String(localized: "home.memories.label")
+        /// Слово под числом — согласовано с ним: «1 воспоминание», «5 воспоминаний».
+        static func memoriesLabel(_ count: Int) -> String {
+            String.localizedStringWithFormat(NSLocalizedString("home.memories.label", comment: ""), count)
+        }
         static let searchPlaceholder = String(localized: "home.search.placeholder")
         static let sidebarTitle = String(localized: "home.sidebar.title")
         static let capturePhoto = String(localized: "home.capture.photo")

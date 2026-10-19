@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>home.memories.label</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@memories@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>воспоминания</string>
+			<key>many</key>
+			<string>воспоминаний</string>
+			<key>one</key>
+			<string>воспоминание</string>
+			<key>other</key>
+			<string>воспоминания</string>
+		</dict>
+	</dict>
+	<key>people.mentions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@memories@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>%d воспоминания</string>
+			<key>many</key>
+			<string>%d воспоминаний</string>
+			<key>one</key>
+			<string>%d воспоминание</string>
+			<key>other</key>
+			<string>%d воспоминания</string>
+		</dict>
+	</dict>
+	<key>settings.import.result</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Импортировано: %#@memories@ из %@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>few</key>
+			<string>%d воспоминания</string>
+			<key>many</key>
+			<string>%d воспоминаний</string>
+			<key>one</key>
+			<string>%d воспоминание</string>
+			<key>other</key>
+			<string>%d воспоминания</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
