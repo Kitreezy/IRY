@@ -2,10 +2,29 @@ import Foundation
 
 // MARK: - Text Completion
 
+/// Запрос к текстовой модели: что сделать и с чем.
+///
+/// Раньше это была одна строка, где инструкция и данные пользователя
+/// склеены. Для облака разницы нет, а модели на устройстве есть: русского
+/// она не знает, и данные надо перевести — но только данные, а не
+/// инструкцию. Заодно инструкция отделена от того, что написал человек:
+/// модель Apple принимает их раздельно и доверяет инструкции больше.
+struct CompletionRequest: Sendable, Equatable {
+    /// Что сделать — по-английски, на нём модели следуют лучше всего.
+    let instructions: String
+    /// Данные пользователя: вопрос, воспоминания, расшифровка — по куску.
+    let content: [String]
+
+    /// Всё одной строкой — для провайдеров, которым разделение не нужно.
+    var prompt: String {
+        ([instructions] + content).joined(separator: "\n\n")
+    }
+}
+
 protocol TextCompletionProvider: Sendable {
     var providerName: String { get }
     var isAvailable: Bool { get }
-    func complete(prompt: String) async throws -> String
+    func complete(_ request: CompletionRequest) async throws -> String
 }
 
 // MARK: - Embedding
@@ -99,6 +118,11 @@ enum LLMError: Error, LocalizedError {
     case invalidResponse
     case httpError(Int, String)
     case parseError(String)
+    /// Модель на устройстве не знает языка, перевести можно, но языки для
+    /// перевода ещё не скачаны.
+    case translationNeedsDownload(String)
+    /// Ни модель, ни переводчик на устройстве языка не знают.
+    case languageUnsupported(String)
 
     var errorDescription: String? {
         switch self {
@@ -108,6 +132,8 @@ enum LLMError: Error, LocalizedError {
         case .invalidResponse: "Unexpected response from AI provider."
         case .httpError(let code, let body): "HTTP \(code): \(body)"
         case .parseError(let raw): "Parse error. Response: \(raw)"
+        case .translationNeedsDownload(let language): "The on-device model doesn't know \(language). Download translation languages in Settings to use it through translation."
+        case .languageUnsupported(let language): "\(language) isn't supported on this device. Choose a cloud provider in Settings."
         }
     }
 }

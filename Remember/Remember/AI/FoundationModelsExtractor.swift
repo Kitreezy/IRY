@@ -23,41 +23,52 @@ struct ExtractedEntities {
 
 @available(iOS 26.0, *)
 actor FoundationModelsExtractor: EntityExtracting {
+    private let bridge: any LanguageBridge
+
+    init(bridge: any LanguageBridge = OnDeviceLanguageBridge()) {
+        self.bridge = bridge
+    }
+
     nonisolated var isAvailable: Bool {
         SystemLanguageModel.default.isAvailable
     }
 
+    /// Русский текст модель не знает — он идёт через перевод, а найденное
+    /// переводится обратно. Обратный перевод заодно ставит названия в
+    /// начальную форму: «в Казани» → «in Kazan» → «Казань», и одно место в
+    /// разных воспоминаниях совпадает, хотя стояло в разных падежах.
     func extract(from text: String, memoryId: UUID) async throws -> [MemoryEntity] {
-        let session = LanguageModelSession(model: .default)
-        let prompt = """
-            Extract named entities from the following text.
-            Return only entities explicitly mentioned.
-
-            Text: \(text)
-            """
-
-        let response = try await session.respond(
-            to: prompt,
-            generating: ExtractedEntities.self
-        )
-
-        let extracted = response.content
-        var entities: [MemoryEntity] = []
-
-        for name in extracted.people where !name.isEmpty {
-            entities.append(MemoryEntity(memoryId: memoryId, value: name, type: .person))
+        var types: [EntityType] = []
+        let values = try await bridge.bridged([text]) { input in
+            let session = LanguageModelSession(
+                model: .default,
+                instructions: "Extract named entities from the user's text. Return only entities explicitly mentioned."
+            )
+            let response = try await session.respond(to: input.joined(), generating: ExtractedEntities.self)
+            let extracted = response.content
+            let found: [(EntityType, [String])] = [
+                (.person, extracted.people), (.place, extracted.places),
+                (.topic, extracted.topics), (.company, extracted.companies)
+            ]
+            // Значения — плоским списком, чтобы перевести их одной пачкой;
+            // тип каждого запоминается по порядку.
+            types = found.flatMap { type, names in names.filter { !$0.isEmpty }.map { _ in type } }
+            return found.flatMap { _, names in names.filter { !$0.isEmpty } }
         }
-        for place in extracted.places where !place.isEmpty {
-            entities.append(MemoryEntity(memoryId: memoryId, value: place, type: .place))
-        }
-        for topic in extracted.topics where !topic.isEmpty {
-            entities.append(MemoryEntity(memoryId: memoryId, value: topic, type: .topic))
-        }
-        for company in extracted.companies where !company.isEmpty {
-            entities.append(MemoryEntity(memoryId: memoryId, value: company, type: .company))
-        }
+        return Self.entities(values: values, types: types, memoryId: memoryId)
+    }
 
-        return entities
+    /// Значения и типы — обратно в сущности. Пустое после перевода и
+    /// повторы одного типа отбрасываются.
+    static func entities(values: [String], types: [EntityType], memoryId: UUID) -> [MemoryEntity] {
+        var seen = Set<String>()
+        return zip(values, types).compactMap { value, type in
+            let value = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !value.isEmpty, seen.insert("\(type.rawValue)|\(value.lowercased())").inserted else {
+                return nil
+            }
+            return MemoryEntity(memoryId: memoryId, value: value, type: type)
+        }
     }
 }
 

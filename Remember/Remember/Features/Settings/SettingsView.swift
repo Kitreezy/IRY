@@ -68,6 +68,10 @@ struct SettingsView: View {
             if providerService.currentKind == .gemini {
                 geminiKeySection
             }
+
+            if providerService.currentKind == .apple, #available(iOS 26.0, *) {
+                TranslationLanguagesRow()
+            }
         } header: {
             Text(L10n.Settings.sectionAI)
         } footer: {
@@ -249,9 +253,12 @@ struct SettingsView: View {
         isTesting = true
         aiTestResult = nil
         do {
-            let text = try await providerService.textCompletion.complete(
-                prompt: "Ответь одним словом на русском: какой сейчас сезон года?"
-            )
+            // Вопрос по-русски нарочно: на устройстве он проверяет и мост
+            // через перевод, а не только модель.
+            let text = try await providerService.textCompletion.complete(CompletionRequest(
+                instructions: "Answer with one word in the language of the question.",
+                content: ["Какое сейчас время года?"]
+            ))
             let embedding = try await providerService.embedding.embed(text: "тест памяти")
             aiTestResult = .success(text: text, embedding: embedding.vector.count)
         } catch {

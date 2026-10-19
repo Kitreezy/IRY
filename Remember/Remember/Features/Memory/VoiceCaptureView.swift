@@ -320,13 +320,15 @@ struct VoiceCaptureView: View {
     private func suggestWhy(for transcript: String) async {
         let provider = LLMProviderService.shared.textCompletion
         guard provider.isAvailable else { return }
-        let prompt = """
-        A user just recorded this memory: "\(transcript)"
-        Suggest in ONE short sentence (max 15 words) why this moment might matter to them.
-        Reply in the same language as the memory text.
-        Be personal and specific. Output only the sentence, no quotes, no explanation.
-        """
-        if let suggestion = try? await provider.complete(prompt: prompt) {
+        let request = CompletionRequest(
+            instructions: """
+            The user just recorded a memory. Suggest in ONE short sentence (max 15 words) why this moment might matter to them.
+            Reply in the same language as the memory text.
+            Be personal and specific. Output only the sentence, no quotes, no explanation.
+            """,
+            content: [transcript]
+        )
+        if let suggestion = try? await provider.complete(request) {
             let trimmed = suggestion.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty {
                 why = trimmed

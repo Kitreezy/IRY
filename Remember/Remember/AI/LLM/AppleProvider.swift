@@ -7,15 +7,29 @@ import FoundationModels
 actor AppleTextCompletionProvider: TextCompletionProvider {
     let providerName = "Apple Foundation Models"
 
+    private let bridge: any LanguageBridge
+
+    init(bridge: any LanguageBridge = OnDeviceLanguageBridge()) {
+        self.bridge = bridge
+    }
+
     nonisolated var isAvailable: Bool {
         SystemLanguageModel.default.isAvailable
     }
 
-    func complete(prompt: String) async throws -> String {
+    /// Языка данных модель не знает — данные идут через перевод, ответ
+    /// возвращается на языке данных. Инструкция не переводится: она и так
+    /// по-английски.
+    func complete(_ request: CompletionRequest) async throws -> String {
         guard isAvailable else { throw LLMError.notAvailable }
-        let session = LanguageModelSession(model: .default)
-        let response = try await session.respond(to: prompt)
-        return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
+        let answer = try await bridge.bridged(request.content) { content in
+            // Инструкция — отдельно от данных: модель следует ей и не
+            // принимает за инструкцию то, что написано в воспоминании.
+            let session = LanguageModelSession(model: .default, instructions: request.instructions)
+            let response = try await session.respond(to: content.joined(separator: "\n\n"))
+            return [response.content]
+        }
+        return (answer.first ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 
@@ -24,5 +38,5 @@ actor AppleTextCompletionProvider: TextCompletionProvider {
 struct UnavailableTextCompletionProvider: TextCompletionProvider {
     let providerName = "Unavailable"
     let isAvailable = false
-    func complete(prompt: String) async throws -> String { throw LLMError.notAvailable }
+    func complete(_ request: CompletionRequest) async throws -> String { throw LLMError.notAvailable }
 }

@@ -491,12 +491,15 @@ private struct ReflectionScreen: View {
         let provider = LLMProviderService.shared.textCompletion
         guard provider.isAvailable else { return }
         isSuggestingWhy = true
-        let prompt = """
-        A user took a photo and recorded this voice memory: "\(transcript)"
-        Rewrite it as ONE short reflective sentence (max 15 words) capturing why this moment matters.
-        Reply in the same language as the input. Output only the sentence, no quotes.
-        """
-        if let suggestion = try? await provider.complete(prompt: prompt) {
+        let request = CompletionRequest(
+            instructions: """
+            The user took a photo and recorded a voice memory about it.
+            Rewrite it as ONE short reflective sentence (max 15 words) capturing why this moment matters.
+            Reply in the same language as the memory. Output only the sentence, no quotes.
+            """,
+            content: [transcript]
+        )
+        if let suggestion = try? await provider.complete(request) {
             let trimmed = suggestion.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { why = trimmed }
         }
@@ -526,11 +529,14 @@ private struct ReflectionScreen: View {
         guard provider.isAvailable, !text.isEmpty else {
             return String(text.prefix(50).trimmingCharacters(in: .whitespaces))
         }
-        let prompt = """
-        Create a SHORT title (3-6 words max) for this memory: "\(text)"
-        Reply in the same language as the input. Output only the title, no quotes, no punctuation at end.
-        """
-        let title = (try? await provider.complete(prompt: prompt)) ?? text
+        let request = CompletionRequest(
+            instructions: """
+            Create a SHORT title (3-6 words max) for the user's memory.
+            Reply in the same language as the memory. Output only the title, no quotes, no punctuation at end.
+            """,
+            content: [text]
+        )
+        let title = (try? await provider.complete(request)) ?? text
         return String(title.trimmingCharacters(in: .whitespacesAndNewlines).prefix(60))
     }
 

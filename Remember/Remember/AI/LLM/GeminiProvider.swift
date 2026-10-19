@@ -14,6 +14,10 @@ actor GeminiTextCompletionProvider: TextCompletionProvider {
         self.model = model
     }
 
+    func complete(_ request: CompletionRequest) async throws -> String {
+        try await complete(prompt: request.prompt)
+    }
+
     func complete(prompt: String) async throws -> String {
         guard !apiKey.isEmpty else { throw LLMError.noAPIKey }
 
