@@ -128,7 +128,7 @@ struct HomeView: View {
                 .font(.system(size: 52, weight: .bold, design: .rounded))
                 .foregroundStyle(.primary)
 
-            Text(L10n.Home.memoriesLabel)
+            Text(L10n.Home.memoriesLabel(count))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }

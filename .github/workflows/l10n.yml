@@ -1,0 +1,71 @@
+# Сверка локализации RU/EN на каждом PR.
+#
+# Механическая проверка (scripts/l10n/check.py) роняет PR при ошибках:
+# нет перевода, не совпали спецификаторы, число без форм, ключ без строки.
+# Смысловая (scripts/l10n/ai_check.py) — только по изменённым строкам и
+# пока лишь пишет комментарий: блокировать ею стоит, когда eval.py покажет,
+# сколько у неё ложных тревог.
+
+name: l10n
+
+on:
+  pull_request:
+    paths:
+      - 'Remember/Remember/**'
+      - 'scripts/l10n/**'
+      - '.github/workflows/l10n.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Механическая проверка
+        run: python3 scripts/l10n/check.py
+
+  ai:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Есть ли токен
+        id: token
+        env:
+          TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: echo "present=$([ -n "$TOKEN" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Сверка выключена
+        if: steps.token.outputs.present != 'true'
+        run: echo "Нет секрета CLAUDE_CODE_OAUTH_TOKEN — смысловая сверка пропущена."
+
+      - uses: actions/checkout@v4
+        if: steps.token.outputs.present == 'true'
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        if: steps.token.outputs.present == 'true'
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        if: steps.token.outputs.present == 'true'
+        with:
+          node-version: '22'
+      - name: Claude Code
+        if: steps.token.outputs.present == 'true'
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Смысловая сверка изменённых строк
+        if: steps.token.outputs.present == 'true'
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: python3 scripts/l10n/ai_check.py --changed "origin/${{ github.base_ref }}" > l10n.md
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: steps.token.outputs.present == 'true'
+        with:
+          header: l10n
+          path: l10n.md

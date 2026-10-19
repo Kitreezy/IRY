@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>home.memories.label</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@memories@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>memory</string>
+			<key>other</key>
+			<string>memories</string>
+		</dict>
+	</dict>
+	<key>people.mentions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@memories@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d memory</string>
+			<key>other</key>
+			<string>%d memories</string>
+		</dict>
+	</dict>
+	<key>settings.import.result</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Imported %#@memories@ from %@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d memory</string>
+			<key>other</key>
+			<string>%d memories</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
