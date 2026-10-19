@@ -27,7 +27,7 @@ MUTATIONS = [
     ("memory.create.button.save", "ru", "Сохранить", "Удалить", "meaning", True),
     ("settings.reset.footer", "ru", " Действие необратимо.", "", "truncated", True),
     ("timeline.today", "ru", "Сегодня", "Today", "untranslated", True),
-    ("memory.detail.related.title", "ru", "Похожие воспоминания", "Похожие заметки", "terminology", False),
+    ("memory.detail.related.title", "ru", "Связанные воспоминания", "Связанные заметки", "terminology", False),
     ("voice.empty.transcript", "ru", "Попробуй ещё раз", "Попробуйте ещё раз", "register", False),
     ("settings.reset.confirm.message", "ru", "будут удалены", "будет удалено", "agreement", True),
     ("people.empty.subtitle", "en", "are discovered automatically from your memories", "are added manually", "meaning", True),
@@ -78,10 +78,15 @@ def main() -> int:
     print(f"{'вид':<14}{'ключ':<34}{'найдено':<10}уровень")
     for key, _, _, _, kind, must_be_error in MUTATIONS:
         f = after.get(key)
-        hit = f is not None and key not in before
+        # Засчитывается и находка у строки, к которой уже были замечания, —
+        # если модель увидела в испорченной другую беду, чем в чистой.
+        was = before.get(key)
+        hit = f is not None and (was is None or was["kind"] != f["kind"])
         found += hit
         level = f["severity"] if f else "—"
         note = "" if not f or (f["severity"] == "error") == must_be_error else "  (ожидался другой уровень)"
+        if was and not hit:
+            note += f"  (и на чистых строках: {was['kind']})"
         print(f"{kind:<14}{key:<34}{'да' if hit else 'нет':<10}{level}{note}")
 
     noise = sorted(set(after) - set(before) - mutated)

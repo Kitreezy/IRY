@@ -80,7 +80,7 @@
 "settings.ai.claude.apikey.placeholder" = "sk-ant-...";
 "settings.ai.apikey.save" = "Save";
 "settings.ai.apikey.saved" = "Saved";
-"settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone. Languages the model doesn't know go through on-device translation.";
+"settings.ai.privacy.apple" = "All AI runs on your device. Nothing leaves your phone. Languages the model doesn't know, Russian among them, go through on-device translation.";
 "settings.ai.privacy.gemini" = "Text is sent to Google Gemini. Full Russian support. Free tier available.";
 "settings.ai.privacy.openai" = "Text is sent to OpenAI. Better quality, especially for Russian.";
 "settings.ai.privacy.claude" = "Text is sent to Anthropic (Claude). Embeddings stay on-device. Excellent Russian support.";
