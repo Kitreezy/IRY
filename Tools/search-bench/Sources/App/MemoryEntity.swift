@@ -1,0 +1,1 @@
+../../../../Remember/Remember/Domain/Memory/MemoryEntity.swift

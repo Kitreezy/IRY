@@ -57,7 +57,7 @@ actor SemanticSearchService {
         return indexed
     }
 
-    // Hybrid search: FTS5 union + semantic reranking
+    /// Гибридный поиск: полнотекстовая выдача и смысловая, слитые по местам.
     func search(query: String, ftsResults: [MemoryItem]) async -> [MemoryItem] {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
             return ftsResults
@@ -90,35 +90,56 @@ actor SemanticSearchService {
             scores[memoryId] = EmbeddingService.cosineSimilarity(queryVector.vector, stored.vector)
         }
 
-        // Смысловых совпадений — не больше трёх лучших, и только выше порога.
-        // Одного порога мало: у модели на устройстве несвязанные фразы
-        // похожи на 0.6–0.7, и по порогу в выдачу шло полколлекции. Замер
-        // (Tools/bench-embeddings.sh) — F1 0.25 по порогу, 0.49 с ограничением.
-        let semanticIds = Set(
-            scores.filter { $0.value >= threshold }
-                .sorted { $0.value > $1.value }
-                .prefix(Self.maxSemanticHits)
-                .map(\.key)
-        )
+        // Смысловых совпадений — не больше нескольких лучших, и только выше
+        // порога: у модели на устройстве несвязанные фразы похожи на
+        // 0.6–0.7, и по одному порогу в выдачу шло полколлекции.
+        let semanticRanked = scores.filter { $0.value >= threshold }
+            .sorted { $0.value > $1.value }
+            .prefix(Self.maxSemanticHits)
+            .map(\.key)
 
-        // FTS5 ids
-        let ftsIds = Set(ftsResults.map { $0.id })
-
-        // Union: FTS5 + semantic hits
-        let unionIds = ftsIds.union(semanticIds)
-
-        let semanticOnly = allMemories.filter { semanticIds.contains($0.id) && !ftsIds.contains($0.id) }
-        let combined = ftsResults + semanticOnly
-
-        // Rerank by score (semantic score takes priority, fallback to 0)
-        return combined
-            .filter { unionIds.contains($0.id) }
-            .sorted { a, b in
-                (scores[a.id] ?? 0) > (scores[b.id] ?? 0)
-            }
+        return Self.fuse(fts: ftsResults, semantic: semanticRanked, all: allMemories)
     }
 
+    /// Слияние двух выдач по местам — Reciprocal Rank Fusion.
+    ///
+    /// Раньше всё сортировалось по косинусу, и точное совпадение по словам
+    /// уходило ниже случайного смыслового. Складывать bm25 и косинус
+    /// нельзя — у них разные шкалы, — поэтому складываются места: каждый
+    /// список даёт `1 / (k + место)`. Найденное обоими способами — выше
+    /// найденного одним, а первое в любом списке — выше десятого.
+    static func fuse(fts: [MemoryItem], semantic: [UUID], all: [MemoryItem]) -> [MemoryItem] {
+        let ftsRank = Dictionary(fts.enumerated().map { ($1.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let semanticRank = Dictionary(semantic.enumerated().map { ($1, $0) }, uniquingKeysWith: { first, _ in first })
+        func score(_ id: UUID) -> Double {
+            [ftsRank[id], semanticRank[id]].compactMap { $0 }.reduce(0) { $0 + 1 / (fusionK + Double($1 + 1)) }
+        }
+
+        let byId = Dictionary(all.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            .merging(fts.map { ($0.id, $0) }, uniquingKeysWith: { _, fresh in fresh })
+        // Равные суммы — обычное дело: первое место в одном списке весит
+        // столько же, сколько первое в другом. Порядок равных задаётся явно —
+        // раньше он зависел от словаря, и одна и та же выдача менялась от
+        // запуска к запуску. Слово надёжнее смысла: полнотекстовое — первым.
+        let never = Int.max
+        return Set(ftsRank.keys).union(semanticRank.keys)
+            .sorted { a, b in
+                let (sa, sb) = (score(a), score(b))
+                if sa != sb { return sa > sb }
+                if ftsRank[a, default: never] != ftsRank[b, default: never] {
+                    return ftsRank[a, default: never] < ftsRank[b, default: never]
+                }
+                return semanticRank[a, default: never] < semanticRank[b, default: never]
+            }
+            .compactMap { byId[$0] }
+    }
+
+    /// Насколько первые места важнее следующих: чем меньше, тем сильнее.
+    /// Обычно берут 60; на коротких выдачах 1–10 чуть лучше, 60 — чуть хуже.
+    static let fusionK: Double = 10
+
     /// Сколько воспоминаний добавляет смысловой поиск к полнотекстовому.
+    /// Пять дают выдачу длиннее при том же качестве (Tools/bench-search.sh).
     static let maxSemanticHits = 3
 
     // MARK: - Private
