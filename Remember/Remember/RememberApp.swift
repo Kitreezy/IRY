@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 
 @main
@@ -20,6 +21,11 @@ struct RememberApp: App {
             extractor = UnavailableEntityExtractor()
         }
         self.entityExtraction = EntityExtractionService(extractor: extractor, repository: repo)
+
+        // Интенты берут сервис отсюда. Siri может запустить приложение ради
+        // одного интента, без экранов, — и init при этом всё равно вызывается.
+        let semantic = self.semantic
+        AppDependencyManager.shared.add { MemoryIntentService(repository: repo, semantic: semantic) }
     }
 
     var body: some Scene {

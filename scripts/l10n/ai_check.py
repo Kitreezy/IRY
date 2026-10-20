@@ -72,13 +72,13 @@ def pairs(strings_dir: Path | None = None) -> list[dict]:
     used = l10n.usages()
     result = []
     for key in sorted(set(en) & set(ru)):
-        result.append({"key": key, "en": en[key], "ru": ru[key], "used": used.get(key, l10n.Usage()).places[:2]})
+        result.append({"key": key, "en": en[key], "ru": ru[key], "used": l10n.usage(used, key).places[:2]})
     if not strings_dir:
         plural_en, plural_ru = l10n.read_plurals("en"), l10n.read_plurals("ru")
         for key in sorted(set(plural_en) & set(plural_ru)):
             for form, ru_value in plural_ru[key].items():
                 result.append({"key": f"{key}#{form}", "en": plural_en[key].get(form, plural_en[key].get("other", "")),
-                               "ru": ru_value, "used": used.get(key, l10n.Usage()).places[:2]})
+                               "ru": ru_value, "used": l10n.usage(used, key).places[:2]})
     return result
 
 

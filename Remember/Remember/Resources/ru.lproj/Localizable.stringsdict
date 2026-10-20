@@ -22,6 +22,26 @@
 			<string>воспоминания</string>
 		</dict>
 	</dict>
+	<key>intent.ask.found %lld</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@memories@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>few</key>
+			<string>Нашлось %lld воспоминания, но ответа из них не сложилось.</string>
+			<key>many</key>
+			<string>Нашлось %lld воспоминаний, но ответа из них не сложилось.</string>
+			<key>one</key>
+			<string>Нашлось %lld воспоминание, но ответа из него не сложилось.</string>
+			<key>other</key>
+			<string>Нашлось %lld воспоминания, но ответа из них не сложилось.</string>
+		</dict>
+	</dict>
 	<key>people.mentions</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>

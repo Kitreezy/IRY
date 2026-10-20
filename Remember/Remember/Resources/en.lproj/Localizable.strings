@@ -128,3 +128,15 @@
 "timeline.empty.title" = "No memories yet";
 "timeline.empty.subtitle" = "Your memories will appear here\nin chronological order.";
 "voice.ai.suggesting" = "AI is thinking…";
+
+"intent.entity.why" = "Why it matters";
+"intent.create.done %@" = "Remembered: %@";
+"intent.ask.title" = "Ask Memories";
+"intent.ask.description" = "Answers a question from your memories, on the device.";
+"intent.ask.question" = "Question";
+"intent.ask.nothing" = "Your memories say nothing about it.";
+"intent.open.title" = "Open Memory";
+"intent.open.memory" = "Memory";
+"shortcut.remember" = "Remember";
+"shortcut.ask" = "Ask";
+"shortcut.search" = "Search";

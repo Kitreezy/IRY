@@ -128,3 +128,15 @@
 "timeline.empty.title" = "Воспоминаний пока нет";
 "timeline.empty.subtitle" = "Твои воспоминания появятся здесь\nв хронологическом порядке.";
 "voice.ai.suggesting" = "AI думает…";
+
+"intent.entity.why" = "Почему это важно";
+"intent.create.done %@" = "Запомнено: %@";
+"intent.ask.title" = "Спросить у воспоминаний";
+"intent.ask.description" = "Отвечает на вопрос по твоим воспоминаниям — на устройстве.";
+"intent.ask.question" = "Вопрос";
+"intent.ask.nothing" = "В твоих воспоминаниях об этом ничего нет.";
+"intent.open.title" = "Открыть воспоминание";
+"intent.open.memory" = "Воспоминание";
+"shortcut.remember" = "Запомнить";
+"shortcut.ask" = "Спросить";
+"shortcut.search" = "Найти";

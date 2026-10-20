@@ -18,6 +18,22 @@
 			<string>memories</string>
 		</dict>
 	</dict>
+	<key>intent.ask.found %lld</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@memories@</string>
+		<key>memories</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Found %lld memory, but couldn't put together an answer.</string>
+			<key>other</key>
+			<string>Found %lld memories, but couldn't put together an answer.</string>
+		</dict>
+	</dict>
 	<key>people.mentions</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>

@@ -4,6 +4,8 @@ struct HomeView: View {
     @Environment(\.memoryRepository) private var repository
     @State private var viewModel: HomeViewModel?
     @State private var navigationPath = NavigationPath()
+    /// Маршруты извне — из Siri и Shortcuts.
+    @State private var router = AppRouter.shared
     @State private var isSearchActive = false
     @State private var showSidebar = false
     @State private var showSettings = false
@@ -56,6 +58,31 @@ struct HomeView: View {
             let vm = HomeViewModel(repository: repository)
             viewModel = vm
             await vm.load()
+            // Приложение запустилось ради интента: маршрут уже ждёт.
+            await follow(router.take())
+        }
+        .onChange(of: router.pending) { _, route in
+            guard route != nil else { return }
+            Task { await follow(router.take()) }
+        }
+    }
+
+
+    // MARK: - Маршруты извне
+
+    /// Исполнить маршрут из Siri или Shortcuts: показать поиск с запросом или
+    /// открыть воспоминание поверх главного экрана.
+    private func follow(_ route: AppRouter.Route?) async {
+        guard let route, let viewModel else { return }
+        switch route {
+        case let .search(query):
+            navigationPath = NavigationPath()
+            viewModel.query = query
+            viewModel.onQueryChanged()
+        case let .memory(id):
+            guard let memory = try? await repository.fetch(id: id) else { return }
+            navigationPath = NavigationPath()
+            navigationPath.append(memory)
         }
     }
 

@@ -43,7 +43,7 @@ def check() -> list[dict]:
     for key in sorted(declared - all_keys):
         out.append(finding("error", "unknown_key", key, "ключ есть в L10n.swift, а строки нет — на экране будет сам ключ"))
     for key in sorted(all_keys):
-        if not used.get(key) or not used[key].places:
+        if not l10n.usage(used, key).places:
             out.append(finding("warning", "unused", key, "строка ни разу не используется в коде"))
 
     # Формы числа: у английского нужны one и other, у русского — ещё few и many.
@@ -99,6 +99,18 @@ def check() -> list[dict]:
                 out.append(finding("warning", "typography", key, f"{language}: пробел по краям", **{language: value}))
         if re.search(r"\b(Нажми|Нажмите)\s+чтобы\b", b):
             out.append(finding("warning", "typography", key, "ru: нет запятой перед «чтобы»", ru=b))
+
+    # Фразы Siri — своя таблица, где ключ — английская фраза из кода. Siri
+    # узнаёт фразу, только если в ней есть имя приложения.
+    phrases = {lang: l10n.read_table(lang, "AppShortcuts") for lang in l10n.LANGUAGES}
+    for key in sorted(set(phrases["en"]) ^ set(phrases["ru"])):
+        missing = "ru" if key in phrases["en"] else "en"
+        out.append(finding("error", "missing", key, f"фраза Siri без перевода на {missing}"))
+    for language in l10n.LANGUAGES:
+        for key, value in phrases[language].items():
+            if "${applicationName}" not in value:
+                out.append(finding("error", "siri", key, f"{language}: фраза Siri без ${{applicationName}} — Siri её не узнает",
+                                   **{language: value}))
 
     # Строки интерфейса прямо в коде — мимо перевода.
     for path in l10n.APP.rglob("*.swift"):

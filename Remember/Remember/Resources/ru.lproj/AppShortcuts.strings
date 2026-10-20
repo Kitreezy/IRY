@@ -1,0 +1,8 @@
+/* Фразы Siri. Ключ — английская фраза из RememberShortcuts.swift. */
+
+"Remember in ${applicationName}" = "Запомни в ${applicationName}";
+"Add a memory to ${applicationName}" = "Добавь воспоминание в ${applicationName}";
+"Ask ${applicationName}" = "Спроси ${applicationName}";
+"What do I know in ${applicationName}" = "Что я знаю в ${applicationName}";
+"Search ${applicationName}" = "Поиск в ${applicationName}";
+"Find in ${applicationName}" = "Найди в ${applicationName}";

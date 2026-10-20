@@ -16,6 +16,10 @@ LANGUAGES = ("en", "ru")
 
 _STRING = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)";', re.M)
 _KEY_IN_CODE = re.compile(r'(?:String\(localized:|NSLocalizedString\()\s*"([^"]+)"')
+# Интенты берут строки через LocalizedStringResource, и ключ бывает с
+# подстановкой: "intent.create.done \(title)" — это ключ "intent.create.done %@".
+# Запоминается часть до подстановки, сравнивается с началом ключа.
+_RESOURCE_IN_CODE = re.compile(r'LocalizedStringResource\(\s*"([a-z][a-z0-9.]*)')
 _FORMAT = re.compile(r"%(?:\d+\$)?(?:l{0,2}[dui]|[@fs])")
 
 
@@ -79,7 +83,7 @@ def usages() -> dict[str, Usage]:
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if path == l10n:
                 continue
-            for key in _KEY_IN_CODE.findall(line):
+            for key in _KEY_IN_CODE.findall(line) + _RESOURCE_IN_CODE.findall(line):
                 found.setdefault(key, Usage()).places.append(f"{rel}:{number}: {line.strip()}")
             for key, name in names.items():
                 if re.search(re.escape(name) + r"\b", line):
@@ -87,6 +91,18 @@ def usages() -> dict[str, Usage]:
     for key in names:
         found.setdefault(key, Usage())
     return found
+
+
+def usage(found: dict[str, Usage], key: str) -> Usage:
+    """Где используется ключ — с учётом ключей с подстановкой («ключ %@»)."""
+    return found.get(key) or found.get(key.split(" ")[0]) or Usage()
+
+
+def read_table(language: str, table: str) -> dict[str, str]:
+    path = RESOURCES / f"{language}.lproj" / f"{table}.strings"
+    if not path.exists():
+        return {}
+    return {key: unescape(value) for key, value in _STRING.findall(path.read_text(encoding="utf-8"))}
 
 
 def declared_in_l10n() -> set[str]:
